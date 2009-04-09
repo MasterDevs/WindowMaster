@@ -26,7 +26,7 @@ namespace WindowMasterLib {
 		static ContextMenu cm;
 		static MenuItem miSettings;
 		static MenuItem miClose;
-		
+
 		static void InitItems() {
 			miSettings = new MenuItem();
 			miSettings.Text = "Settings";
@@ -46,6 +46,8 @@ namespace WindowMasterLib {
 			notify.Icon = Icon.FromHandle(Properties.Resources.Monitor_16.GetHicon());
 			notify.ContextMenu = cm;
 			notify.DoubleClick += new EventHandler(miSettings_Click);
+
+			notify.Text = "Window Master";
 		}
 
 		static void miClose_Click(object sender, EventArgs e) {
