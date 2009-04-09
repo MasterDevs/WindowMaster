@@ -1,0 +1,40 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ArrayOfHotKeyAction xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <HotKeyAction xsi:type="MoveWindowAction">
+    <Combos>
+      <KeyCombo>
+        <Modifiers>Shift Win</Modifiers>
+        <Key>Left</Key>
+      </KeyCombo>
+      <KeyCombo>
+        <Modifiers>Shift Win</Modifiers>
+        <Key>Right</Key>
+      </KeyCombo>
+    </Combos>
+    <Enabled>true</Enabled>
+    <Name>Move foreground window to next screen</Name>
+    <Description>This action will get the current foreground window and move it to the next screen. If there is only one screen, it will not move the window.</Description>
+  </HotKeyAction>
+  <HotKeyAction xsi:type="RestoreUp">
+    <Combos>
+      <KeyCombo>
+        <Modifiers>Win</Modifiers>
+        <Key>Up</Key>
+      </KeyCombo>
+    </Combos>
+    <Enabled>true</Enabled>
+    <Name>Restore Window Up</Name>
+    <Description>If the window is minimized, this action will set the window state to normal placing it in it's normal location and size. If it's in the normal state, the window will be maximized.</Description>
+  </HotKeyAction>
+  <HotKeyAction xsi:type="RestoreDown">
+    <Combos>
+      <KeyCombo>
+        <Modifiers>Win</Modifiers>
+        <Key>Down</Key>
+      </KeyCombo>
+    </Combos>
+    <Enabled>true</Enabled>
+    <Name>Restore Window Down</Name>
+    <Description>If the window is maximized, this action will set the window state to normal placing it in it's normal location and size. If it's in the normal state, the window will be minimized.</Description>
+  </HotKeyAction>
+</ArrayOfHotKeyAction>
