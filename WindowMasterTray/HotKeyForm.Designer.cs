@@ -31,7 +31,7 @@
 			this.ddlKey = new System.Windows.Forms.ComboBox();
 			this.gbKey = new System.Windows.Forms.GroupBox();
 			this.bOK = new System.Windows.Forms.Button();
-			this.bCancle = new System.Windows.Forms.Button();
+			this.bCancel = new System.Windows.Forms.Button();
 			this.groupBox1.SuspendLayout();
 			this.gbKey.SuspendLayout();
 			this.SuspendLayout();
@@ -124,25 +124,25 @@
 			this.bOK.Text = "&OK";
 			this.bOK.UseVisualStyleBackColor = true;
 			// 
-			// bCancle
+			// bCancel
 			// 
-			this.bCancle.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-			this.bCancle.Location = new System.Drawing.Point(183, 132);
-			this.bCancle.Name = "bCancle";
-			this.bCancle.Size = new System.Drawing.Size(75, 23);
-			this.bCancle.TabIndex = 6;
-			this.bCancle.Text = "Cancle";
-			this.bCancle.UseVisualStyleBackColor = true;
+			this.bCancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
+			this.bCancel.Location = new System.Drawing.Point(183, 132);
+			this.bCancel.Name = "bCancel";
+			this.bCancel.Size = new System.Drawing.Size(75, 23);
+			this.bCancel.TabIndex = 6;
+			this.bCancel.Text = "Cancel";
+			this.bCancel.UseVisualStyleBackColor = true;
 			// 
 			// HotKeyForm
 			// 
 			this.AcceptButton = this.bOK;
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-			this.CancelButton = this.bCancle;
+			this.CancelButton = this.bCancel;
 			this.ClientSize = new System.Drawing.Size(279, 168);
 			this.ControlBox = false;
-			this.Controls.Add(this.bCancle);
+			this.Controls.Add(this.bCancel);
 			this.Controls.Add(this.bOK);
 			this.Controls.Add(this.groupBox1);
 			this.Controls.Add(this.gbKey);
@@ -169,6 +169,6 @@
 		private System.Windows.Forms.ComboBox ddlKey;
 		private System.Windows.Forms.GroupBox gbKey;
 		private System.Windows.Forms.Button bOK;
-		private System.Windows.Forms.Button bCancle;
+		private System.Windows.Forms.Button bCancel;
 	}
 }
