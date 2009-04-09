@@ -68,12 +68,16 @@ namespace WindowMasterLib {
 		/// the Actions will be reloaded from the configuration file.</para>
 		/// </summary>
 		private void SettingsWindow_VisibleChanged(object sender, EventArgs e) {
+			ShowInTaskbar = Visible;
+
 			if (Visible) {
 				LoadActions();
 			} else {
 				//-- Remove All Actions, in case some have been changed
 				RemoveAllHotKeys();
 
+				//-- Don't enable this button when nothing is selected
+				bDeleteHotKey.Enabled = false;
 				//-- Load Actions from ConfigFile
 				Actions = ActionManager.LoadActions(ConfigPath);
 			}

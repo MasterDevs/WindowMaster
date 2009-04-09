@@ -131,7 +131,9 @@
 			this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
 			this.KeyPreview = true;
 			this.MaximizeBox = false;
+			this.MaximumSize = new System.Drawing.Size(485, 258);
 			this.MinimizeBox = false;
+			this.MinimumSize = new System.Drawing.Size(485, 258);
 			this.Name = "SettingsWindow";
 			this.ShowInTaskbar = false;
 			this.SizeGripStyle = System.Windows.Forms.SizeGripStyle.Hide;

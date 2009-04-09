@@ -147,6 +147,8 @@
 			this.Controls.Add(this.groupBox1);
 			this.Controls.Add(this.gbKey);
 			this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedToolWindow;
+			this.MaximumSize = new System.Drawing.Size(285, 192);
+			this.MinimumSize = new System.Drawing.Size(285, 192);
 			this.Name = "HotKeyForm";
 			this.ShowIcon = false;
 			this.ShowInTaskbar = false;
