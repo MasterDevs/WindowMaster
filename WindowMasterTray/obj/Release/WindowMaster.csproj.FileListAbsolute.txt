@@ -1,0 +1,10 @@
+C:\Users\BrYmSt0n3\Documents\Visual Studio 2008\Projects\WindowMaster\WindowMaster\bin\Release\WindowMaster.exe
+C:\Users\BrYmSt0n3\Documents\Visual Studio 2008\Projects\WindowMaster\WindowMaster\bin\Release\WindowMaster.pdb
+C:\Users\BrYmSt0n3\Documents\Visual Studio 2008\Projects\WindowMaster\WindowMaster\obj\Release\ResolveAssemblyReference.cache
+C:\Users\BrYmSt0n3\Documents\Visual Studio 2008\Projects\WindowMaster\WindowMaster\obj\Release\WindowMaster.Form1.resources
+C:\Users\BrYmSt0n3\Documents\Visual Studio 2008\Projects\WindowMaster\WindowMaster\obj\Release\WindowMaster.Properties.Resources.resources
+C:\Users\BrYmSt0n3\Documents\Visual Studio 2008\Projects\WindowMaster\WindowMaster\obj\Release\WindowMaster.csproj.GenerateResource.Cache
+C:\Users\BrYmSt0n3\Documents\Visual Studio 2008\Projects\WindowMaster\WindowMaster\obj\Release\WindowMaster.exe
+C:\Users\BrYmSt0n3\Documents\Visual Studio 2008\Projects\WindowMaster\WindowMaster\obj\Release\WindowMaster.pdb
+C:\Users\BrYmSt0n3\Documents\Visual Studio 2008\Projects\WindowMaster\WindowMaster\bin\Release\WindowMasterLib.dll
+C:\Users\BrYmSt0n3\Documents\Visual Studio 2008\Projects\WindowMaster\WindowMaster\bin\Release\WindowMasterLib.pdb

@@ -1,0 +1,10 @@
+C:\Users\BrYmSt0n3\Documents\Visual Studio 2008\Projects\WindowMaster\WindowMasterLib\obj\Debug\ResolveAssemblyReference.cache
+C:\Users\BrYmSt0n3\Documents\Visual Studio 2008\Projects\WindowMaster\WindowMasterLib\bin\Debug\WindowMasterLib.dll
+C:\Users\BrYmSt0n3\Documents\Visual Studio 2008\Projects\WindowMaster\WindowMasterLib\bin\Debug\WindowMasterLib.pdb
+C:\Users\BrYmSt0n3\Documents\Visual Studio 2008\Projects\WindowMaster\WindowMasterLib\obj\Debug\WindowMasterLib.dll
+C:\Users\BrYmSt0n3\Documents\Visual Studio 2008\Projects\WindowMaster\WindowMasterLib\obj\Debug\WindowMasterLib.pdb
+C:\Documents and Settings\jrall\My Documents\Visual Studio 2008\Projects\WindowMaster\WindowMasterLib\bin\Debug\WindowMasterLib.dll
+C:\Documents and Settings\jrall\My Documents\Visual Studio 2008\Projects\WindowMaster\WindowMasterLib\bin\Debug\WindowMasterLib.pdb
+C:\Documents and Settings\jrall\My Documents\Visual Studio 2008\Projects\WindowMaster\WindowMasterLib\obj\Debug\ResolveAssemblyReference.cache
+C:\Documents and Settings\jrall\My Documents\Visual Studio 2008\Projects\WindowMaster\WindowMasterLib\obj\Debug\WindowMasterLib.dll
+C:\Documents and Settings\jrall\My Documents\Visual Studio 2008\Projects\WindowMaster\WindowMasterLib\obj\Debug\WindowMasterLib.pdb
