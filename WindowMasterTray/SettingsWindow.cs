@@ -32,9 +32,12 @@ namespace WindowMasterLib {
 		/// and populates the Actions CheckedListBox
 		/// </summary>
 		private void LoadActions() {
+			//-- Start from Scratch
+			RemoveAllHotKeys();
+			
 			//-- Initialize Actions
 			Actions = ActionManager.LoadActions(ConfigPath);
-			
+
 			//-- Add Actions to the Actions List Box
 			lbActions.Items.Clear();
 			foreach (HotKeyAction act in Actions) {
@@ -42,6 +45,7 @@ namespace WindowMasterLib {
 			}
 
 			//-- Set the ListBox HotKey Datasource
+			Combos = new KeyCombo[0];
 			lbHotKeys.DataSource = Combos;
 		}
 		
@@ -57,6 +61,34 @@ namespace WindowMasterLib {
 			}
 		}
 
+		/// <summary>
+		/// If we are showing the form, this method will call LoadActions.
+		/// <para>If we are closing the form, this method will remove
+		/// all of the current HotKeys (in case some were changed) and
+		/// the Actions will be reloaded from the configuration file.</para>
+		/// </summary>
+		private void SettingsWindow_VisibleChanged(object sender, EventArgs e) {
+			if (Visible) {
+				LoadActions();
+			} else {
+				//-- Remove All Actions, in case some have been changed
+				RemoveAllHotKeys();
+
+				//-- Load Actions from ConfigFile
+				Actions = ActionManager.LoadActions(ConfigPath);
+			}
+		}
+
+		/// <summary>
+		/// Unregisters all current hotkeys
+		/// </summary>
+		private void RemoveAllHotKeys() {
+			if (Actions != null) 
+				foreach (HotKeyAction a in Actions)
+					a.RemoveAllHotKeys();
+		}
+
+	
 		/// <summary>
 		/// Populates the Description Text & HotKeys List Box when we change
 		/// the selected action.
@@ -76,7 +108,6 @@ namespace WindowMasterLib {
 				//-- Initialize Add / Delete HotKey Buttons
 				bAddHotKey.Enabled = true;
 				bDeleteHotKey.Enabled = HasKeyCombo;
-				
 			}
 
 		}
@@ -85,27 +116,11 @@ namespace WindowMasterLib {
 		/// Refreshes the HotKeys List Box
 		/// </summary>
 		private void RefreshHotKeys() {
-			Combos = SelectedAction.Combos;
+			if (SelectedAction != null)
+				Combos = SelectedAction.Combos;
+			else
+				Combos = new KeyCombo[0];
 			lbHotKeys.DataSource = Combos;
-		}
-
-		/// <summary>
-		/// If we are showing the form, this method will call LoadActions.
-		/// <para>If we are closing the form, this method will remove
-		/// all of the current HotKeys (in case some were changed) and
-		/// the Actions will be reloaded from the configuration file.</para>
-		/// </summary>
-		private void SettingsWindow_VisibleChanged(object sender, EventArgs e) {
-			if (Visible) {
-				LoadActions();
-			} else {
-				//-- Remove All Actions that might've been changed
-				foreach (HotKeyAction a in Actions) {
-					a.RemoveAllHotKeys();
-				}
-				//-- Load Actions from ConfigFile
-				Actions = ActionManager.LoadActions(ConfigPath);
-			}
 		}
 
 		/// <summary>
