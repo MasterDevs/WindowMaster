@@ -52,11 +52,13 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Actions\ActionManager.cs" />
+    <Compile Include="Actions\HotKeyActions\DecreaseOpacityAction.cs" />
+    <Compile Include="Actions\HotKeyActions\IncreaseOpacityAction.cs" />
     <Compile Include="Actions\HotKeyActions\MaximizeWindowAction.cs" />
     <Compile Include="Actions\HotKeyActions\MinimizeWindowAction.cs" />
     <Compile Include="Actions\HotKeyActions\MoveWindowAction.cs" />
-    <Compile Include="Actions\HotKeyActions\RestoreDown.cs" />
-    <Compile Include="Actions\HotKeyActions\RestoreUp.cs" />
+    <Compile Include="Actions\HotKeyActions\RestoreDownAction.cs" />
+    <Compile Include="Actions\HotKeyActions\RestoreUpAction.cs" />
     <Compile Include="Actions\HotKeyActions\RestoreWindowAction.cs" />
     <Compile Include="HotKeyForm.cs">
       <SubType>Form</SubType>

@@ -5,24 +5,24 @@ using System.Text;
 
 namespace WindowMasterLib.Actions.HotKeyActions {
 	[Serializable]
-	public class RestoreUp : HotKeyAction {
+	public class RestoreDownAction : HotKeyAction {
 
 		protected override void ActionMethod(object sender, EventArgs args) {
 			uint state = Window.ForeGroundWindow.GetWindowPlacement().showCmd;
 
-			if (state == showCmd.Minimized) {
+			if (state == showCmd.Maximized) {
 				Window.ForeGroundWindow.SetWindowPlacement(showCmd.Normal);
 			} else if (state == showCmd.Normal) {
-				Window.ForeGroundWindow.SetWindowPlacement(showCmd.Maximized);
+				Window.ForeGroundWindow.SetWindowPlacement(showCmd.Minimized);
 			}
 		}
 
-		public RestoreUp() {
-			Name = "Restore Window Up";
-			Description = "If the window is minimized, this action will set the window state to normal placing it in it's normal location and size. If it's in the normal state, the window will be maximized.";
+		public RestoreDownAction() {
+			Name = "Restore Window Down";
+			Description = "If the window is maximized, this action will set the window state to normal placing it in it's normal location and size. If it's in the normal state, the window will be minimized.";
 		}
 
-		public RestoreUp(KeyCombo hotKey)
+		public RestoreDownAction(KeyCombo hotKey)
 			: this() {
 			AddHotKey(hotKey);
 		}

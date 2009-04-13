@@ -28,16 +28,21 @@ namespace WindowMasterLib.Actions {
 			}
 		}
 
-
-		private static Type[] ActionTypes {
+		/// <summary>
+		/// This array contains all action types. If new actions are created, this 
+        /// property needs to be modified in order for the Action De Serializer to work.
+		/// </summary>
+        private static Type[] ActionTypes {
 			get {
 				List<Type> aTypes = new List<Type>();
 				aTypes.Add(typeof(MoveWindowAction));
 				aTypes.Add(typeof(MaximizeWindowAction));
 				aTypes.Add(typeof(MinimizeWindowAction));
 				aTypes.Add(typeof(RestoreWindowAction));
-				aTypes.Add(typeof(RestoreDown));
-				aTypes.Add(typeof(RestoreUp));
+				aTypes.Add(typeof(RestoreDownAction));
+				aTypes.Add(typeof(RestoreUpAction));
+                aTypes.Add(typeof(IncreaseOpacityAction));
+                aTypes.Add(typeof(DecreaseOpacityAction));
 				return aTypes.ToArray();
 			}
 		}

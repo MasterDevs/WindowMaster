@@ -37,15 +37,16 @@ namespace WindowMasterLib {
 			
 			//-- Initialize Actions
 			Actions = ActionManager.LoadActions(ConfigPath);
-
+            
 			//-- Add Actions to the Actions List Box
 			lbActions.Items.Clear();
 			foreach (HotKeyAction act in Actions) {
 				lbActions.Items.Add(act, act.Enabled);
 			}
 
-			//-- Set the ListBox HotKey Datasource
-			Combos = new KeyCombo[0];
+			//-- Set the ListBox HotKey Datasource to nothing. 
+            //[When a Action is clicked, the list will be populated]
+			Combos = null;
 			lbHotKeys.DataSource = Combos;
 		}
 		
@@ -91,8 +92,7 @@ namespace WindowMasterLib {
 				foreach (HotKeyAction a in Actions)
 					a.RemoveAllHotKeys();
 		}
-
-	
+        	
 		/// <summary>
 		/// Populates the Description Text & HotKeys List Box when we change
 		/// the selected action.
@@ -200,6 +200,5 @@ namespace WindowMasterLib {
 				Hide();
 			}
 		}
-		
 	}
 }
