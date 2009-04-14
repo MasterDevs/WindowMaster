@@ -33,8 +33,8 @@ namespace WindowMasterLib {
 				UnRegisterHotKeys();
 				if (value) {
 					RegisterHotKeys();
-					_Enabled = value;
 				}
+				_Enabled = value;
 			}
 		}
 		/// <summary>

@@ -3,7 +3,7 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProductVersion>9.0.30729</ProductVersion>
+    <ProductVersion>9.0.21022</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>{2147001D-941A-4A62-BDD2-DA9F1F124D4B}</ProjectGuid>
     <OutputType>WinExe</OutputType>
@@ -54,6 +54,8 @@
     <Compile Include="Actions\ActionManager.cs" />
     <Compile Include="Actions\HotKeyActions\DecreaseOpacityAction.cs" />
     <Compile Include="Actions\HotKeyActions\IncreaseOpacityAction.cs" />
+    <Compile Include="Actions\HotKeyActions\MakeInvisibleAction.cs" />
+    <Compile Include="Actions\HotKeyActions\MakeOpaqueAction.cs" />
     <Compile Include="Actions\HotKeyActions\MaximizeWindowAction.cs" />
     <Compile Include="Actions\HotKeyActions\MinimizeWindowAction.cs" />
     <Compile Include="Actions\HotKeyActions\MoveWindowAction.cs" />

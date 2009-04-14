@@ -37,7 +37,7 @@ namespace WindowMasterLib {
 			
 			//-- Initialize Actions
 			Actions = ActionManager.LoadActions(ConfigPath);
-            
+			      
 			//-- Add Actions to the Actions List Box
 			lbActions.Items.Clear();
 			foreach (HotKeyAction act in Actions) {

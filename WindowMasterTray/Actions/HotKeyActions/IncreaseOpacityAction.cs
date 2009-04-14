@@ -7,10 +7,10 @@ namespace WindowMasterLib.Actions.HotKeyActions {
 	[Serializable]
 	public class IncreaseOpacityAction : HotKeyAction {
 
-        private double Percentage = 0.05;
+		private double Percentage = 0.05;
 
 		protected override void ActionMethod(object sender, EventArgs args) {
-            Window.ForeGroundWindow.IncreaseOpacity(Percentage);
+			Window.ForeGroundWindow.IncreaseOpacity(Percentage);
 		}
 
 		public IncreaseOpacityAction() {
@@ -18,7 +18,7 @@ namespace WindowMasterLib.Actions.HotKeyActions {
 			Description = string.Format("Increases the opacity of the foreground window by {0:0%}.", Percentage);
 		}
 
-        public IncreaseOpacityAction(KeyCombo hotKey)
+		public IncreaseOpacityAction(KeyCombo hotKey)
 			: this() {
 			AddHotKey(hotKey);
 		}

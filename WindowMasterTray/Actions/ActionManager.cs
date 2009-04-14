@@ -9,8 +9,8 @@ using WindowMasterLib.Actions.HotKeyActions;
 namespace WindowMasterLib.Actions {
 	public class ActionManager {
 
-		private static XmlSerializer serializer = 
-		  new XmlSerializer(typeof(List<HotKeyAction>), ActionTypes); 
+		private static XmlSerializer serializer =
+			new XmlSerializer(typeof(List<HotKeyAction>), ActionTypes);
 
 		public static List<HotKeyAction> LoadActions(string xmlPath) {
 			List<HotKeyAction> actions = new List<HotKeyAction>();
@@ -30,9 +30,9 @@ namespace WindowMasterLib.Actions {
 
 		/// <summary>
 		/// This array contains all action types. If new actions are created, this 
-        /// property needs to be modified in order for the Action De Serializer to work.
+		/// property needs to be modified in order for the Action De Serializer to work.
 		/// </summary>
-        private static Type[] ActionTypes {
+		private static Type[] ActionTypes {
 			get {
 				List<Type> aTypes = new List<Type>();
 				aTypes.Add(typeof(MoveWindowAction));
@@ -41,8 +41,10 @@ namespace WindowMasterLib.Actions {
 				aTypes.Add(typeof(RestoreWindowAction));
 				aTypes.Add(typeof(RestoreDownAction));
 				aTypes.Add(typeof(RestoreUpAction));
-                aTypes.Add(typeof(IncreaseOpacityAction));
-                aTypes.Add(typeof(DecreaseOpacityAction));
+				aTypes.Add(typeof(IncreaseOpacityAction));
+				aTypes.Add(typeof(DecreaseOpacityAction));
+				aTypes.Add(typeof(MakeInvisibleAction));
+				aTypes.Add(typeof(MakeOpaqueAction));
 				return aTypes.ToArray();
 			}
 		}

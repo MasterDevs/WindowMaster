@@ -38,29 +38,29 @@ namespace WindowMasterLib {
 		private static extern bool SetWindowPos(IntPtr hWnd, IntPtr hWndInsertAfter, int x, int y, int cx, int cy, uint uFlags);
 
 		[DllImport("user32.dll")]
-        private static extern bool GetWindowInfo(IntPtr hwnd, ref WINDOWINFO pwi);
+		private static extern bool GetWindowInfo(IntPtr hwnd, ref WINDOWINFO pwi);
 
 		[DllImport("user32.dll")]
 		[return: MarshalAs(UnmanagedType.Bool)]
-        private static extern bool GetWindowPlacement(IntPtr hWnd, ref WINDOWPLACEMENT lpwndpl);
+		private static extern bool GetWindowPlacement(IntPtr hWnd, ref WINDOWPLACEMENT lpwndpl);
 
 		[DllImport("user32.dll")]
-        private static extern bool SetWindowPlacement(IntPtr hWnd, ref WINDOWPLACEMENT lpwndpl);
+		private static extern bool SetWindowPlacement(IntPtr hWnd, ref WINDOWPLACEMENT lpwndpl);
 
-        [DllImport("user32.dll")]
-        private static extern bool SetLayeredWindowAttributes(IntPtr hWnd, uint crKey, byte bAlpha, uint dwFlags);
+		[DllImport("user32.dll")]
+		private static extern bool SetLayeredWindowAttributes(IntPtr hWnd, uint crKey, byte bAlpha, uint dwFlags);
 
-        [DllImport("user32.dll", SetLastError=true)]
-        private static extern bool GetLayeredWindowAttributes(IntPtr hwnd, out uint crKey, out byte bAlpha, out uint dwFlags);
+		[DllImport("user32.dll", SetLastError = true)]
+		private static extern bool GetLayeredWindowAttributes(IntPtr hwnd, out uint crKey, out byte bAlpha, out uint dwFlags);
 
-        [DllImport("user32.dll", SetLastError = true)]
-        private static extern int GetWindowLong(IntPtr hWnd, int nIndex);
+		[DllImport("user32.dll", SetLastError = true)]
+		private static extern int GetWindowLong(IntPtr hWnd, int nIndex);
 
-        [DllImport("user32.dll")]
-        private static extern int SetWindowLong(IntPtr hWnd, int nIndex, int dwNewLong);
+		[DllImport("user32.dll")]
+		private static extern int SetWindowLong(IntPtr hWnd, int nIndex, int dwNewLong);
 
 		#endregion
-		
+
 		private IntPtr WindowHandle;
 		private RECT ClientBounds;
 		private RECT ScreenBounds;
@@ -83,7 +83,7 @@ namespace WindowMasterLib {
 		}
 
 		public Window(IntPtr handle) {
-            WindowHandle = handle;
+			WindowHandle = handle;
 			ClientBounds = new RECT();
 			ScreenBounds = new RECT();
 			GetClientRect(handle, ref ClientBounds);
@@ -134,7 +134,7 @@ namespace WindowMasterLib {
 			//-- Get the screen coordinates for the window
 			if (ClientToScreen(WindowHandle, ref p))
 				ClientBounds.MoveToLocation(p);
-			
+
 			//-- Save Original CoOrdinates
 			int oldLeft = ClientBounds.Left;
 			int oldTop = ClientBounds.Top;
@@ -194,19 +194,74 @@ namespace WindowMasterLib {
 			return SetWindowPlacement(showCmd.Normal);
 		}
 
-        public bool IncreaseOpacity(double percentage)
-        {
-            //-- Turn the window into a Layered Window
-            //SetWindowLong(WindowHandle, GWL_EXSTYLE, GetWindowLong(WindowHandle, GWL_EXSTYLE) ^ WS__EX_LAYERED);
+		public bool IncreaseOpacity(double percentage) {
+			return SetOpacity(percentage, true);
+		}
 
-            return true;
-            //return SetLayeredWindowAttributes(WindowHandle, 
-        }
+		public bool DecreaseOpacity(double percentage) {
+			return SetOpacity(percentage, false);
+		}
 
-        public bool DecreaseOpacity(double percentage)
-        {
-            return true;
-        }
+		public bool MakeInvisible() {
+			return SetOpacity(0, true);
+		}
+
+		public bool MakeOpaque() {
+			return SetOpacity(1, true);
+		}
+
+		/// <summary>
+		/// This method will modify the bAlpha channel by adding / subtracting the
+		/// percentage of 255 to it's current value. This will effectively
+		/// increase or decrease the windows opacity. 
+		/// </summary>
+		private bool SetOpacity(double percentage, bool increase) {
+			uint crKey;
+			byte bAlpha;
+			uint dwFlags;
+			int GWL_EXSTYLE = WindowStyles.GWL_EXSTYLE;
+			uint WS_EX_LAYERED = WindowStyles.WS_EX_LAYERED;
+			uint LWA_ALPHA = 0x2;
+
+			int Win = GetWindowLong(WindowHandle, GWL_EXSTYLE);
+
+			//-- Get Current Values
+			GetLayeredWindowAttributes(WindowHandle, out crKey, out bAlpha, out dwFlags);
+
+			//-- Extend the window style to a Layered Window if it's not already layered
+			if ((Win & WS_EX_LAYERED) != WS_EX_LAYERED) {
+				SetWindowLong(WindowHandle,
+					WindowStyles.GWL_EXSTYLE, (int)WS_EX_LAYERED);
+				bAlpha = 255;
+			}
+
+			//-- Generate value to modify by
+			byte val;
+			if (percentage < 1 && percentage > 0)
+				val = (byte)(percentage * 255);
+			else if (percentage == 1) //-- Set the window to Opaqe
+				return SetLayeredWindowAttributes(WindowHandle, 0, 255, LWA_ALPHA);
+			else if (percentage == 0) //-- Set the window to Invisible
+				return SetLayeredWindowAttributes(WindowHandle, 0, 0, LWA_ALPHA);
+			else //-- Default value
+				val = 10;
+			
+			//-- Modify bAlpha, making sure it's within the bounds
+			if (increase) {
+				if ((bAlpha + val) > 255)
+					bAlpha = 255;
+				else
+					bAlpha += val;
+			} else {
+				if ((bAlpha - val) < 0)
+					bAlpha = 0;
+				else
+					bAlpha -= val;
+			}
+
+			//-- Set Layred Attributes
+			return SetLayeredWindowAttributes(WindowHandle, 0, bAlpha, LWA_ALPHA);
+		}
 
 		/// <summary>
 		/// Gets the index in Screen.AllScreens that contains
@@ -235,6 +290,7 @@ namespace WindowMasterLib {
 			GetWindowPlacement(WindowHandle, ref w);
 			return w;
 		}
+		
 		/// <summary>
 		/// Sets the placement of the current window
 		/// </summary>
@@ -411,66 +467,65 @@ namespace WindowMasterLib {
 		public static readonly uint Maximized = 3;
 	}
 
-    /// <summary>
-    /// Simple List to all constants.
-    /// </summary>
-    public class WindowStyles
-    {
-        public const int GWL_ID = (-12);
-        public const int GWL_STYLE = (-16);
-        public const int GWL_EXSTYLE = (-20);
+	/// <summary>
+	/// Simple List to all constants.
+	/// </summary>
+	public class WindowStyles {
+		public const int GWL_ID = (-12);
+		public const int GWL_STYLE = (-16);
+		public const int GWL_EXSTYLE = (-20);
 
-        // Window Styles
-        public const UInt32 WS_OVERLAPPED = 0;
-        public const UInt32 WS_POPUP = 0x80000000;
-        public const UInt32 WS_CHILD = 0x40000000;
-        public const UInt32 WS_MINIMIZE = 0x20000000;
-        public const UInt32 WS_VISIBLE = 0x10000000;
-        public const UInt32 WS_DISABLED = 0x8000000;
-        public const UInt32 WS_CLIPSIBLINGS = 0x4000000;
-        public const UInt32 WS_CLIPCHILDREN = 0x2000000;
-        public const UInt32 WS_MAXIMIZE = 0x1000000;
-        public const UInt32 WS_CAPTION = 0xC00000;      // WS_BORDER or WS_DLGFRAME  
-        public const UInt32 WS_BORDER = 0x800000;
-        public const UInt32 WS_DLGFRAME = 0x400000;
-        public const UInt32 WS_VSCROLL = 0x200000;
-        public const UInt32 WS_HSCROLL = 0x100000;
-        public const UInt32 WS_SYSMENU = 0x80000;
-        public const UInt32 WS_THICKFRAME = 0x40000;
-        public const UInt32 WS_GROUP = 0x20000;
-        public const UInt32 WS_TABSTOP = 0x10000;
-        public const UInt32 WS_MINIMIZEBOX = 0x20000;
-        public const UInt32 WS_MAXIMIZEBOX = 0x10000;
-        public const UInt32 WS_TILED = WS_OVERLAPPED;
-        public const UInt32 WS_ICONIC = WS_MINIMIZE;
-        public const UInt32 WS_SIZEBOX = WS_THICKFRAME;
+		// Window Styles
+		public const UInt32 WS_OVERLAPPED = 0;
+		public const UInt32 WS_POPUP = 0x80000000;
+		public const UInt32 WS_CHILD = 0x40000000;
+		public const UInt32 WS_MINIMIZE = 0x20000000;
+		public const UInt32 WS_VISIBLE = 0x10000000;
+		public const UInt32 WS_DISABLED = 0x8000000;
+		public const UInt32 WS_CLIPSIBLINGS = 0x4000000;
+		public const UInt32 WS_CLIPCHILDREN = 0x2000000;
+		public const UInt32 WS_MAXIMIZE = 0x1000000;
+		public const UInt32 WS_CAPTION = 0xC00000;      // WS_BORDER or WS_DLGFRAME  
+		public const UInt32 WS_BORDER = 0x800000;
+		public const UInt32 WS_DLGFRAME = 0x400000;
+		public const UInt32 WS_VSCROLL = 0x200000;
+		public const UInt32 WS_HSCROLL = 0x100000;
+		public const UInt32 WS_SYSMENU = 0x80000;
+		public const UInt32 WS_THICKFRAME = 0x40000;
+		public const UInt32 WS_GROUP = 0x20000;
+		public const UInt32 WS_TABSTOP = 0x10000;
+		public const UInt32 WS_MINIMIZEBOX = 0x20000;
+		public const UInt32 WS_MAXIMIZEBOX = 0x10000;
+		public const UInt32 WS_TILED = WS_OVERLAPPED;
+		public const UInt32 WS_ICONIC = WS_MINIMIZE;
+		public const UInt32 WS_SIZEBOX = WS_THICKFRAME;
 
-        // Extended Window Styles
-        public const UInt32 WS_EX_DLGMODALFRAME = 0x0001;
-        public const UInt32 WS_EX_NOPARENTNOTIFY = 0x0004;
-        public const UInt32 WS_EX_TOPMOST = 0x0008;
-        public const UInt32 WS_EX_ACCEPTFILES = 0x0010;
-        public const UInt32 WS_EX_TRANSPARENT = 0x0020;
-        public const UInt32 WS_EX_MDICHILD = 0x0040;
-        public const UInt32 WS_EX_TOOLWINDOW = 0x0080;
-        public const UInt32 WS_EX_WINDOWEDGE = 0x0100;
-        public const UInt32 WS_EX_CLIENTEDGE = 0x0200;
-        public const UInt32 WS_EX_CONTEXTHELP = 0x0400;
-        public const UInt32 WS_EX_RIGHT = 0x1000;
-        public const UInt32 WS_EX_LEFT = 0x0000;
-        public const UInt32 WS_EX_RTLREADING = 0x2000;
-        public const UInt32 WS_EX_LTRREADING = 0x0000;
-        public const UInt32 WS_EX_LEFTSCROLLBAR = 0x4000;
-        public const UInt32 WS_EX_RIGHTSCROLLBAR = 0x0000;
-        public const UInt32 WS_EX_CONTROLPARENT = 0x10000;
-        public const UInt32 WS_EX_STATICEDGE = 0x20000;
-        public const UInt32 WS_EX_APPWINDOW = 0x40000;
-        public const UInt32 WS_EX_OVERLAPPEDWINDOW = (WS_EX_WINDOWEDGE | WS_EX_CLIENTEDGE);
-        public const UInt32 WS_EX_PALETTEWINDOW = (WS_EX_WINDOWEDGE | WS_EX_TOOLWINDOW | WS_EX_TOPMOST);
-        public const UInt32 WS_EX_LAYERED = 0x00080000;
-        public const UInt32 WS_EX_NOINHERITLAYOUT = 0x00100000; // Disable inheritence of mirroring by children
-        public const UInt32 WS_EX_LAYOUTRTL = 0x00400000; // Right to left mirroring
-        public const UInt32 WS_EX_COMPOSITED = 0x02000000;
-        public const UInt32 WS_EX_NOACTIVATE = 0x08000000;
-    }
+		// Extended Window Styles
+		public const UInt32 WS_EX_DLGMODALFRAME = 0x0001;
+		public const UInt32 WS_EX_NOPARENTNOTIFY = 0x0004;
+		public const UInt32 WS_EX_TOPMOST = 0x0008;
+		public const UInt32 WS_EX_ACCEPTFILES = 0x0010;
+		public const UInt32 WS_EX_TRANSPARENT = 0x0020;
+		public const UInt32 WS_EX_MDICHILD = 0x0040;
+		public const UInt32 WS_EX_TOOLWINDOW = 0x0080;
+		public const UInt32 WS_EX_WINDOWEDGE = 0x0100;
+		public const UInt32 WS_EX_CLIENTEDGE = 0x0200;
+		public const UInt32 WS_EX_CONTEXTHELP = 0x0400;
+		public const UInt32 WS_EX_RIGHT = 0x1000;
+		public const UInt32 WS_EX_LEFT = 0x0000;
+		public const UInt32 WS_EX_RTLREADING = 0x2000;
+		public const UInt32 WS_EX_LTRREADING = 0x0000;
+		public const UInt32 WS_EX_LEFTSCROLLBAR = 0x4000;
+		public const UInt32 WS_EX_RIGHTSCROLLBAR = 0x0000;
+		public const UInt32 WS_EX_CONTROLPARENT = 0x10000;
+		public const UInt32 WS_EX_STATICEDGE = 0x20000;
+		public const UInt32 WS_EX_APPWINDOW = 0x40000;
+		public const UInt32 WS_EX_OVERLAPPEDWINDOW = (WS_EX_WINDOWEDGE | WS_EX_CLIENTEDGE);
+		public const UInt32 WS_EX_PALETTEWINDOW = (WS_EX_WINDOWEDGE | WS_EX_TOOLWINDOW | WS_EX_TOPMOST);
+		public const UInt32 WS_EX_LAYERED = 0x00080000;
+		public const UInt32 WS_EX_NOINHERITLAYOUT = 0x00100000; // Disable inheritence of mirroring by children
+		public const UInt32 WS_EX_LAYOUTRTL = 0x00400000; // Right to left mirroring
+		public const UInt32 WS_EX_COMPOSITED = 0x02000000;
+		public const UInt32 WS_EX_NOACTIVATE = 0x08000000;
+	}
 }
