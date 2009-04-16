@@ -15,7 +15,6 @@ namespace WindowMasterLib {
 			Application.EnableVisualStyles();
 			Application.SetCompatibleTextRenderingDefault(false);
 			settings = new SettingsWindow();
-			//Application.Run(new WindowSettings());
 			InitItems();
 			miSettings_Click(null, null);
 			Application.Run();
@@ -58,10 +57,7 @@ namespace WindowMasterLib {
 
 		static void miSettings_Click(object sender, EventArgs e) {
 			settings.Show();
-		}
-
-		static void MoveWindow(object sender, KeyPressedEventArgs args) {
-			Window.ForeGroundWindow.MoveToNextScreen();
+			settings.Activate();
 		}
 	}
 }

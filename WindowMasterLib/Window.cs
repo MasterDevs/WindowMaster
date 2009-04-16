@@ -172,6 +172,49 @@ namespace WindowMasterLib {
 			GoToScreen(Screens.Next);
 		}
 
+		public bool StretchHorizontally() {
+			//-- Get Current Window Placement
+			WINDOWPLACEMENT wp = GetWindowPlacement();
+
+			if (wp.showCmd == showCmd.Normal) {
+				//-- Check if we're stretched
+				RECT curScreen = new RECT(Screen.AllScreens[GetScreenIndex(WindowHandle)].WorkingArea);
+				if (curScreen.Width <= wp.rcNormalPosition.Width) { //-- If we're stretched, restore to 2/3
+					wp.rcNormalPosition.Left = curScreen.Left + (curScreen.Width / 6);
+					wp.rcNormalPosition.Right = wp.rcNormalPosition.Left + (curScreen.Width / 3 * 2);
+					return SetWindowPlacement(wp);
+				} else { //-- Stretch
+					wp.rcNormalPosition.Left = curScreen.Left;
+					wp.rcNormalPosition.Right = curScreen.Right;
+					return SetWindowPlacement(wp);
+				}
+			}
+			return false;
+		}
+
+		public bool StretchVertically() {
+			//-- Get Current Window Placement
+			WINDOWPLACEMENT wp = GetWindowPlacement();
+
+			//-- First make sure the window is in Normal Mode
+			if (wp.showCmd == showCmd.Normal) {
+				RECT curScreen = new RECT(Screen.AllScreens[GetScreenIndex(WindowHandle)].WorkingArea);
+				
+				//-- Check if we're stretched
+				if (curScreen.Height <= wp.rcNormalPosition.Height) { //-- If we're stretched, restore to 2/3
+					wp.rcNormalPosition.Top = curScreen.Top+ (curScreen.Height/ 6);
+					wp.rcNormalPosition.Bottom = wp.rcNormalPosition.Top + (curScreen.Height / 3 * 2);
+					return SetWindowPlacement(wp);
+				} else { //-- Stretch
+					wp.rcNormalPosition.Top = curScreen.Top;
+					wp.rcNormalPosition.Bottom = curScreen.Bottom;
+					return SetWindowPlacement(wp);
+				}
+			}
+			return false;
+		}
+		
+		
 		/// <summary>
 		/// Minimizes the window.
 		/// </summary>

@@ -32,6 +32,8 @@
 			this.groupBox1 = new System.Windows.Forms.GroupBox();
 			this.groupBox2 = new System.Windows.Forms.GroupBox();
 			this.tbActionDescription = new System.Windows.Forms.TextBox();
+			this.bApply = new System.Windows.Forms.Button();
+			this.bCancel = new System.Windows.Forms.Button();
 			this.groupBox1.SuspendLayout();
 			this.groupBox2.SuspendLayout();
 			this.SuspendLayout();
@@ -48,13 +50,13 @@
 			// 
 			// bOK
 			// 
-			this.bOK.Location = new System.Drawing.Point(112, 191);
+			this.bOK.Location = new System.Drawing.Point(182, 191);
 			this.bOK.Name = "bOK";
-			this.bOK.Size = new System.Drawing.Size(247, 23);
+			this.bOK.Size = new System.Drawing.Size(78, 23);
 			this.bOK.TabIndex = 3;
-			this.bOK.Text = "&Save";
+			this.bOK.Text = "&OK";
 			this.bOK.UseVisualStyleBackColor = true;
-			this.bOK.Click += new System.EventHandler(this.bSave_Click);
+			this.bOK.Click += new System.EventHandler(this.bOK_Click);
 			// 
 			// lbHotKeys
 			// 
@@ -118,11 +120,34 @@
 			this.tbActionDescription.Size = new System.Drawing.Size(442, 40);
 			this.tbActionDescription.TabIndex = 11;
 			// 
+			// bApply
+			// 
+			this.bApply.Enabled = false;
+			this.bApply.Location = new System.Drawing.Point(382, 191);
+			this.bApply.Name = "bApply";
+			this.bApply.Size = new System.Drawing.Size(78, 23);
+			this.bApply.TabIndex = 12;
+			this.bApply.Text = "&Apply";
+			this.bApply.UseVisualStyleBackColor = true;
+			this.bApply.Click += new System.EventHandler(this.bApply_Click);
+			// 
+			// bCancel
+			// 
+			this.bCancel.Location = new System.Drawing.Point(282, 191);
+			this.bCancel.Name = "bCancel";
+			this.bCancel.Size = new System.Drawing.Size(78, 23);
+			this.bCancel.TabIndex = 13;
+			this.bCancel.Text = "&Cancel";
+			this.bCancel.UseVisualStyleBackColor = true;
+			this.bCancel.Click += new System.EventHandler(this.bCancel_Click);
+			// 
 			// SettingsWindow
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-			this.ClientSize = new System.Drawing.Size(479, 226);
+			this.ClientSize = new System.Drawing.Size(479, 230);
+			this.Controls.Add(this.bCancel);
+			this.Controls.Add(this.bApply);
 			this.Controls.Add(this.tbActionDescription);
 			this.Controls.Add(this.groupBox2);
 			this.Controls.Add(this.groupBox1);
@@ -159,5 +184,7 @@
 		private System.Windows.Forms.GroupBox groupBox1;
 		private System.Windows.Forms.GroupBox groupBox2;
 		private System.Windows.Forms.TextBox tbActionDescription;
+		private System.Windows.Forms.Button bApply;
+		private System.Windows.Forms.Button bCancel;
 	}
 }

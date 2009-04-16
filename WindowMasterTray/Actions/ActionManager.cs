@@ -45,6 +45,8 @@ namespace WindowMasterLib.Actions {
 				aTypes.Add(typeof(DecreaseOpacityAction));
 				aTypes.Add(typeof(MakeInvisibleAction));
 				aTypes.Add(typeof(MakeOpaqueAction));
+				aTypes.Add(typeof(StretchHorizontallyAction));
+				aTypes.Add(typeof(StretchVerticallyAction));
 				return aTypes.ToArray();
 			}
 		}

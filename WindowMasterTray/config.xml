@@ -1,38 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ArrayOfHotKeyAction xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
   <HotKeyAction xsi:type="MoveWindowAction">
-    <Combos>
-      <KeyCombo>
-        <Modifiers>Shift Win</Modifiers>
-        <Key>Left</Key>
-      </KeyCombo>
-      <KeyCombo>
-        <Modifiers>Shift Win</Modifiers>
-        <Key>Right</Key>
-      </KeyCombo>
-    </Combos>
+    <Combos />
     <Enabled>true</Enabled>
     <Name>Move foreground window to next screen</Name>
     <Description>This action will get the current foreground window and move it to the next screen. If there is only one screen, it will not move the window.</Description>
   </HotKeyAction>
   <HotKeyAction xsi:type="RestoreUpAction">
-    <Combos>
-      <KeyCombo>
-        <Modifiers>Win</Modifiers>
-        <Key>Up</Key>
-      </KeyCombo>
-    </Combos>
+    <Combos />
     <Enabled>true</Enabled>
     <Name>Restore Window Up</Name>
     <Description>If the window is minimized, this action will set the window state to normal placing it in it's normal location and size. If it's in the normal state, the window will be maximized.</Description>
   </HotKeyAction>
   <HotKeyAction xsi:type="RestoreDownAction">
-    <Combos>
-      <KeyCombo>
-        <Modifiers>Win</Modifiers>
-        <Key>Down</Key>
-      </KeyCombo>
-    </Combos>
+    <Combos />
     <Enabled>true</Enabled>
     <Name>Restore Window Down</Name>
     <Description>If the window is maximized, this action will set the window state to normal placing it in it's normal location and size. If it's in the normal state, the window will be minimized.</Description>
@@ -80,5 +61,27 @@
     <Enabled>true</Enabled>
     <Name>Make Opaque</Name>
     <Description>Makes the foreground window completely visible.</Description>
+  </HotKeyAction>
+  <HotKeyAction xsi:type="StretchHorizontallyAction">
+    <Combos>
+      <KeyCombo>
+        <Modifiers>Win</Modifiers>
+        <Key>H</Key>
+      </KeyCombo>
+    </Combos>
+    <Enabled>true</Enabled>
+    <Name>Stretch Window Horizontally</Name>
+    <Description>If the foreground window is in normal position, it will stretch it's width to fill the screen. If pressed again, it will restore the width to 2 /3 of the screen.</Description>
+  </HotKeyAction>
+  <HotKeyAction xsi:type="StretchVerticallyAction">
+    <Combos>
+      <KeyCombo>
+        <Modifiers>Win</Modifiers>
+        <Key>V</Key>
+      </KeyCombo>
+    </Combos>
+    <Enabled>true</Enabled>
+    <Name>Stretch Window Vertically</Name>
+    <Description>If the foreground window is in normal position, it will stretch it's height to fill the screen. If pressed again, it will restore the height to 2 /3 of the screen.</Description>
   </HotKeyAction>
 </ArrayOfHotKeyAction>

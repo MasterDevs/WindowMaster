@@ -17,7 +17,7 @@ namespace WindowMasterLib {
 
 		public List<HotKeyAction> Actions;
 		public KeyCombo[] Combos;
-
+		
 		private string ConfigPath { get { return Application.StartupPath + Path.DirectorySeparatorChar + Properties.Settings.Default.ConfigFile; } }
 		private HotKeyAction SelectedAction { get { return (HotKeyAction)lbActions.SelectedItem; } }
 		private KeyCombo SelectedCombo { get { return (KeyCombo)lbHotKeys.SelectedItem; } }
@@ -37,6 +37,8 @@ namespace WindowMasterLib {
 			
 			//-- Initialize Actions
 			Actions = ActionManager.LoadActions(ConfigPath);
+			//Actions.Add(new StretchHorizontallyAction(new KeyCombo(Modifiers.Win, Keys.H)));
+			//Actions.Add(new StretchVerticallyAction(new KeyCombo(Modifiers.Win, Keys.V)));
 			      
 			//-- Add Actions to the Actions List Box
 			lbActions.Items.Clear();
@@ -48,7 +50,15 @@ namespace WindowMasterLib {
             //[When a Action is clicked, the list will be populated]
 			Combos = null;
 			lbHotKeys.DataSource = Combos;
+
+			//-- Initialize MadeAChange Bit
+			bApply.Enabled = false;
 		}
+
+		/// <summary>
+		/// Saves the actions to the Config File
+		/// </summary>
+		private void SaveActions() { ActionManager.SaveActions(Actions, ConfigPath); }
 		
 		/// <summary>
 		/// Ensures that we're only hiding the form. The only time
@@ -128,14 +138,6 @@ namespace WindowMasterLib {
 		}
 
 		/// <summary>
-		/// Saves the actions to the config file and hides the form.
-		/// </summary>
-		private void bSave_Click(object sender, EventArgs e) {
-			ActionManager.SaveActions(Actions, ConfigPath);
-			Hide();
-		}
-
-		/// <summary>
 		/// Opens a new HotKeyForm. If the dialog result is OK,
 		/// the new HotKey will be added to the SelectedAction
 		/// </summary>
@@ -146,6 +148,7 @@ namespace WindowMasterLib {
 			if (result == DialogResult.OK) {
 				SelectedAction.AddHotKey(hkf.HotKey);
 				RefreshHotKeys();
+				bApply.Enabled = true;
 			}
 			hkf.Dispose();
 		}
@@ -162,6 +165,8 @@ namespace WindowMasterLib {
 			if (lbHotKeys.Items.Count == 0) {
 				bDeleteHotKey.Enabled = false;
 			}
+
+			bApply.Enabled = true;
 		}
 
 		/// <summary>
@@ -177,6 +182,7 @@ namespace WindowMasterLib {
 				if (result == DialogResult.OK) {
 					SelectedAction.ChangeHotKey(oldKC, hkf.HotKey, false);
 					RefreshHotKeys();
+					bApply.Enabled = true;
 				}
 				hkf.Dispose();
 			}
@@ -188,6 +194,7 @@ namespace WindowMasterLib {
 		private void lbActions_ItemCheck(object sender, ItemCheckEventArgs e) {
 			if (SelectedAction != null) {
 				SelectedAction.Enabled = (e.NewValue == CheckState.Checked) ? true : false;
+				bApply.Enabled = true;
 			}
 		}
 
@@ -199,6 +206,30 @@ namespace WindowMasterLib {
 				e.Handled = true;
 				Hide();
 			}
+		}
+
+		
+		/// <summary>
+		/// Saves the actions to the config file and hides the form.
+		/// </summary>
+		private void bOK_Click(object sender, EventArgs e) {
+			SaveActions();
+			Hide();
+		}
+	
+		/// <summary>
+		/// Saves the actions to the config file.
+		/// </summary>
+		private void bApply_Click(object sender, EventArgs e) {
+			SaveActions();
+			bApply.Enabled = false;
+		}
+
+		/// <summary>
+		/// Hides the form.
+		/// </summary>
+		private void bCancel_Click(object sender, EventArgs e) {
+			Hide();
 		}
 	}
 }
