@@ -1,7 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ArrayOfHotKeyAction xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
   <HotKeyAction xsi:type="MoveWindowAction">
-    <Combos />
+    <Combos>
+      <KeyCombo>
+        <Modifiers>Shift Win</Modifiers>
+        <Key>Right</Key>
+      </KeyCombo>
+      <KeyCombo>
+        <Modifiers>Shift Win</Modifiers>
+        <Key>Left</Key>
+      </KeyCombo>
+    </Combos>
     <Enabled>true</Enabled>
     <Name>Move foreground window to next screen</Name>
     <Description>This action will get the current foreground window and move it to the next screen. If there is only one screen, it will not move the window.</Description>
@@ -35,7 +44,7 @@
         <Key>Up</Key>
       </KeyCombo>
     </Combos>
-    <Enabled>true</Enabled>
+    <Enabled>false</Enabled>
     <Name>Increase Opacity</Name>
     <Description>Increases the opacity of the foreground window by 5%.</Description>
   </HotKeyAction>
@@ -46,7 +55,7 @@
         <Key>Down</Key>
       </KeyCombo>
     </Combos>
-    <Enabled>true</Enabled>
+    <Enabled>false</Enabled>
     <Name>Decrease Opacity</Name>
     <Description>Decreases the opacity of the foreground window by 5%.</Description>
   </HotKeyAction>
@@ -57,7 +66,7 @@
         <Key>I</Key>
       </KeyCombo>
     </Combos>
-    <Enabled>true</Enabled>
+    <Enabled>false</Enabled>
     <Name>Make Invisible</Name>
     <Description>Makes the foreground window invisible.</Description>
   </HotKeyAction>
@@ -68,7 +77,7 @@
         <Key>O</Key>
       </KeyCombo>
     </Combos>
-    <Enabled>true</Enabled>
+    <Enabled>false</Enabled>
     <Name>Make Opaque</Name>
     <Description>Makes the foreground window completely visible.</Description>
   </HotKeyAction>
