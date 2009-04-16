@@ -7,13 +7,23 @@
     <Description>This action will get the current foreground window and move it to the next screen. If there is only one screen, it will not move the window.</Description>
   </HotKeyAction>
   <HotKeyAction xsi:type="RestoreUpAction">
-    <Combos />
+    <Combos>
+      <KeyCombo>
+        <Modifiers>Win</Modifiers>
+        <Key>Up</Key>
+      </KeyCombo>
+    </Combos>
     <Enabled>true</Enabled>
     <Name>Restore Window Up</Name>
     <Description>If the window is minimized, this action will set the window state to normal placing it in it's normal location and size. If it's in the normal state, the window will be maximized.</Description>
   </HotKeyAction>
   <HotKeyAction xsi:type="RestoreDownAction">
-    <Combos />
+    <Combos>
+      <KeyCombo>
+        <Modifiers>Win</Modifiers>
+        <Key>Down</Key>
+      </KeyCombo>
+    </Combos>
     <Enabled>true</Enabled>
     <Name>Restore Window Down</Name>
     <Description>If the window is maximized, this action will set the window state to normal placing it in it's normal location and size. If it's in the normal state, the window will be minimized.</Description>
