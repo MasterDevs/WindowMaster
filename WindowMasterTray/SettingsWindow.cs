@@ -231,5 +231,11 @@ namespace WindowMasterLib {
 		private void bCancel_Click(object sender, EventArgs e) {
 			Hide();
 		}
+
+		private void SettingsWindow_HelpButtonClicked(object sender, CancelEventArgs e) {
+			About a = new About();
+			a.ShowDialog();
+			e.Cancel = true;
+		}
 	}
 }

@@ -121,11 +121,19 @@ namespace WindowMasterLib {
 			return false;
 		}
 
+		/// <summary>
+		/// Registers a hotkey with the static window instance.
+		/// </summary>
+		/// <param name="handler">Reference to delegate that will be called when hotkey is pressed</param>
+		/// <returns>true if teh hotkey was succesfully registered</returns>
 		public static bool RegisterHotKey(Modifiers modfiers, Keys key, EventHandler<KeyPressedEventArgs> handler) {
 			KeyCombo kc = new KeyCombo(modfiers, key);
 			return RegisterHotKey(kc, handler);
 		}
 
+		/// <summary>
+		/// Unregisters a hotkey
+		/// </summary>
 		public static void UnRegisterHotKey(KeyCombo kc) {
 			if (StaticKeyCombos.ContainsKey(kc)) {
 				StaticKeyCombos.Remove(kc);
@@ -133,12 +141,16 @@ namespace WindowMasterLib {
 				StaticComboIDs.Remove(kc);
 			}
 		}
-
+		/// <summary>
+		/// Unregisters a hotkey
+		/// </summary>
 		public static void UnRegisterHotKey(Modifiers modifer, Keys key) {
 			KeyCombo kc = new KeyCombo(modifer, key);
 			UnRegisterHotKey(kc);
 		}
-
+		/// <summary>
+		/// Unregisters all hotkeys assigned to the static window
+		/// </summary>
 		public static void UnRegisterAllHotKeys() {
 			foreach (KeyCombo kc in StaticComboIDs.Keys) {
 				UnRegisterHotKey(kc);
@@ -172,6 +184,9 @@ namespace WindowMasterLib {
 				return false;
 		}
 
+		/// <summary>
+		/// Unregisters the hotkey
+		/// </summary>
 		public void UnRegister(Modifiers modifers, Keys key) {
 			KeyCombo combo = new KeyCombo(modifers, key);
 			int hotkeyID = -1;
@@ -267,28 +282,5 @@ namespace WindowMasterLib {
 		Control = 2,
 		Shift = 4,
 		Win = 8
-	}
-
-	public static class ModifierKeysExtension {
-		public static string ToString(this Modifiers mk, int mode) {
-			string x = string.Empty;
-			if (mode == 0) {
-				if (((Modifiers.Win & mk) == Modifiers.Win)) {
-					x += "Win+";
-				}
-				if ((Modifiers.Alt & mk) == Modifiers.Alt) {
-					x += "Alt+";
-				}
-				if ((Modifiers.Control & mk) == Modifiers.Control) {
-					x += "Control+";
-				}
-				if (((Modifiers.Shift & mk) == Modifiers.Shift)) {
-					x += "Shift+";
-				}
-			} else
-				x = "Test";
-
-			return x;
-		}
 	}
 }

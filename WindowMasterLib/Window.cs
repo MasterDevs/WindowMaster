@@ -111,17 +111,14 @@ namespace WindowMasterLib {
 			//-- Get the screen we're currently on
 			Screen curScreen = Screens[GetScreenIndex(WindowHandle)];
 
-			//-- Determine if the window is Currently Maximized
+			//-- Get the current state of the window
 			WINDOWPLACEMENT wp = GetWindowPlacement();
-			uint windowState = wp.showCmd;
-			bool redraw = true;
-
+			uint windowStateBeforeMove = wp.showCmd;
+			
 			//-- Place window in normal mode if it's currently maximized
-			if (windowState == showCmd.Maximized) {
+			if (windowStateBeforeMove == showCmd.Maximized) {
 				wp.showCmd = showCmd.Normal;
-				//-- USE  --> wp.rcNormalPosition instead of GetClientRect when Maximized!
 				SetWindowPlacement(wp);
-				redraw = false;
 			}
 
 			//-- Initialize the Client & Screen bounds of our window
@@ -129,15 +126,12 @@ namespace WindowMasterLib {
 			GetWindowRect(WindowHandle, ref ScreenBounds);
 
 			//-- Initialize a point
-			POINT p = ClientBounds.Location;
+			POINT p = new POINT();
 
 			//-- Get the screen coordinates for the window
+			// and move it to this location
 			if (ClientToScreen(WindowHandle, ref p))
 				ClientBounds.MoveToLocation(p);
-
-			//-- Save Original CoOrdinates
-			int oldLeft = ClientBounds.Left;
-			int oldTop = ClientBounds.Top;
 
 			//-- Slide the window to the new screen adjusting the size & location 
 			// if the window is larger then the screen.
@@ -146,21 +140,22 @@ namespace WindowMasterLib {
 				new RECT(curScreen.WorkingArea),
 				new RECT(toScr.WorkingArea), true);
 
+			//-- Get the new bounds in Screen Coordinates
+			r.Translate(ClientBounds, ScreenBounds);	
+
 			//-- If we started off maximized, let's finish that way
-			if (windowState == showCmd.Maximized) {
-				//-- Place window in Normal Mode on new screen
-				wp.showCmd = showCmd.Normal;
-				// ??? --> wp.rcNormalPosition = RECT.Translate(r, ScreenBounds, ClientBounds);
+			if (windowStateBeforeMove == showCmd.Maximized) {
+				//-- Set the windows normal position to exist on the new screen
+				// that way if the window is restored, it will be restored on the new screen
+				// not the old screen
 				wp.rcNormalPosition = r;
-				//wp.ptMaxPosition = new POINT(toScr.WorkingArea.X, toScr.WorkingArea.Y);
-				SetWindowPlacement(wp);
-				//-- Now Maximize to finish move
+				//-- Set the showCmd to Maximized as that was the state of the window
+				// before the move.
 				wp.showCmd = showCmd.Maximized;
+				//-- Set the new window placement.
 				SetWindowPlacement(wp);
 			} else {
-				//-- Get the new Rectangle in Screen Bounds
-				r.Translate(ClientBounds, ScreenBounds);
-				MoveWindow(WindowHandle, r.Left, r.Top, r.Width, r.Height, redraw);
+				MoveWindow(WindowHandle, r.Left, r.Top, r.Width, r.Height, true);
 			}
 		}
 
@@ -179,17 +174,16 @@ namespace WindowMasterLib {
 			if (wp.showCmd == showCmd.Normal) {
 				//-- Check if we're stretched
 				RECT curScreen = new RECT(Screen.AllScreens[GetScreenIndex(WindowHandle)].WorkingArea);
-				if (curScreen.Width <= wp.rcNormalPosition.Width) { //-- If we're stretched, restore to 2/3
+				if (wp.rcNormalPosition.Width == curScreen.Width) { //-- If we're stretched, restore to 2/3
 					wp.rcNormalPosition.Left = curScreen.Left + (curScreen.Width / 6);
 					wp.rcNormalPosition.Right = wp.rcNormalPosition.Left + (curScreen.Width / 3 * 2);
 					return SetWindowPlacement(wp);
 				} else { //-- Stretch
-					wp.rcNormalPosition.Left = curScreen.Left;
-					wp.rcNormalPosition.Right = curScreen.Right;
-					return SetWindowPlacement(wp);
+					MoveWindow(WindowHandle, curScreen.Left, wp.rcNormalPosition.Top, curScreen.Width, wp.rcNormalPosition.Height, true);
+					return true;
 				}
 			}
-			return false;
+			return false; //-- Window is either Maximized or Minimized
 		}
 
 		public bool StretchVertically() {
@@ -201,17 +195,16 @@ namespace WindowMasterLib {
 				RECT curScreen = new RECT(Screen.AllScreens[GetScreenIndex(WindowHandle)].WorkingArea);
 				
 				//-- Check if we're stretched
-				if (curScreen.Height <= wp.rcNormalPosition.Height) { //-- If we're stretched, restore to 2/3
-					wp.rcNormalPosition.Top = curScreen.Top+ (curScreen.Height/ 6);
+				if (wp.rcNormalPosition.Height == curScreen.Height) { //-- If we're stretched, restore to 2/3
+					wp.rcNormalPosition.Top = curScreen.Top + (curScreen.Height/ 6);
 					wp.rcNormalPosition.Bottom = wp.rcNormalPosition.Top + (curScreen.Height / 3 * 2);
 					return SetWindowPlacement(wp);
 				} else { //-- Stretch
-					wp.rcNormalPosition.Top = curScreen.Top;
-					wp.rcNormalPosition.Bottom = curScreen.Bottom;
-					return SetWindowPlacement(wp);
+					MoveWindow(WindowHandle, wp.rcNormalPosition.Left, curScreen.Top, wp.rcNormalPosition.Width, curScreen.Height, true);
+					return true;
 				}
 			}
-			return false;
+			return false; //-- Window is either Maximized or Minimized
 		}
 		
 		

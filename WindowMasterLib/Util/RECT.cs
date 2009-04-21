@@ -78,7 +78,7 @@ namespace WindowMasterLib.Util {
 		/// <summary>
 		/// Returns a new RECT that will have the same dimensions
 		/// as the parameter r but have it's top left corner at
-		/// parameter lcoation
+		/// parameter location
 		/// <remarks>This doesn't actually alter the parameter r. It
 		/// simply creates a new rectangle that would represent what r would
 		/// look like if it was moved to the new location</remarks>

@@ -145,7 +145,7 @@
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-			this.ClientSize = new System.Drawing.Size(479, 230);
+			this.ClientSize = new System.Drawing.Size(479, 226);
 			this.Controls.Add(this.bCancel);
 			this.Controls.Add(this.bApply);
 			this.Controls.Add(this.tbActionDescription);
@@ -153,6 +153,7 @@
 			this.Controls.Add(this.groupBox1);
 			this.Controls.Add(this.bOK);
 			this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
+			this.HelpButton = true;
 			this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
 			this.KeyPreview = true;
 			this.MaximizeBox = false;
@@ -164,6 +165,7 @@
 			this.SizeGripStyle = System.Windows.Forms.SizeGripStyle.Hide;
 			this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
 			this.Text = "WindowMaster Settings";
+			this.HelpButtonClicked += new System.ComponentModel.CancelEventHandler(this.SettingsWindow_HelpButtonClicked);
 			this.VisibleChanged += new System.EventHandler(this.SettingsWindow_VisibleChanged);
 			this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.SettingsWindow_FormClosing);
 			this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.SettingsWindow_KeyDown);

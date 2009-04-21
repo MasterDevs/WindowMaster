@@ -23,13 +23,18 @@ namespace WindowMasterLib {
 		static SettingsWindow settings;
 		static NotifyIcon notify;
 		static ContextMenu cm;
+		static MenuItem miAbout;
 		static MenuItem miSettings;
 		static MenuItem miClose;
-
+		
 		static void InitItems() {
 			miSettings = new MenuItem();
 			miSettings.Text = "Settings";
 			miSettings.Click += new EventHandler(miSettings_Click);
+
+			miAbout = new MenuItem();
+			miAbout.Text = "About";
+			miAbout.Click += new EventHandler(miAbout_Click);
 
 			miClose = new MenuItem();
 			miClose.Text = "Exit";
@@ -37,6 +42,7 @@ namespace WindowMasterLib {
 
 			cm = new ContextMenu();
 			cm.MenuItems.Add(miSettings);
+			cm.MenuItems.Add(miAbout);
 			cm.MenuItems.Add(miClose);
 			cm.Name = "cm";
 
@@ -47,6 +53,11 @@ namespace WindowMasterLib {
 			notify.DoubleClick += new EventHandler(miSettings_Click);
 
 			notify.Text = "Window Master";
+		}
+
+		static void miAbout_Click(object sender, EventArgs e) {
+			About a = new About();
+			a.ShowDialog();
 		}
 
 		static void miClose_Click(object sender, EventArgs e) {
