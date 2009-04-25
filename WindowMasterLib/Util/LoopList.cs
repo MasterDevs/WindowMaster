@@ -14,6 +14,9 @@ namespace WindowMasterLib.Util {
 	/// <typeparam name="T">Type of object that will be contained in the list</typeparam>
 	public class LoopList<T> : List<T> {
 
+		/// <summary>
+		/// Gets or Sets the current index of the list
+		/// </summary>
 		public int CurrentIndex { get; set; }
 
 		public LoopList() {
@@ -47,6 +50,9 @@ namespace WindowMasterLib.Util {
 			}
 		}
 
+		/// <summary>
+		/// Returns the current item in the list
+		/// </summary>
 		public T Current { get { return this[CurrentIndex]; } }
 
 		/// <summary>

@@ -65,6 +65,7 @@
     </Compile>
     <Compile Include="Actions\ActionManager.cs" />
     <Compile Include="Actions\HotKeyActions\ChangeOpacityAction.cs" />
+    <Compile Include="Actions\HotKeyActions\DockAndMoveWindowAction.cs" />
     <Compile Include="Actions\HotKeyActions\DockWindowAction.cs" />
     <Compile Include="Actions\HotKeyActions\MakeInvisibleAction.cs" />
     <Compile Include="Actions\HotKeyActions\MakeOpaqueAction.cs" />
@@ -74,8 +75,7 @@
     <Compile Include="Actions\HotKeyActions\RestoreDownAction.cs" />
     <Compile Include="Actions\HotKeyActions\RestoreUpAction.cs" />
     <Compile Include="Actions\HotKeyActions\RestoreWindowAction.cs" />
-    <Compile Include="Actions\HotKeyActions\StretchHorizontallyAction.cs" />
-    <Compile Include="Actions\HotKeyActions\StretchVerticallyAction.cs" />
+    <Compile Include="Actions\HotKeyActions\StretchWindowAction.cs" />
     <Compile Include="HotKeyForm.cs">
       <SubType>Form</SubType>
     </Compile>

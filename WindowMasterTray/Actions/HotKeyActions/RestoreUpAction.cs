@@ -8,13 +8,11 @@ namespace WindowMasterLib.Actions.HotKeyActions {
 	public class RestoreUpAction : HotKeyAction {
 
 		protected override void ActionMethod(object sender, EventArgs args) {
-			uint state = Window.ForeGroundWindow.GetWindowPlacement().showCmd;
-
-			if (state == showCmd.Minimized) {
-				Window.ForeGroundWindow.SetWindowPlacement(showCmd.Normal);
-			} else if (state == showCmd.Normal) {
-				Window.ForeGroundWindow.SetWindowPlacement(showCmd.Maximized);
-			}
+			Window w = Window.ForeGroundWindow;
+			if(w.WindowState == WindowState.Minimized)
+				w.Restore();
+			else if(w.WindowState == WindowState.Normal)
+				w.Maximize();
 		}
 
 		public RestoreUpAction() {

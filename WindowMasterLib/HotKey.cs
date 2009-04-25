@@ -9,8 +9,6 @@ using System.Windows.Forms;
  * Special thanks to http://www.liensberger.it/web/blog/?p=207
  * for the shell of this code.
  *************************************************************/
-
-
 namespace WindowMasterLib {
 	[Serializable]
 	public sealed class HotKey : IDisposable {

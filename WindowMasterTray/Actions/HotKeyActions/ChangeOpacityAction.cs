@@ -24,7 +24,7 @@ namespace WindowMasterLib.Actions.HotKeyActions {
 		}
 
 		protected override void ActionMethod(object sender, EventArgs args) {
-			Window.ForeGroundWindow.IncreaseOpacity(Percentage);
+			Window.ForeGroundWindow.ChangeOpacity(Percentage);
 		}
 
 		public ChangeOpacityAction () {

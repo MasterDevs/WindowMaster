@@ -36,6 +36,7 @@ namespace WindowMasterLib.Actions {
 			get {
 				List<Type> aTypes = new List<Type>();
 				aTypes.Add(typeof(ChangeOpacityAction));
+				aTypes.Add(typeof(DockAndMoveWindowAction)); 
 				aTypes.Add(typeof(DockWindowAction));
 				aTypes.Add(typeof(MakeInvisibleAction));
 				aTypes.Add(typeof(MakeOpaqueAction));
@@ -45,8 +46,7 @@ namespace WindowMasterLib.Actions {
 				aTypes.Add(typeof(RestoreDownAction));
 				aTypes.Add(typeof(RestoreUpAction));
 				aTypes.Add(typeof(RestoreWindowAction));
-				aTypes.Add(typeof(StretchHorizontallyAction));
-				aTypes.Add(typeof(StretchVerticallyAction));
+				aTypes.Add(typeof(StretchWindowAction));
 				return aTypes.ToArray();
 			}
 		}

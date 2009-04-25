@@ -8,13 +8,11 @@ namespace WindowMasterLib.Actions.HotKeyActions {
 	public class RestoreDownAction : HotKeyAction {
 
 		protected override void ActionMethod(object sender, EventArgs args) {
-			uint state = Window.ForeGroundWindow.GetWindowPlacement().showCmd;
-
-			if (state == showCmd.Maximized) {
-				Window.ForeGroundWindow.SetWindowPlacement(showCmd.Normal);
-			} else if (state == showCmd.Normal) {
-				Window.ForeGroundWindow.SetWindowPlacement(showCmd.Minimized);
-			}
+			Window w = Window.ForeGroundWindow;
+			if (w.WindowState == WindowState.Maximized)
+				w.Restore();
+			else if (w.WindowState == WindowState.Normal)
+				w.Minimize();
 		}
 
 		public RestoreDownAction() {
