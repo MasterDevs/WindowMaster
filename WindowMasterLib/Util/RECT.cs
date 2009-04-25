@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Runtime.InteropServices;
 using System.Diagnostics;
+using System.Windows.Forms;
+using System.Drawing;
 
 namespace WindowMasterLib.Util {
 	
@@ -163,9 +165,112 @@ namespace WindowMasterLib.Util {
 			return new RECT(left, top, right, bottom);
 		}
 
+		/// <summary>
+		/// This method will move the window from it's current location
+		/// to a new location. The window will be repositioned such that the
+		/// ratio of the distance between the RECT edges and the from
+		/// RECT edges are equal to the distance between the RECT edges
+		/// and the to RECT edges.
+		/// <param name="preserveSize">When true, the rectangle will be moved, but it's size
+		/// will remain the same as before. The rectangle will be positioned based
+		/// on the Top, Left corner and it's original height and width will extend from
+		/// the relocated Top, Left point</param>
+		/// </summary>
+		public void Relocate(RECT from, RECT to, bool preserveSize) {
+			ReInit(Relocate(this, from, to, preserveSize));
+		}
 
+		private static RECT Relocate(RECT r, RECT from, RECT to, bool preserveSize) {
+			//-- Find Height & Width Multiplier
+			double height = (double)to.Height / (double)from.Height;
+			double width = (double)to.Width / (double)from.Width;
+
+
+			//-- Calculate the new location of the window
+			int left = to.Left + (int)((r.Left - from.Left) * width);
+			int right = to.Right - (int)((from.Right - r.Right) * width);
+			int top = to.Top + (int)((r.Top - from.Top) * height);
+			int bottom = to.Bottom - (int)((from.Bottom - r.Bottom) * height);
+
+			//-- Calculate Reverse Ratios
+			height = (double)from.Height / (double)to.Height;
+			width = (double)from.Width / (double)to.Width;
+
+			//-- Calculate position if the window were to be moved back. 
+			//-- Use ceiling to determine if a pixel differnce would occur 
+			//   as casting from Double to INT is essentially a floor.
+			int revLeft = from.Left + (int)Math.Ceiling((left - to.Left) * width);
+			int revRight = from.Right - (int)Math.Ceiling((to.Right - right) * width);
+			int revTop = from.Top + (int)Math.Ceiling((top - to.Top) * height);
+			int revBottom = from.Bottom - (int)Math.Ceiling((to.Bottom - bottom) * height);
+
+			//-- ReAdjust Left
+			if (revLeft > r.Left) left -= 1;
+			else if (revLeft < r.Left) left += 1;
+
+			//-- ReAdjust Bottom
+			if (revBottom > r.Bottom) bottom -= 1;
+			else if (revBottom < r.Bottom) bottom += 1;
+
+			//-- ReAdjust Top
+			if (revTop > r.Top) top -= 1;
+			else if (revTop < r.Top) top += 1;
+
+			//-- ReAdjust Right
+			if (revRight > r.Right) right -= 1;
+			else if (revRight < r.Right) right += 1;
+
+			//-- Create the new rectangle
+			RECT ret = new RECT(left, top, right, bottom);
+
+			//-- ReAdjust the size if we are preserving it.
+			if (preserveSize) {
+				ret.Right = ret.Left + r.Width;
+				ret.Bottom = ret.Top + r.Height;
+			}
+
+			//-- Return the newly relocated rectangle
+			return ret;
+		}
+ 
+		public void PlaceInisde(RECT r) {
+			Left = Left < r.Left ? r.Left : Left;
+			Right = Right > r.Right ? r.Right : Right;
+			Top = Top < r.Top ? r.Top : Top; 
+			Bottom = Bottom > r.Bottom ? r.Bottom : Bottom;
+		}
+
+		public static RECT GetDockedRECT(RECT container, DockStyle ds, double percentage) {
+			RECT rect = container;
+			int height = (int)((double)container.Height * percentage);
+			int width = (int)((double)container.Width * percentage);
+			switch (ds) {
+				case DockStyle.Bottom:
+					rect.Top = container.Bottom - height;;
+					break;
+				case DockStyle.Fill:
+					rect = container;
+					break;
+				case DockStyle.Left:
+					rect.Right = container.Left + width;
+					break;
+				case DockStyle.Right:
+					rect.Left = container.Right - width;
+					break;
+				case DockStyle.Top:
+					rect.Bottom = container.Top + height;
+					break;
+				case DockStyle.None:
+				default:
+					break;
+			}
+			return rect;
+		}
+
+
+		#region Overrides
 		public override string ToString() {
-			return string.Format("{X {0} Y {1} Width {2} Height {3} }", Top, Left, Width, Height);
+			return string.Format("X {0} Y {1} Width {2} Height {3} ", Left, Top, Width, Height);
 		}
 
 		public override int GetHashCode() {
@@ -174,12 +279,53 @@ namespace WindowMasterLib.Util {
 				^ ((Height << 7) | (Height >> 0x19));
 		}
 
-		public void PlaceInisde(RECT r) {
-			Left = Left < r.Left ? r.Left : Left;
-			Right = Right > r.Right ? r.Right : Right;
-			Top = Top < r.Top ? r.Top : Top; 
-			Bottom = Bottom > r.Bottom ? r.Bottom : Bottom;
+		private static bool CompareValues(RECT a, RECT b) {
+			return a.Top == b.Top && a.Bottom == b.Bottom && a.Left == b.Left && a.Right == b.Right;
 		}
+		private bool CompareValues(RECT r) {
+			return CompareValues(this, r);
+		}
+		public override bool Equals(object obj) {
+			if (obj == null)
+				return false;
+
+			return obj is RECT && Equals((RECT)obj);
+		}
+
+		public bool Equals(RECT r) {
+			if ((object)r == null)
+				return false;
+
+			return CompareValues(r);
+		}
+
+		public bool Equals(Rectangle r) {
+			if((object)r == null)
+				return false;
+
+			RECT rect = new RECT(r);
+			return this.Equals(rect);
+		}
+
+		public static bool operator ==(RECT a, RECT b) {
+			// If both are null, or both are teh same instance, return true
+			if (object.ReferenceEquals(a, b))
+				return true;
+
+			// If one is null, but not both, return false
+			if (((object)a == null) || (object)b == null)
+				return false;
+
+			// Return true only if all parameters are equal
+			return CompareValues(a, b);
+		}
+
+		public static bool operator !=(RECT a, RECT b) {
+			return !(a == b);
+		}
+
+		#endregion
+
 	}
 
 }

@@ -3,12 +3,14 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using WindowMasterLib;
+using System.ComponentModel;
 
 namespace WindowMasterLib {
 	[Serializable]
 	public abstract class HotKeyAction {
 
 		private List<KeyCombo> _Combos;
+		[Browsable(false)]
 		public KeyCombo[] Combos {
 			get { return _Combos.ToArray(); }
 			set {
@@ -25,6 +27,7 @@ namespace WindowMasterLib {
 		/// When value is set to true, all current hotkeys are registerd.
 		/// <para>When value is set to false, all current hotkeys are unregistered.</para>
 		/// </summary>
+		[Browsable(true),Description("When set to true, the hotkey will be registered and the action will be performed whenever the hotkey is pressed")]
 		public bool Enabled {
 			get {
 				return _Enabled;
@@ -40,17 +43,31 @@ namespace WindowMasterLib {
 		/// <summary>
 		/// Consise name of the action
 		/// </summary>
+		[Browsable(true)]
 		public string Name { get; set; }
 		/// <summary>
 		/// Explains the function of the action
 		/// </summary>
+		[Browsable(false)]
 		public string Description { get; set; }
 		/// <summary>
 		/// When overridden in a derived class, this method will be called
 		/// when any of the HotKeys are pressed.
 		/// </summary>
 		protected abstract void ActionMethod(object sender, EventArgs args);
-		
+		/// <summary>
+		/// When overridden in a base class, this method will set all derived
+		/// class properties of the calling instance to the values
+		/// of the parameter.
+		/// </summary>
+		/// <param name="action">Must be the derived type</param>
+		public virtual void Initialize(HotKeyAction action) {
+			if (action != null) {
+				Enabled = action.Enabled;
+				Name = action.Name;
+			}
+		}
+
 		public HotKeyAction() {
 			_Combos = new List<KeyCombo>();
 			Name = string.Empty;

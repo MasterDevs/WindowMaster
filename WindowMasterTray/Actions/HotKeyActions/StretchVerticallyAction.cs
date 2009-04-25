@@ -13,7 +13,7 @@ namespace WindowMasterLib.Actions.HotKeyActions {
 
 		public StretchVerticallyAction() {
 			Name = "Stretch Window Vertically";
-			Description = "If the foreground window is in normal position, it will stretch it's height to fill the screen. If pressed again, it will restore the height to 2 /3 of the screen.";
+			Description = "If the foreground window is in normal position, it will stretch it's height to fill the screen. If pressed again, it will restore the window to its location before the stretch.";
 		}
 
 		public StretchVerticallyAction(KeyCombo hotKey)

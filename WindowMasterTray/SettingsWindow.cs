@@ -34,11 +34,10 @@ namespace WindowMasterLib {
 		private void LoadActions() {
 			//-- Start from Scratch
 			RemoveAllHotKeys();
+
 			
 			//-- Initialize Actions
 			Actions = ActionManager.LoadActions(ConfigPath);
-			//Actions.Add(new StretchHorizontallyAction(new KeyCombo(Modifiers.Win, Keys.H)));
-			//Actions.Add(new StretchVerticallyAction(new KeyCombo(Modifiers.Win, Keys.V)));
 			      
 			//-- Add Actions to the Actions List Box
 			lbActions.Items.Clear();
@@ -59,7 +58,43 @@ namespace WindowMasterLib {
 		/// Saves the actions to the Config File
 		/// </summary>
 		private void SaveActions() { ActionManager.SaveActions(Actions, ConfigPath); }
-		
+
+		/// <summary>
+		/// Unregisters all current hotkeys
+		/// </summary>
+		private void RemoveAllHotKeys() {
+			if (Actions != null)
+				foreach (HotKeyAction a in Actions)
+					a.RemoveAllHotKeys();
+		}
+
+		/// <summary>
+		/// Refreshes the HotKeys List Box
+		/// </summary>
+		private void RefreshHotKeys() {
+			if (SelectedAction != null)
+				Combos = SelectedAction.Combos;
+			else
+				Combos = new KeyCombo[0];
+			lbHotKeys.DataSource = Combos;
+		}
+
+		/// <summary>
+		/// Displays a message to the user that there have been changes made,
+		/// but they haven't been saved. The user can then save those changes
+		/// or not save the changes.
+		/// </summary>
+		private DialogResult PromptForSave() {
+			DialogResult dr = MessageBox.Show("You have modified some actions. Do you want to save your actions?", "Actions not saved!", MessageBoxButtons.YesNoCancel, MessageBoxIcon.Warning);
+			if (dr == DialogResult.Yes) {
+				SaveActions();
+			}
+
+			return dr;
+		}
+
+		#region Form Events
+
 		/// <summary>
 		/// Ensures that we're only hiding the form. The only time
 		/// we'll close the form is when the CloseReason is ApplicationExitCall.
@@ -67,6 +102,10 @@ namespace WindowMasterLib {
 		private void SettingsWindow_FormClosing(object sender, FormClosingEventArgs e) {
 			//-- Only close this form if we are exiting. Else, we'll hide it.
 			if (e.CloseReason != CloseReason.ApplicationExitCall) {
+				if (bApply.Enabled) {
+					DialogResult dr = PromptForSave();
+					if (dr == DialogResult.Cancel) return;
+				}
 				Hide();
 				e.Cancel = true;
 			}
@@ -87,33 +126,53 @@ namespace WindowMasterLib {
 				//-- Remove All Actions, in case some have been changed
 				RemoveAllHotKeys();
 
-				//-- Don't enable this button when nothing is selected
+				//-- Don't enable these buttons when nothing is selected
 				bDeleteHotKey.Enabled = false;
+				bModifyAction.Enabled = false;
+				bRemoveAction.Enabled = false;
 				//-- Load Actions from ConfigFile
 				Actions = ActionManager.LoadActions(ConfigPath);
 			}
 		}
 
 		/// <summary>
-		/// Unregisters all current hotkeys
+		/// If Escape is pressed, the form will be hidden.
 		/// </summary>
-		private void RemoveAllHotKeys() {
-			if (Actions != null) 
-				foreach (HotKeyAction a in Actions)
-					a.RemoveAllHotKeys();
+		private void SettingsWindow_KeyDown(object sender, KeyEventArgs e) {
+			if (e.KeyCode == Keys.Escape) {
+				e.Handled = true;
+				if (bApply.Enabled) {
+					DialogResult dr = PromptForSave();
+					if (dr == DialogResult.Cancel) return;
+				}
+				Hide();
+			}
 		}
-        	
+
+		/// <summary>
+		/// Shows the About form
+		/// </summary>
+		private void SettingsWindow_HelpButtonClicked(object sender, CancelEventArgs e) {
+			About a = new About();
+			a.ShowDialog();
+			e.Cancel = true;
+		}
+
+		#endregion
+
+		#region ListBoxes Actions
+
 		/// <summary>
 		/// Populates the Description Text & HotKeys List Box when we change
 		/// the selected action.
 		/// </summary>
 		private void lbActions_SelectedIndexChanged(object sender, EventArgs e) {
 			if (lbActions.SelectedItem != null) {
-				
+
 				//-- Populate lbHotKeys
 				HotKeyAction a = (HotKeyAction)lbActions.SelectedItem;
 				Combos = a.Combos;
-				
+
 				//-- Set description text
 				tbActionDescription.Text = a.Description;
 
@@ -122,19 +181,88 @@ namespace WindowMasterLib {
 				//-- Initialize Add / Delete HotKey Buttons
 				bAddHotKey.Enabled = true;
 				bDeleteHotKey.Enabled = HasKeyCombo;
+
+				//-- Enable Modify & Remove Buttons
+				bModifyAction.Enabled = true;
+				bRemoveAction.Enabled = true;
 			}
 
 		}
 
 		/// <summary>
-		/// Refreshes the HotKeys List Box
+		/// Launches the HotKeyForm with the current hotkey passed
+		/// into it's constructor. If the form's dialog result
+		/// is OK, it'll change the old hotkey with the new one.
 		/// </summary>
-		private void RefreshHotKeys() {
-			if (SelectedAction != null)
-				Combos = SelectedAction.Combos;
-			else
-				Combos = new KeyCombo[0];
-			lbHotKeys.DataSource = Combos;
+		private void lbHotKeys_DoubleClick(object sender, EventArgs e) {
+			if (lbHotKeys.SelectedItem != null) {
+				KeyCombo oldKC = SelectedCombo;
+				HotKeyForm hkf = new HotKeyForm(oldKC);
+				DialogResult result = hkf.ShowDialog();
+				if (result == DialogResult.OK) {
+					SelectedAction.ChangeHotKey(oldKC, hkf.HotKey, false);
+					RefreshHotKeys();
+					bApply.Enabled = true;
+				}
+				hkf.Dispose();
+			}
+		}
+
+		/// <summary>
+		/// Sets the HotKeyAction.Enabled value to the new checkbox value
+		/// </summary>
+		private void lbActions_ItemCheck(object sender, ItemCheckEventArgs e) {
+			if (SelectedAction != null) {
+				SelectedAction.Enabled = (e.NewValue == CheckState.Checked) ? true : false;
+				bApply.Enabled = true;
+			}
+		}
+
+		#endregion
+
+		#region Button Events
+		/// <summary>
+		/// Launches a new form that will allow a user to define a new action
+		/// and add it to the actions list.
+		/// </summary>
+		private void bAddAction_Click(object sender, EventArgs e) {
+			ActionForm af = new ActionForm();
+			DialogResult dr = af.ShowDialog();
+			if (dr == DialogResult.OK) {
+				Actions.Add(af.Action);
+				lbActions.Items.Add(af.Action);
+				lbActions.SetItemChecked(lbActions.Items.Count - 1, af.Action.Enabled);
+				bApply.Enabled = true;
+			}
+			af.Dispose();
+		}
+
+		/// <summary>
+		/// Opens up the action form to modify the setting for the
+		/// selected action
+		/// </summary>
+		private void bModify_Click(object sender, EventArgs e) {
+			ActionForm af = new ActionForm(SelectedAction);
+			DialogResult dr = af.ShowDialog();
+			if (dr == DialogResult.OK) {
+				//-- Update Checked state
+				int index = lbActions.SelectedIndex;
+				lbActions.SetItemChecked(index, SelectedAction.Enabled);
+				tbActionDescription.Text = SelectedAction.Description;
+				lbActions.Refresh();
+				bApply.Enabled = true;
+			}
+			af.Dispose();
+		}
+
+		/// <summary>
+		/// Removes the selected action
+		/// </summary>
+		private void bRemoveAction_Click(object sender, EventArgs e) {
+			SelectedAction.RemoveAllHotKeys();
+			Actions.Remove(SelectedAction);
+			lbActions.Items.Remove(SelectedAction);
+			bApply.Enabled = true;
 		}
 
 		/// <summary>
@@ -169,46 +297,7 @@ namespace WindowMasterLib {
 			bApply.Enabled = true;
 		}
 
-		/// <summary>
-		/// Launches the HotKeyForm with the current hotkey passed
-		/// into it's constructor. If the form's dialog result
-		/// is OK, it'll change the old hotkey with the new one.
-		/// </summary>
-		private void lbHotKeys_DoubleClick(object sender, EventArgs e) {
-			if (lbHotKeys.SelectedItem != null) {
-				KeyCombo oldKC = SelectedCombo;
-				HotKeyForm hkf = new HotKeyForm(oldKC);
-				DialogResult result = hkf.ShowDialog();
-				if (result == DialogResult.OK) {
-					SelectedAction.ChangeHotKey(oldKC, hkf.HotKey, false);
-					RefreshHotKeys();
-					bApply.Enabled = true;
-				}
-				hkf.Dispose();
-			}
-		}
-		
-		/// <summary>
-		/// Sets the HotKeyAction.Enabled value to the new checkbox value
-		/// </summary>
-		private void lbActions_ItemCheck(object sender, ItemCheckEventArgs e) {
-			if (SelectedAction != null) {
-				SelectedAction.Enabled = (e.NewValue == CheckState.Checked) ? true : false;
-				bApply.Enabled = true;
-			}
-		}
 
-		/// <summary>
-		/// If Escape is pressed, the form will be hidden.
-		/// </summary>
-		private void SettingsWindow_KeyDown(object sender, KeyEventArgs e) {
-			if (e.KeyCode == Keys.Escape) {
-				e.Handled = true;
-				Hide();
-			}
-		}
-
-		
 		/// <summary>
 		/// Saves the actions to the config file and hides the form.
 		/// </summary>
@@ -216,7 +305,7 @@ namespace WindowMasterLib {
 			SaveActions();
 			Hide();
 		}
-	
+
 		/// <summary>
 		/// Saves the actions to the config file.
 		/// </summary>
@@ -229,13 +318,14 @@ namespace WindowMasterLib {
 		/// Hides the form.
 		/// </summary>
 		private void bCancel_Click(object sender, EventArgs e) {
+			if (bApply.Enabled) {
+				DialogResult dr = PromptForSave();
+				if (dr == DialogResult.Cancel) return;
+			}
 			Hide();
 		}
 
-		private void SettingsWindow_HelpButtonClicked(object sender, CancelEventArgs e) {
-			About a = new About();
-			a.ShowDialog();
-			e.Cancel = true;
-		}
+
+		#endregion
 	}
 }

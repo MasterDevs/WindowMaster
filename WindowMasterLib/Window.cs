@@ -28,7 +28,13 @@ namespace WindowMasterLib {
 		internal static extern bool ScreenToClient(ref POINT lpPoint);
 
 		[DllImport("user32.dll", CharSet = CharSet.Auto, CallingConvention = CallingConvention.StdCall, ExactSpelling = true, SetLastError = true)]
+		internal static extern bool ScreenToClient(ref RECT lpRect);
+
+		[DllImport("user32.dll", CharSet = CharSet.Auto, CallingConvention = CallingConvention.StdCall, ExactSpelling = true, SetLastError = true)]
 		internal static extern bool ClientToScreen(IntPtr hwnd, ref POINT lpPoint);
+
+		[DllImport("user32.dll", CharSet = CharSet.Auto, CallingConvention = CallingConvention.StdCall, ExactSpelling = true, SetLastError = true)]
+		internal static extern bool ClientToScreen(ref RECT lpRect);
 
 		[DllImport("user32.dll", CharSet = CharSet.Auto, CallingConvention = CallingConvention.StdCall, ExactSpelling = true, SetLastError = true)]
 		internal static extern bool ClientToScreen(ref POINT lpPoint);
@@ -64,10 +70,21 @@ namespace WindowMasterLib {
 		private IntPtr WindowHandle;
 		private RECT ClientBounds;
 		private RECT ScreenBounds;
+		private RECT CurrentScreenWorkingArea {
+			get {
+				return new RECT(Screen.AllScreens[GetScreenIndex(WindowHandle)].WorkingArea);
+			}
+		}
 
 		private static LoopList<Screen> Screens;
+		private static Dictionary<IntPtr, RECT> VerticalStretches;
+		private static Dictionary<IntPtr, RECT> HorizontalStretches;
+		private static Dictionary<IntPtr, WINDOWPLACEMENT> Docks;
 
 		static Window() {
+			VerticalStretches = new Dictionary<IntPtr, RECT>();
+			HorizontalStretches = new Dictionary<IntPtr, RECT>();
+			Docks = new Dictionary<IntPtr, WINDOWPLACEMENT>();
 			Screens = new LoopList<Screen>(Screen.AllScreens.Length);
 			foreach (Screen s in Screen.AllScreens) {
 				Screens.Add(s);
@@ -102,15 +119,15 @@ namespace WindowMasterLib {
 
 		/// <summary>
 		/// This method will move a window from it's current screen
-		/// and place it into the toScr. The window is resized if it's too
-		/// large and the window is slid so that the entire window will be contained
-		/// within the bounds of toScr.
+		/// and place it into the toScr. The window is repositioned such
+		/// that the ratio of the space around it is relative to the
+		/// new screen.
+		/// <param name="preserveSize">When set to true, the window will be
+		/// relocated to the next screen then it's size will be reset to
+		/// it's original size based from the Top Left relocated corner</param>
 		/// </summary>
-		public void GoToScreen(Screen toScr) {
-
-			//-- Get the screen we're currently on
-			Screen curScreen = Screens[GetScreenIndex(WindowHandle)];
-
+		public void GoToScreen(Screen toScr, bool preserveSize) {
+			
 			//-- Get the current state of the window
 			WINDOWPLACEMENT wp = GetWindowPlacement();
 			uint windowStateBeforeMove = wp.showCmd;
@@ -121,74 +138,82 @@ namespace WindowMasterLib {
 				SetWindowPlacement(wp);
 			}
 
-			//-- Initialize the Client & Screen bounds of our window
-			GetClientRect(WindowHandle, ref ClientBounds);
+			//-- Initialize the Screen bounds of our window
 			GetWindowRect(WindowHandle, ref ScreenBounds);
 
-			//-- Initialize a point
-			POINT p = new POINT();
+			//-- Get the screen we're currently on
+			Screen curScreen = Screens[GetScreenIndex(WindowHandle)];
 
-			//-- Get the screen coordinates for the window
-			// and move it to this location
-			if (ClientToScreen(WindowHandle, ref p))
-				ClientBounds.MoveToLocation(p);
+			//-- Relocate the window to the other screen
+			ScreenBounds.Relocate(new RECT(curScreen.WorkingArea), new RECT(toScr.WorkingArea), preserveSize);
 
-			//-- Slide the window to the new screen adjusting the size & location 
-			// if the window is larger then the screen.
-			RECT r =
-				RECT.SlideInBounds(ClientBounds,
-				new RECT(curScreen.WorkingArea),
-				new RECT(toScr.WorkingArea), true);
-
-			//-- Get the new bounds in Screen Coordinates
-			r.Translate(ClientBounds, ScreenBounds);	
-
+			//-- Move & ReDraw the window
+			MoveWindow(WindowHandle,
+				ScreenBounds.Left, ScreenBounds.Top, ScreenBounds.Width, ScreenBounds.Height, true);
+			
 			//-- If we started off maximized, let's finish that way
 			if (windowStateBeforeMove == showCmd.Maximized) {
+
+				//GetClientRect(WindowHandle, ref ClientBounds);
+				GetWindowRect(WindowHandle, ref ScreenBounds);
+
 				//-- Set the windows normal position to exist on the new screen
 				// that way if the window is restored, it will be restored on the new screen
 				// not the old screen
-				wp.rcNormalPosition = r;
-				//-- Set the showCmd to Maximized as that was the state of the window
-				// before the move.
+				wp.rcNormalPosition = ScreenBounds;
+				//-- Set the showCmd to Maximized as that was the state of the window before the move.
 				wp.showCmd = showCmd.Maximized;
 				//-- Set the new window placement.
 				SetWindowPlacement(wp);
-			} else {
-				MoveWindow(WindowHandle, r.Left, r.Top, r.Width, r.Height, true);
-			}
+			} 
 		}
 
 		/// <summary>
 		/// Moves the window to the next screen. 
 		/// </summary>
-		public void MoveToNextScreen() {
-			Screens.CurrentIndex = GetScreenIndex(WindowHandle);
-			GoToScreen(Screens.Next);
+		public void MoveToNextScreen(bool preserveSize) {
+			if (Screens.Count > 1) {
+				Screens.CurrentIndex = GetScreenIndex(WindowHandle);
+				GoToScreen(Screens.Next, preserveSize);
+			}
 		}
 
-		public bool StretchHorizontally() {
+		public void StretchHorizontally() {
 			//-- Get Current Window Placement
 			WINDOWPLACEMENT wp = GetWindowPlacement();
+			GetWindowRect(WindowHandle, ref ScreenBounds);
 
+			//-- First make sure the window is in Normal Mode
 			if (wp.showCmd == showCmd.Normal) {
 				//-- Check if we're stretched
 				RECT curScreen = new RECT(Screen.AllScreens[GetScreenIndex(WindowHandle)].WorkingArea);
-				if (wp.rcNormalPosition.Width == curScreen.Width) { //-- If we're stretched, restore to 2/3
-					wp.rcNormalPosition.Left = curScreen.Left + (curScreen.Width / 6);
-					wp.rcNormalPosition.Right = wp.rcNormalPosition.Left + (curScreen.Width / 3 * 2);
-					return SetWindowPlacement(wp);
+				if (ScreenBounds.Width == curScreen.Width) { //-- If we're stretched, restore to 2/3
+					//-- Check if we stored the position before the stretch
+					if (HorizontalStretches.ContainsKey(WindowHandle)) {
+						ScreenBounds = HorizontalStretches[WindowHandle];
+						//-- Remove the key
+						HorizontalStretches.Remove(WindowHandle);
+					} else { //-- Set to default width of 2/3 screen width and center the window
+						ScreenBounds.Left = curScreen.Left + (curScreen.Width / 6);
+						ScreenBounds.Right = ScreenBounds.Left + (curScreen.Width / 3 * 2);
+					}
 				} else { //-- Stretch
-					MoveWindow(WindowHandle, curScreen.Left, wp.rcNormalPosition.Top, curScreen.Width, wp.rcNormalPosition.Height, true);
-					return true;
+					//-- Store Old Position
+					HorizontalStretches[WindowHandle] = ScreenBounds;
+
+					ScreenBounds.Left = curScreen.Left;
+					ScreenBounds.Right = curScreen.Right;
 				}
+				//-- RePosition the window
+				MoveWindow(WindowHandle, 
+					ScreenBounds.Left, ScreenBounds.Top, ScreenBounds.Width, ScreenBounds.Height, true);
 			}
-			return false; //-- Window is either Maximized or Minimized
 		}
 
-		public bool StretchVertically() {
+		public void StretchVertically() {
 			//-- Get Current Window Placement
 			WINDOWPLACEMENT wp = GetWindowPlacement();
+			GetWindowRect(WindowHandle, ref ScreenBounds);
 
 			//-- First make sure the window is in Normal Mode
 			if (wp.showCmd == showCmd.Normal) {
@@ -196,17 +221,53 @@ namespace WindowMasterLib {
 				
 				//-- Check if we're stretched
 				if (wp.rcNormalPosition.Height == curScreen.Height) { //-- If we're stretched, restore to 2/3
-					wp.rcNormalPosition.Top = curScreen.Top + (curScreen.Height/ 6);
-					wp.rcNormalPosition.Bottom = wp.rcNormalPosition.Top + (curScreen.Height / 3 * 2);
-					return SetWindowPlacement(wp);
+					//-- check if we stored the position before the stretch
+					if (VerticalStretches.ContainsKey(WindowHandle)) {
+						ScreenBounds = VerticalStretches[WindowHandle];
+						VerticalStretches.Remove(WindowHandle);
+					} else { //-- Set to default height of 2/3 screen and center window
+						ScreenBounds.Top = curScreen.Top + (curScreen.Height / 6);
+						ScreenBounds.Bottom = ScreenBounds.Top + (curScreen.Height / 3 * 2);
+					}
 				} else { //-- Stretch
-					MoveWindow(WindowHandle, wp.rcNormalPosition.Left, curScreen.Top, wp.rcNormalPosition.Width, curScreen.Height, true);
-					return true;
+					//-- Store Old Position
+					VerticalStretches[WindowHandle] = ScreenBounds;
+
+					ScreenBounds.Top = curScreen.Top;
+					ScreenBounds.Bottom = curScreen.Bottom;
 				}
+				//-- RePosition the window
+				MoveWindow(WindowHandle,
+					ScreenBounds.Left, ScreenBounds.Top, ScreenBounds.Width, ScreenBounds.Height, true);
 			}
-			return false; //-- Window is either Maximized or Minimized
 		}
-		
+
+		public void Dock(DockStyle ds, double percentage) {
+			Dock(Screen.AllScreens[GetScreenIndex(WindowHandle)], ds, percentage);
+		}
+		private void Dock(Screen scr, DockStyle ds, double percentage) {
+			WINDOWPLACEMENT wp = GetWindowPlacement();
+			RECT r = wp.rcNormalPosition;
+			RECT wa = new RECT(scr.WorkingArea);
+
+			//-- Save location before dock
+			Docks.Add(WindowHandle, wp);
+
+			r = RECT.GetDockedRECT(wa, ds, percentage);
+			wp.showCmd = showCmd.Normal;
+			SetWindowPlacement(wp); // -- Put the window into Normal State
+			MoveWindow(WindowHandle, r.Left, r.Top, r.Width, r.Height, true);
+		}
+
+		public void UnDock() {
+			if (Docks.ContainsKey(WindowHandle)) {
+				WINDOWPLACEMENT wp = Docks[WindowHandle];
+				SetWindowPlacement(wp);
+				Docks.Remove(WindowHandle);
+			}
+		}
+
+		public bool IsDocked { get { return Docks.ContainsKey(WindowHandle); }  }
 		
 		/// <summary>
 		/// Minimizes the window.
@@ -231,19 +292,19 @@ namespace WindowMasterLib {
 		}
 
 		public bool IncreaseOpacity(double percentage) {
-			return SetOpacity(percentage, true);
+			return ChangeOpacity(percentage);
 		}
 
 		public bool DecreaseOpacity(double percentage) {
-			return SetOpacity(percentage, false);
+			return ChangeOpacity(percentage);
 		}
 
 		public bool MakeInvisible() {
-			return SetOpacity(0, true);
+			return ChangeOpacity(0);
 		}
 
 		public bool MakeOpaque() {
-			return SetOpacity(1, true);
+			return ChangeOpacity(1);
 		}
 
 		/// <summary>
@@ -251,7 +312,7 @@ namespace WindowMasterLib {
 		/// percentage of 255 to it's current value. This will effectively
 		/// increase or decrease the windows opacity. 
 		/// </summary>
-		private bool SetOpacity(double percentage, bool increase) {
+		private bool ChangeOpacity(double percentage) {
 			uint crKey;
 			byte bAlpha;
 			uint dwFlags;
@@ -273,6 +334,8 @@ namespace WindowMasterLib {
 
 			//-- Generate value to modify by
 			byte val;
+			bool increase = percentage > 0;
+			percentage = Math.Abs(percentage);
 			if (percentage < 1 && percentage > 0)
 				val = (byte)(percentage * 255);
 			else if (percentage == 1) //-- Set the window to Opaqe

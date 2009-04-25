@@ -57,9 +57,15 @@
     <Compile Include="About.Designer.cs">
       <DependentUpon>About.cs</DependentUpon>
     </Compile>
+    <Compile Include="ActionForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="ActionForm.Designer.cs">
+      <DependentUpon>ActionForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="Actions\ActionManager.cs" />
-    <Compile Include="Actions\HotKeyActions\DecreaseOpacityAction.cs" />
-    <Compile Include="Actions\HotKeyActions\IncreaseOpacityAction.cs" />
+    <Compile Include="Actions\HotKeyActions\ChangeOpacityAction.cs" />
+    <Compile Include="Actions\HotKeyActions\DockWindowAction.cs" />
     <Compile Include="Actions\HotKeyActions\MakeInvisibleAction.cs" />
     <Compile Include="Actions\HotKeyActions\MakeOpaqueAction.cs" />
     <Compile Include="Actions\HotKeyActions\MaximizeWindowAction.cs" />
@@ -82,8 +88,8 @@
       <DependentUpon>About.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
-    <EmbeddedResource Include="HotKeyForm.resx">
-      <DependentUpon>HotKeyForm.cs</DependentUpon>
+    <EmbeddedResource Include="ActionForm.resx">
+      <DependentUpon>ActionForm.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">

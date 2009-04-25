@@ -32,19 +32,19 @@ namespace WindowMasterLib.Actions {
 		/// This array contains all action types. If new actions are created, this 
 		/// property needs to be modified in order for the Action De Serializer to work.
 		/// </summary>
-		private static Type[] ActionTypes {
+		public static Type[] ActionTypes {
 			get {
 				List<Type> aTypes = new List<Type>();
-				aTypes.Add(typeof(MoveWindowAction));
-				aTypes.Add(typeof(MaximizeWindowAction));
-				aTypes.Add(typeof(MinimizeWindowAction));
-				aTypes.Add(typeof(RestoreWindowAction));
-				aTypes.Add(typeof(RestoreDownAction));
-				aTypes.Add(typeof(RestoreUpAction));
-				aTypes.Add(typeof(IncreaseOpacityAction));
-				aTypes.Add(typeof(DecreaseOpacityAction));
+				aTypes.Add(typeof(ChangeOpacityAction));
+				aTypes.Add(typeof(DockWindowAction));
 				aTypes.Add(typeof(MakeInvisibleAction));
 				aTypes.Add(typeof(MakeOpaqueAction));
+				aTypes.Add(typeof(MaximizeWindowAction));
+				aTypes.Add(typeof(MinimizeWindowAction));
+				aTypes.Add(typeof(MoveWindowAction));
+				aTypes.Add(typeof(RestoreDownAction));
+				aTypes.Add(typeof(RestoreUpAction));
+				aTypes.Add(typeof(RestoreWindowAction));
 				aTypes.Add(typeof(StretchHorizontallyAction));
 				aTypes.Add(typeof(StretchVerticallyAction));
 				return aTypes.ToArray();
