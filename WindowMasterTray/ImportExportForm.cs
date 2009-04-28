@@ -43,6 +43,11 @@ namespace WindowMasterLib {
 
 				MessageBox.Show("Actions Exported!", "Success", MessageBoxButtons.OK, MessageBoxIcon.Asterisk);
 
+				//-- Unregister all hotkeys
+				foreach (HotKeyAction  a in Actions) {
+					a.RemoveAllHotKeys();
+				}
+
 				//-- Set DialogResult to Close form and return to owner
 				DialogResult = DialogResult.OK;
 			}
@@ -65,6 +70,11 @@ namespace WindowMasterLib {
 				//-- Save the actions
 				if (ActionManager.SaveActions(Actions))
 					MessageBox.Show("Actions Imported!", "Success", MessageBoxButtons.OK, MessageBoxIcon.Asterisk);
+
+				//-- Unregister all hotkeys
+				foreach (HotKeyAction a in Actions) {
+					a.RemoveAllHotKeys();
+				}
 
 				//-- Set DialogResult to Close form and return to owner
 				DialogResult = DialogResult.OK;

@@ -250,6 +250,8 @@ namespace WindowMasterLib {
 				lbActions.Items.Add(af.Action);
 				lbActions.SetItemChecked(lbActions.Items.Count - 1, af.Action.Enabled);
 				bApply.Enabled = true;
+
+				lbHotKeys.DataSource = SelectedAction.Combos;
 			}
 			af.Dispose();
 		}

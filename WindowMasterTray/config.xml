@@ -14,6 +14,7 @@
     <Enabled>true</Enabled>
     <Name>Move foreground window to next screen</Name>
     <Description>This action will get the current foreground window and move it to the next screen. If there is only one screen, it will not move the window.</Description>
+    <PreserveSize>false</PreserveSize>
   </HotKeyAction>
   <HotKeyAction xsi:type="RestoreUpAction">
     <Combos>
@@ -37,51 +38,7 @@
     <Name>Restore Window Down</Name>
     <Description>If the window is maximized, this action will set the window state to normal placing it in it's normal location and size. If it's in the normal state, the window will be minimized.</Description>
   </HotKeyAction>
-  <HotKeyAction xsi:type="IncreaseOpacityAction">
-    <Combos>
-      <KeyCombo>
-        <Modifiers>Alt Control</Modifiers>
-        <Key>Up</Key>
-      </KeyCombo>
-    </Combos>
-    <Enabled>false</Enabled>
-    <Name>Increase Opacity</Name>
-    <Description>Increases the opacity of the foreground window by 5%.</Description>
-  </HotKeyAction>
-  <HotKeyAction xsi:type="DecreaseOpacityAction">
-    <Combos>
-      <KeyCombo>
-        <Modifiers>Alt Control</Modifiers>
-        <Key>Down</Key>
-      </KeyCombo>
-    </Combos>
-    <Enabled>false</Enabled>
-    <Name>Decrease Opacity</Name>
-    <Description>Decreases the opacity of the foreground window by 5%.</Description>
-  </HotKeyAction>
-  <HotKeyAction xsi:type="MakeInvisibleAction">
-    <Combos>
-      <KeyCombo>
-        <Modifiers>Win</Modifiers>
-        <Key>I</Key>
-      </KeyCombo>
-    </Combos>
-    <Enabled>false</Enabled>
-    <Name>Make Invisible</Name>
-    <Description>Makes the foreground window invisible.</Description>
-  </HotKeyAction>
-  <HotKeyAction xsi:type="MakeOpaqueAction">
-    <Combos>
-      <KeyCombo>
-        <Modifiers>Win</Modifiers>
-        <Key>O</Key>
-      </KeyCombo>
-    </Combos>
-    <Enabled>false</Enabled>
-    <Name>Make Opaque</Name>
-    <Description>Makes the foreground window completely visible.</Description>
-  </HotKeyAction>
-  <HotKeyAction xsi:type="StretchHorizontallyAction">
+  <HotKeyAction xsi:type="StretchWindowAction">
     <Combos>
       <KeyCombo>
         <Modifiers>Win</Modifiers>
@@ -90,9 +47,10 @@
     </Combos>
     <Enabled>true</Enabled>
     <Name>Stretch Window Horizontally</Name>
-    <Description>If the foreground window is in normal position, it will stretch it's width to fill the screen. If pressed again, it will restore the width to 2 /3 of the screen.</Description>
+    <Description>If the foreground window is in normal position, it will stretch the window in the given direction. If pressed again, it will restore the window to its location before the stretch.</Description>
+    <Direction>Horizontally</Direction>
   </HotKeyAction>
-  <HotKeyAction xsi:type="StretchVerticallyAction">
+  <HotKeyAction xsi:type="StretchWindowAction">
     <Combos>
       <KeyCombo>
         <Modifiers>Win</Modifiers>
@@ -101,6 +59,35 @@
     </Combos>
     <Enabled>true</Enabled>
     <Name>Stretch Window Vertically</Name>
-    <Description>If the foreground window is in normal position, it will stretch it's height to fill the screen. If pressed again, it will restore the height to 2 /3 of the screen.</Description>
+    <Description>If the foreground window is in normal position, it will stretch the window in the given direction. If pressed again, it will restore the window to its location before the stretch.</Description>
+    <Direction>Vertically</Direction>
+  </HotKeyAction>
+  <HotKeyAction xsi:type="DockAndMoveWindowAction">
+    <Combos>
+      <KeyCombo>
+        <Modifiers>Win</Modifiers>
+        <Key>Left</Key>
+      </KeyCombo>
+    </Combos>
+    <Enabled>true</Enabled>
+    <Name>Dock &amp; Move Window Left</Name>
+    <Description>This action will get the current foreground window and move it to the next screen. If there is only one screen, it will not move the window.</Description>
+    <Percentage>0.4</Percentage>
+    <MoveDirection>Left</MoveDirection>
+    <PreserveSize>false</PreserveSize>
+  </HotKeyAction>
+  <HotKeyAction xsi:type="DockAndMoveWindowAction">
+    <Combos>
+      <KeyCombo>
+        <Modifiers>Win</Modifiers>
+        <Key>Right</Key>
+      </KeyCombo>
+    </Combos>
+    <Enabled>true</Enabled>
+    <Name>Dock &amp; Move Window Right</Name>
+    <Description>This action will get the current foreground window and move it to the next screen. If there is only one screen, it will not move the window.</Description>
+    <Percentage>0.4</Percentage>
+    <MoveDirection>Right</MoveDirection>
+    <PreserveSize>false</PreserveSize>
   </HotKeyAction>
 </ArrayOfHotKeyAction>

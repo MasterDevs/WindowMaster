@@ -12,7 +12,7 @@ namespace WindowMasterLib.Actions.HotKeyActions {
 	public class DockAndMoveWindowAction : HotKeyAction {
 
 
-		private double _Percentage;
+		private double _Percentage = .5;
 		[Description("The amount of screen the window will take up when it is docked. Valid values: (0, 1)")]
 		public double Percentage {
 			get { return _Percentage; }
