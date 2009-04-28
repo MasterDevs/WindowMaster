@@ -29,7 +29,7 @@
 			this.bOK = new System.Windows.Forms.Button();
 			this.lbHotKeys = new System.Windows.Forms.ListBox();
 			this.bAddHotKey = new System.Windows.Forms.Button();
-			this.bDeleteHotKey = new System.Windows.Forms.Button();
+			this.bRemoveHotKey = new System.Windows.Forms.Button();
 			this.groupBox1 = new System.Windows.Forms.GroupBox();
 			this.bModifyAction = new System.Windows.Forms.Button();
 			this.bRemoveAction = new System.Windows.Forms.Button();
@@ -39,6 +39,7 @@
 			this.bApply = new System.Windows.Forms.Button();
 			this.bCancel = new System.Windows.Forms.Button();
 			this.toolTip = new System.Windows.Forms.ToolTip(this.components);
+			this.bImportExport = new System.Windows.Forms.Button();
 			this.groupBox1.SuspendLayout();
 			this.groupBox2.SuspendLayout();
 			this.SuspendLayout();
@@ -88,17 +89,17 @@
 			this.bAddHotKey.UseVisualStyleBackColor = true;
 			this.bAddHotKey.Click += new System.EventHandler(this.bAddHotKey_Click);
 			// 
-			// bDeleteHotKey
+			// bRemoveHotKey
 			// 
-			this.bDeleteHotKey.Enabled = false;
-			this.bDeleteHotKey.Location = new System.Drawing.Point(153, 90);
-			this.bDeleteHotKey.Name = "bDeleteHotKey";
-			this.bDeleteHotKey.Size = new System.Drawing.Size(40, 23);
-			this.bDeleteHotKey.TabIndex = 8;
-			this.bDeleteHotKey.Text = "-";
-			this.toolTip.SetToolTip(this.bDeleteHotKey, "Remove Selected HotKey for Selected Action");
-			this.bDeleteHotKey.UseVisualStyleBackColor = true;
-			this.bDeleteHotKey.Click += new System.EventHandler(this.bDeleteHotKey_Click);
+			this.bRemoveHotKey.Enabled = false;
+			this.bRemoveHotKey.Location = new System.Drawing.Point(153, 90);
+			this.bRemoveHotKey.Name = "bRemoveHotKey";
+			this.bRemoveHotKey.Size = new System.Drawing.Size(40, 23);
+			this.bRemoveHotKey.TabIndex = 8;
+			this.bRemoveHotKey.Text = "-";
+			this.toolTip.SetToolTip(this.bRemoveHotKey, "Remove Selected HotKey for Selected Action");
+			this.bRemoveHotKey.UseVisualStyleBackColor = true;
+			this.bRemoveHotKey.Click += new System.EventHandler(this.bRemoveKey_Click);
 			// 
 			// groupBox1
 			// 
@@ -152,7 +153,7 @@
 			// 
 			this.groupBox2.Controls.Add(this.lbHotKeys);
 			this.groupBox2.Controls.Add(this.bAddHotKey);
-			this.groupBox2.Controls.Add(this.bDeleteHotKey);
+			this.groupBox2.Controls.Add(this.bRemoveHotKey);
 			this.groupBox2.Location = new System.Drawing.Point(307, 12);
 			this.groupBox2.Name = "groupBox2";
 			this.groupBox2.Size = new System.Drawing.Size(200, 126);
@@ -192,11 +193,22 @@
 			this.bCancel.UseVisualStyleBackColor = true;
 			this.bCancel.Click += new System.EventHandler(this.bCancel_Click);
 			// 
+			// bImportExport
+			// 
+			this.bImportExport.Location = new System.Drawing.Point(18, 191);
+			this.bImportExport.Name = "bImportExport";
+			this.bImportExport.Size = new System.Drawing.Size(110, 23);
+			this.bImportExport.TabIndex = 14;
+			this.bImportExport.Text = "&Import | Export";
+			this.bImportExport.UseVisualStyleBackColor = true;
+			this.bImportExport.Click += new System.EventHandler(this.bImportExport_Click);
+			// 
 			// SettingsWindow
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
 			this.ClientSize = new System.Drawing.Size(519, 226);
+			this.Controls.Add(this.bImportExport);
 			this.Controls.Add(this.bCancel);
 			this.Controls.Add(this.bApply);
 			this.Controls.Add(this.tbActionDescription);
@@ -233,7 +245,7 @@
 		private System.Windows.Forms.Button bOK;
 		private System.Windows.Forms.ListBox lbHotKeys;
 		private System.Windows.Forms.Button bAddHotKey;
-		private System.Windows.Forms.Button bDeleteHotKey;
+		private System.Windows.Forms.Button bRemoveHotKey;
 		private System.Windows.Forms.GroupBox groupBox1;
 		private System.Windows.Forms.GroupBox groupBox2;
 		private System.Windows.Forms.TextBox tbActionDescription;
@@ -243,5 +255,6 @@
 		private System.Windows.Forms.Button bRemoveAction;
 		private System.Windows.Forms.Button bModifyAction;
 		private System.Windows.Forms.ToolTip toolTip;
+		private System.Windows.Forms.Button bImportExport;
 	}
 }

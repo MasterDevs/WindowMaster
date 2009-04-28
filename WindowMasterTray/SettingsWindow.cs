@@ -18,7 +18,6 @@ namespace WindowMasterLib {
 		public List<HotKeyAction> Actions;
 		public KeyCombo[] Combos;
 		
-		private string ConfigPath { get { return Application.StartupPath + Path.DirectorySeparatorChar + Properties.Settings.Default.ConfigFile; } }
 		private HotKeyAction SelectedAction { get { return (HotKeyAction)lbActions.SelectedItem; } }
 		private KeyCombo SelectedCombo { get { return (KeyCombo)lbHotKeys.SelectedItem; } }
 		private bool HasKeyCombo { get { return lbHotKeys.Items.Count != 0; } }
@@ -34,10 +33,9 @@ namespace WindowMasterLib {
 		private void LoadActions() {
 			//-- Start from Scratch
 			RemoveAllHotKeys();
-
 			
 			//-- Initialize Actions
-			Actions = ActionManager.LoadActions(ConfigPath);
+			Actions = ActionManager.LoadActions();
 			      
 			//-- Add Actions to the Actions List Box
 			lbActions.Items.Clear();
@@ -46,18 +44,20 @@ namespace WindowMasterLib {
 			}
 
 			//-- Set the ListBox HotKey Datasource to nothing. 
-            //[When a Action is clicked, the list will be populated]
+      //[When a Action is clicked, the list will be populated]
 			Combos = null;
 			lbHotKeys.DataSource = Combos;
 
-			//-- Initialize MadeAChange Bit
+			//-- Initialize Buttons
 			bApply.Enabled = false;
+			bAddHotKey.Enabled = false;
+			bRemoveHotKey.Enabled = false;
 		}
 
 		/// <summary>
 		/// Saves the actions to the Config File
 		/// </summary>
-		private void SaveActions() { ActionManager.SaveActions(Actions, ConfigPath); }
+		private void SaveActions() { ActionManager.SaveActions(Actions); }
 
 		/// <summary>
 		/// Unregisters all current hotkeys
@@ -91,6 +91,17 @@ namespace WindowMasterLib {
 			}
 
 			return dr;
+		}
+
+		/// <summary>
+		/// Method will set the following buttons enabled value to false:
+		/// bRemoveHotKey, bAddHotKey, bRemoveAction & bModifyAction
+		/// </summary>
+		private void DisableButtons() {
+			bRemoveHotKey.Enabled = 
+				bAddHotKey.Enabled = 
+				bRemoveAction.Enabled = 
+				bModifyAction.Enabled = false;
 		}
 
 		#region Form Events
@@ -127,11 +138,11 @@ namespace WindowMasterLib {
 				RemoveAllHotKeys();
 
 				//-- Don't enable these buttons when nothing is selected
-				bDeleteHotKey.Enabled = false;
+				bRemoveHotKey.Enabled = false;
 				bModifyAction.Enabled = false;
 				bRemoveAction.Enabled = false;
 				//-- Load Actions from ConfigFile
-				Actions = ActionManager.LoadActions(ConfigPath);
+				Actions = ActionManager.LoadActions();
 			}
 		}
 
@@ -146,6 +157,12 @@ namespace WindowMasterLib {
 					if (dr == DialogResult.Cancel) return;
 				}
 				Hide();
+			} else if (e.KeyCode == Keys.Delete) { //-- Delete Action or KeyCode
+				if (lbActions.Focused && SelectedAction != null) {
+					bRemoveAction_Click(sender, e);
+				} else if (lbHotKeys.Focused && SelectedCombo != null) {
+					bRemoveKey_Click(sender, e);
+				}
 			}
 		}
 
@@ -180,7 +197,7 @@ namespace WindowMasterLib {
 
 				//-- Initialize Add / Delete HotKey Buttons
 				bAddHotKey.Enabled = true;
-				bDeleteHotKey.Enabled = HasKeyCombo;
+				bRemoveHotKey.Enabled = HasKeyCombo;
 
 				//-- Enable Modify & Remove Buttons
 				bModifyAction.Enabled = true;
@@ -263,6 +280,7 @@ namespace WindowMasterLib {
 			Actions.Remove(SelectedAction);
 			lbActions.Items.Remove(SelectedAction);
 			bApply.Enabled = true;
+			DisableButtons();
 		}
 
 		/// <summary>
@@ -277,6 +295,7 @@ namespace WindowMasterLib {
 				SelectedAction.AddHotKey(hkf.HotKey);
 				RefreshHotKeys();
 				bApply.Enabled = true;
+				bRemoveHotKey.Enabled = true;
 			}
 			hkf.Dispose();
 		}
@@ -285,19 +304,18 @@ namespace WindowMasterLib {
 		/// Removes the selected hotkey. If there are not hotkeys left
 		/// after the remove, the bDeleteHotKey button will be disabled.
 		/// </summary>
-		private void bDeleteHotKey_Click(object sender, EventArgs e) {
+		private void bRemoveKey_Click(object sender, EventArgs e) {
 			KeyCombo kc = SelectedCombo;
 			SelectedAction.RemoveHotKey(kc);
 			RefreshHotKeys();
 
 			if (lbHotKeys.Items.Count == 0) {
-				bDeleteHotKey.Enabled = false;
+				bRemoveHotKey.Enabled = false;
 			}
 
 			bApply.Enabled = true;
 		}
-
-
+		
 		/// <summary>
 		/// Saves the actions to the config file and hides the form.
 		/// </summary>
@@ -325,6 +343,33 @@ namespace WindowMasterLib {
 			Hide();
 		}
 
+		/// <summary>
+		/// If there are unsaved actions, the user is prompted to save.
+		/// If they choose to save, then are then presented with the 
+		/// Import / Export form
+		/// </summary>
+		private void bImportExport_Click(object sender, EventArgs e) {
+
+			//-- Make sure all actions are saved
+			if (bApply.Enabled) {
+				DialogResult dr = MessageBox.Show("Before Importing / Exporting you must save your actions. Would you like to save now?", "Actions not saved!", MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
+				if (dr == DialogResult.Yes) {
+					SaveActions();
+					bApply.Enabled = false;
+				} else
+					return;
+			}
+
+			ImportExportForm ief = new ImportExportForm();
+			//-- We must unregister & remove all hotkeys
+			RemoveAllHotKeys();
+
+			//-- Block on the dialog
+			ief.ShowDialog(this);
+			
+			//-- Load Actions
+			LoadActions();
+		}
 
 		#endregion
 	}

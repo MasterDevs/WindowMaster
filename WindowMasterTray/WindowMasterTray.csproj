@@ -82,6 +82,12 @@
     <Compile Include="HotKeyForm.Designer.cs">
       <DependentUpon>HotKeyForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="ImportExportForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="ImportExportForm.Designer.cs">
+      <DependentUpon>ImportExportForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <EmbeddedResource Include="About.resx">
@@ -90,6 +96,10 @@
     </EmbeddedResource>
     <EmbeddedResource Include="ActionForm.resx">
       <DependentUpon>ActionForm.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ImportExportForm.resx">
+      <DependentUpon>ImportExportForm.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">

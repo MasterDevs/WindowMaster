@@ -5,12 +5,15 @@ using System.Text;
 using System.IO;
 using System.Xml.Serialization;
 using WindowMasterLib.Actions.HotKeyActions;
+using System.IO.IsolatedStorage;
 
 namespace WindowMasterLib.Actions {
 	public class ActionManager {
 
 		private static XmlSerializer serializer =
 			new XmlSerializer(typeof(List<HotKeyAction>), ActionTypes);
+
+		private const string ConfigFileName = "WindowMasterConfig.xml";
 
 		public static List<HotKeyAction> LoadActions(string xmlPath) {
 			List<HotKeyAction> actions = new List<HotKeyAction>();
@@ -19,6 +22,47 @@ namespace WindowMasterLib.Actions {
 				reader.Close();
 			}
 			return actions;
+		}
+
+		public static List<HotKeyAction> LoadActions() {
+
+			List<HotKeyAction> actions = new List<HotKeyAction>();
+			try {
+
+				//-- Get a storage location
+				using (IsolatedStorageFile isoStore = IsolatedStorageFile.GetUserStoreForAssembly())
+				//-- Get a handle to the config file stream
+				using (IsolatedStorageFileStream isoFileStream =
+					new IsolatedStorageFileStream(ConfigFileName, FileMode.Open, FileAccess.Read, isoStore)) {
+					//-- Deserialize the actions
+					actions = (List<HotKeyAction>)serializer.Deserialize(isoFileStream);
+					//-- Close the file stream
+					isoFileStream.Close();
+				}
+			} catch (Exception) { }
+			return actions;
+		}
+
+		public static bool SaveActions(List<HotKeyAction> actions) {
+
+			try {
+
+				//-- We are getting an isolated storage file for this application / user.
+				using (IsolatedStorageFile isoStore = IsolatedStorageFile.GetUserStoreForAssembly())
+				//-- Get a handle to the config file stream
+				using (IsolatedStorageFileStream isoStream =
+					new IsolatedStorageFileStream(ConfigFileName, FileMode.Create, FileAccess.Write, isoStore)) {
+
+					//-- Serialize the actions to the file
+					serializer.Serialize(isoStream, actions);
+
+					//-- Close the stream
+					isoStream.Close();
+
+					//-- Success
+					return true;
+				}
+			} catch (Exception) { return false; }
 		}
 
 		public static void SaveActions(List<HotKeyAction> actions, string xmlPath) {
@@ -36,7 +80,7 @@ namespace WindowMasterLib.Actions {
 			get {
 				List<Type> aTypes = new List<Type>();
 				aTypes.Add(typeof(ChangeOpacityAction));
-				aTypes.Add(typeof(DockAndMoveWindowAction)); 
+				aTypes.Add(typeof(DockAndMoveWindowAction));
 				aTypes.Add(typeof(DockWindowAction));
 				aTypes.Add(typeof(MakeInvisibleAction));
 				aTypes.Add(typeof(MakeOpaqueAction));
