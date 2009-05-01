@@ -29,20 +29,24 @@ namespace WindowMasterLib.Actions.HotKeyActions {
 				Window w = Window.ForeGroundWindow;
 				Screen curScreen = w.CurrentScreen;
 
-				//-- Make sure we are docked at either the right or left
+				//-- If Docked, Make sure we are docked at either the right or left
 				if (!(w.IsDocked && (w.CurrentDockPosition == DockStyle.Left || w.CurrentDockPosition == DockStyle.Right))) {
 					w.UnDock();
 				}
 
+				double orig_opacity = w.GetOpacityPercentage();
+
+				//-- Hide Window
+				w.MakeInvisible();
 
 				//-- We are moving to the left
 				if (MoveDirection == Direction.Left) {
 					//-- Window is Docked on the Left
-					if (w.IsDocked && w.CurrentDockPosition == DockStyle.Left) {
+					if (w.CurrentDockPosition == DockStyle.Left) {
 						w.UnDock();
 						w.Dock(NextScreen(curScreen, MoveDirection), DockStyle.Right, Percentage);
 					}//-- Window is Docked on the Right 
-					else if (w.IsDocked && w.CurrentDockPosition == DockStyle.Right) {
+					else if (w.CurrentDockPosition == DockStyle.Right) {
 						w.UnDock();
 						w.MoveToScreen(curScreen, false);
 					}
@@ -52,11 +56,11 @@ namespace WindowMasterLib.Actions.HotKeyActions {
 					}
 				} else { //-- We are moving to the right
 					//-- Window is Docked on the right
-					if (w.IsDocked && w.CurrentDockPosition == DockStyle.Right) {
+					if (w.CurrentDockPosition == DockStyle.Right) {
 						w.UnDock();
 						w.Dock(NextScreen(curScreen, MoveDirection), DockStyle.Left, Percentage);
 					} //-- Window is Docked on the Left
-					else if (w.IsDocked && w.CurrentDockPosition == DockStyle.Left) {
+					else if (w.CurrentDockPosition == DockStyle.Left) {
 						w.UnDock();
 						w.MoveToScreen(curScreen, false);
 					} //-- Window is not Docked
@@ -64,6 +68,10 @@ namespace WindowMasterLib.Actions.HotKeyActions {
 						w.Dock(curScreen, DockStyle.Right, Percentage);
 					}
 				}
+
+				//-- Show Window @ it's original opacity
+				//w.ChangeOpacity(orig_opacity);
+				w.MakeOpaque();
 			}
 		}
 
@@ -109,7 +117,7 @@ namespace WindowMasterLib.Actions.HotKeyActions {
 
 		public DockAndMoveWindowAction() {
 			Name = "Dock and Move Window";
-			Description = "This action will get the current foreground window and move it to the next screen. If there is only one screen, it will not move the window.";
+			Description = "If the window is in normal position, it will dock the window to the given specified side at the specified percentage. When pressed again, it will move the window to the next screen at the opposite side. Pressing a third time will restore the window to normal position on the new monitor.";
 		}
 
 		public DockAndMoveWindowAction(KeyCombo kc)

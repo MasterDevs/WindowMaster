@@ -12,8 +12,8 @@
       </KeyCombo>
     </Combos>
     <Enabled>true</Enabled>
-    <Name>Move foreground window to next screen</Name>
-    <Description>This action will get the current foreground window and move it to the next screen. If there is only one screen, it will not move the window.</Description>
+    <Name>Move Window</Name>
+    <Description>This action will move the current foreground window to the next screen. If there is only one screen, it will not move the window.</Description>
     <PreserveSize>false</PreserveSize>
   </HotKeyAction>
   <HotKeyAction xsi:type="RestoreUpAction">
@@ -71,7 +71,7 @@
     </Combos>
     <Enabled>true</Enabled>
     <Name>Dock &amp; Move Window Left</Name>
-    <Description>This action will get the current foreground window and move it to the next screen. If there is only one screen, it will not move the window.</Description>
+    <Description>If the window is in normal position, it will dock the window to the given specified side at the specified percentage. When pressed again, it will move the window to the next screen at the opposite side. Pressing a third time will restore the window to normal position on the new monitor.</Description>
     <Percentage>0.4</Percentage>
     <MoveDirection>Left</MoveDirection>
     <PreserveSize>false</PreserveSize>
@@ -85,7 +85,7 @@
     </Combos>
     <Enabled>true</Enabled>
     <Name>Dock &amp; Move Window Right</Name>
-    <Description>This action will get the current foreground window and move it to the next screen. If there is only one screen, it will not move the window.</Description>
+    <Description>If the window is in normal position, it will dock the window to the given specified side at the specified percentage. When pressed again, it will move the window to the next screen at the opposite side. Pressing a third time will restore the window to normal position on the new monitor.</Description>
     <Percentage>0.4</Percentage>
     <MoveDirection>Right</MoveDirection>
     <PreserveSize>false</PreserveSize>

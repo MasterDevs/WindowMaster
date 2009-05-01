@@ -9,9 +9,9 @@ namespace WindowMasterLib.Actions.HotKeyActions {
 
 		protected override void ActionMethod(object sender, EventArgs args) {
 			Window w = Window.ForeGroundWindow;
-			if(w.WindowState == WindowState.Minimized)
+			if(w.State == WindowState.Minimized)
 				w.Restore();
-			else if(w.WindowState == WindowState.Normal)
+			else if(w.State == WindowState.Normal)
 				w.Maximize();
 		}
 

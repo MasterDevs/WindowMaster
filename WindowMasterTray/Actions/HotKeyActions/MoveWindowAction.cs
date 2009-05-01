@@ -35,8 +35,8 @@ namespace WindowMasterLib.Actions.HotKeyActions {
 		}
 
 		public MoveWindowAction() {
-			Name = "Move foreground window to next screen";
-			Description = "This action will get the current foreground window and move it to the next screen. If there is only one screen, it will not move the window.";
+			Name = "Move Window";
+			Description = "This action will move the current foreground window to the next screen. If there is only one screen, it will not move the window.";
 		}
 
 		public MoveWindowAction(KeyCombo kc) : this() {

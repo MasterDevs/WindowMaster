@@ -187,38 +187,10 @@ namespace WindowMasterLib.Util {
 
 
 			//-- Calculate the new location of the window
-			int left = to.Left + (int)((r.Left - from.Left) * width);
-			int right = to.Right - (int)((from.Right - r.Right) * width);
-			int top = to.Top + (int)((r.Top - from.Top) * height);
-			int bottom = to.Bottom - (int)((from.Bottom - r.Bottom) * height);
-
-			//-- Calculate Reverse Ratios
-			height = (double)from.Height / (double)to.Height;
-			width = (double)from.Width / (double)to.Width;
-
-			//-- Calculate position if the window were to be moved back. 
-			//-- Use ceiling to determine if a pixel differnce would occur 
-			//   as casting from Double to INT is essentially a floor.
-			int revLeft = from.Left + (int)Math.Ceiling((left - to.Left) * width);
-			int revRight = from.Right - (int)Math.Ceiling((to.Right - right) * width);
-			int revTop = from.Top + (int)Math.Ceiling((top - to.Top) * height);
-			int revBottom = from.Bottom - (int)Math.Ceiling((to.Bottom - bottom) * height);
-
-			//-- ReAdjust Left
-			if (revLeft > r.Left) left -= 1;
-			else if (revLeft < r.Left) left += 1;
-
-			//-- ReAdjust Bottom
-			if (revBottom > r.Bottom) bottom -= 1;
-			else if (revBottom < r.Bottom) bottom += 1;
-
-			//-- ReAdjust Top
-			if (revTop > r.Top) top -= 1;
-			else if (revTop < r.Top) top += 1;
-
-			//-- ReAdjust Right
-			if (revRight > r.Right) right -= 1;
-			else if (revRight < r.Right) right += 1;
+			int left = to.Left + (int)Math.Round(((double)(r.Left - from.Left) * width));
+			int right = to.Right - (int)Math.Round((double)(from.Right - r.Right) * width);
+			int top = to.Top + (int)Math.Round((double)(r.Top - from.Top) * height);
+			int bottom = to.Bottom - (int)Math.Round((double)(from.Bottom - r.Bottom) * height);
 
 			//-- Create the new rectangle
 			RECT ret = new RECT(left, top, right, bottom);

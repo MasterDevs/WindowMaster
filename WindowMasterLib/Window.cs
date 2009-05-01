@@ -350,6 +350,27 @@ namespace WindowMasterLib {
 		}
 
 		/// <summary>
+		/// Returns the perctange of opacity of the current window.
+		/// </summary>
+		/// <returns>1 is fully opaque<para>0 is fully invisible</para></returns>
+		public double GetOpacityPercentage() {
+			uint crKey;
+			byte bAlpha;
+			uint dwFlags;
+			
+			//-- Get Current Values
+			GetLayeredWindowAttributes(WindowHandle, out crKey, out bAlpha, out dwFlags);
+
+		
+			//-- If the window is not layered, return 1 (fully opaque)
+			if (crKey == 0 && bAlpha == 0 && dwFlags == 0) {
+				return 1;
+			}
+			else
+				return bAlpha / 255;
+		}
+
+		/// <summary>
 		/// Gets the window info of the current window
 		/// </summary>
 		private WINDOWINFO GetWindowInfo() {
@@ -371,7 +392,7 @@ namespace WindowMasterLib {
 		/// Returns the current state of the window
 		/// </summary>
 		/// <returns></returns>
-		public WindowState WindowState {
+		public WindowState State {
 			get {
 				switch (GetWindowPlacement().showCmd) {
 					case (uint)WindowState.Maximized:
