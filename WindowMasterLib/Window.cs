@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Runtime.InteropServices;
 using System.Windows.Forms;
 using WindowMasterLib.Util;
+using System.Text;
 
 namespace WindowMasterLib {
 	public class Window {
@@ -11,6 +12,10 @@ namespace WindowMasterLib {
 
 		[DllImport("user32.dll", ExactSpelling = true, SetLastError = true)]
 		private static extern IntPtr GetForegroundWindow();
+
+		[DllImport("user32.dll", ExactSpelling = true, SetLastError = true)]
+		[return: MarshalAs(UnmanagedType.Bool)]
+		private static extern bool SetForegroundWindow(IntPtr hWnd);
 
 		[DllImport("user32.dll", CharSet = CharSet.Auto, CallingConvention = CallingConvention.StdCall, ExactSpelling = true, SetLastError = true)]
 		internal static extern bool GetWindowRect(IntPtr hWnd, ref RECT rect);
@@ -40,6 +45,19 @@ namespace WindowMasterLib {
 		[DllImport("user32.dll")]
 		private static extern int SetWindowLong(IntPtr hWnd, int nIndex, int dwNewLong);
 
+		[DllImport("user32.dll")]
+		static extern bool EnumWindows(EnumWindowsDelagate lpfn, IntPtr lParam);
+		[DllImport("user32.dll")]
+		public static extern bool IsWindowVisible(IntPtr hWnd);
+
+		private delegate bool EnumWindowsDelagate(IntPtr hWnd, int lParam);
+
+		[DllImport("user32.dll", CharSet = CharSet.Auto, SetLastError = true)]
+		static extern int GetWindowText(IntPtr hWnd, StringBuilder lpString, int nMaxCount);
+		
+		[DllImport("user32.dll", SetLastError = true, CharSet = CharSet.Auto)]
+		static extern int GetWindowTextLength(IntPtr hWnd);
+
 		#endregion
 
 		public IntPtr WindowHandle;
@@ -57,14 +75,49 @@ namespace WindowMasterLib {
 		private static Dictionary<IntPtr, RECT> VerticalStretches;
 		private static Dictionary<IntPtr, RECT> HorizontalStretches;
 		private static Dictionary<IntPtr, DockInfo> Docks;
+		private static List<Window> VisibleWindows;
 
 		static Window() {
 			VerticalStretches = new Dictionary<IntPtr, RECT>();
 			HorizontalStretches = new Dictionary<IntPtr, RECT>();
 			Docks = new Dictionary<IntPtr, DockInfo>();
+			VisibleWindows = new List<Window>();
+		}
+		/// <summary>
+		/// The active foreground window
+		/// </summary>
+		public static Window ForeGroundWindow { get { return new Window(GetForegroundWindow()); } }
+		/// <summary>
+		/// List of all visible windows
+		/// </summary>
+		public static List<Window> AllVisibleWindows {
+			get {
+				VisibleWindows.Clear();
+				EnumWindows(new EnumWindowsDelagate(EnumWindowsCallBack), IntPtr.Zero);
+				return VisibleWindows;
+			}
+		}		
+		/// <summary>
+		/// This is the callback method for the EnumWindows command
+		/// </summary>
+		/// <param name="hWnd">The window in the enumeration</param>
+		/// <param name="lParam">Parameters set from initial call. In this case it's IntPtr.Zero</param>
+		private static bool EnumWindowsCallBack(IntPtr hWnd, int lParam) {
+			//-- Make sure the window is visible before adding it to the collection
+			if (IsWindowVisible(hWnd)) {
+				VisibleWindows.Add(new Window(hWnd));
+			}
+			return true; //-- Continue Enumeration
 		}
 
-		public static Window ForeGroundWindow { get { return new Window(GetForegroundWindow()); } }
+		public string Title {
+			get {
+				int length = GetWindowTextLength(WindowHandle);
+				StringBuilder sb = new StringBuilder(length + 1);
+				GetWindowText(WindowHandle, sb, sb.Capacity);
+				return sb.ToString();
+			}
+		}
 
 		public Window() {
 			WindowHandle = IntPtr.Zero;
@@ -261,21 +314,21 @@ namespace WindowMasterLib {
 		/// </summary>
 		/// <returns>True if the window was minimized</returns>
 		public bool Minimize() {
-			return SetWindowPlacement(WindowState.Minimized);
+			return SetWindowState(WindowState.Minimized);
 		}
 		/// <summary>
 		/// Maximizes the window.
 		/// </summary>
 		/// <returns>True if the window was maximized</returns>
 		public bool Maximize() {
-			return SetWindowPlacement(WindowState.Maximized);
+			return SetWindowState(WindowState.Maximized);
 		}
 		/// <summary>
 		/// Move the window to it's normal location and size.
 		/// </summary>
 		/// <returns>True if the window was restored</returns>
 		public bool Restore() {
-			return SetWindowPlacement(WindowState.Normal);
+			return SetWindowState(WindowState.Normal);
 		}
 
 		/// <summary>
@@ -292,6 +345,14 @@ namespace WindowMasterLib {
 		/// <returns>True if change was successfull</returns>
 		public bool MakeOpaque() {
 			return ChangeOpacity(1);
+		}
+
+		/// <summary>
+		/// Sets the current window as the active foreground window
+		/// </summary>
+		/// <returns>True if the window was brought to the foreground</returns>
+		public bool SetAsForegroundWindow() {
+			return SetForegroundWindow(WindowHandle);
 		}
 
 		/// <summary>
@@ -422,7 +483,7 @@ namespace WindowMasterLib {
 		/// </summary>
 		/// <param name="showCmd">Desired state of the window</param>
 		/// <returns>True if the state has been set</returns>
-		private bool SetWindowPlacement(WindowState showCmd) {
+		public bool SetWindowState(WindowState showCmd) {
 			WINDOWPLACEMENT wp = GetWindowPlacement();
 			wp.showCmd = (uint)showCmd;
 			return SetWindowPlacement(wp);

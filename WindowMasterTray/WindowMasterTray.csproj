@@ -85,6 +85,7 @@
     <Compile Include="Actions\HotKeyActions\MakeInvisibleAction.cs" />
     <Compile Include="Actions\HotKeyActions\MakeOpaqueAction.cs" />
     <Compile Include="Actions\HotKeyActions\MaximizeWindowAction.cs" />
+    <Compile Include="Actions\HotKeyActions\MinimizeRestoreOtherWindowsAction.cs" />
     <Compile Include="Actions\HotKeyActions\MinimizeWindowAction.cs" />
     <Compile Include="Actions\HotKeyActions\MoveWindowAction.cs" />
     <Compile Include="Actions\HotKeyActions\RestoreDownAction.cs" />
