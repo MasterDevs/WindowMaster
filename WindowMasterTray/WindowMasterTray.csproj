@@ -86,6 +86,7 @@
     <Compile Include="Actions\HotKeyActions\MakeOpaqueAction.cs" />
     <Compile Include="Actions\HotKeyActions\MaximizeWindowAction.cs" />
     <Compile Include="Actions\HotKeyActions\MinimizeRestoreOtherWindowsAction.cs" />
+    <Compile Include="Actions\HotKeyActions\MinimizeToTray.cs" />
     <Compile Include="Actions\HotKeyActions\MinimizeWindowAction.cs" />
     <Compile Include="Actions\HotKeyActions\MoveWindowAction.cs" />
     <Compile Include="Actions\HotKeyActions\RestoreDownAction.cs" />
@@ -98,12 +99,6 @@
     <Compile Include="HotKeyForm.Designer.cs">
       <DependentUpon>HotKeyForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="ImportExportForm.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="ImportExportForm.Designer.cs">
-      <DependentUpon>ImportExportForm.cs</DependentUpon>
-    </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <EmbeddedResource Include="About.resx">
@@ -112,10 +107,6 @@
     </EmbeddedResource>
     <EmbeddedResource Include="ActionForm.resx">
       <DependentUpon>ActionForm.cs</DependentUpon>
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
-    <EmbeddedResource Include="ImportExportForm.resx">
-      <DependentUpon>ImportExportForm.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
@@ -141,6 +132,7 @@
       <DependentUpon>Settings.settings</DependentUpon>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
+    <Compile Include="RegistryManager.cs" />
     <Compile Include="SettingsWindow.cs">
       <SubType>Form</SubType>
     </Compile>

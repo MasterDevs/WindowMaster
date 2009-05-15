@@ -60,6 +60,13 @@ namespace WindowMasterLib.Properties {
             }
         }
         
+        internal static System.Drawing.Icon DefaultTrayIcon {
+            get {
+                object obj = ResourceManager.GetObject("DefaultTrayIcon", resourceCulture);
+                return ((System.Drawing.Icon)(obj));
+            }
+        }
+        
         internal static System.Drawing.Bitmap Monitor_128 {
             get {
                 object obj = ResourceManager.GetObject("Monitor_128", resourceCulture);

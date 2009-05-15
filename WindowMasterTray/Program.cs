@@ -11,12 +11,14 @@ namespace WindowMasterLib {
 		/// The main entry point for the application.
 		/// </summary>
 		[STAThread]
-		static void Main() {
+		static void Main(string[] args) {
 			Application.EnableVisualStyles();
 			Application.SetCompatibleTextRenderingDefault(false);
 			settings = new SettingsWindow();
 			InitItems();
-			miSettings_Click(null, null);
+			//-- Only show the settings form if we don't have the -hide argument
+			if(!ContainsArgument(args, "hide"))
+				miSettings_Click(null, null);
 			Application.Run();
 		}
 
@@ -69,6 +71,16 @@ namespace WindowMasterLib {
 		static void miSettings_Click(object sender, EventArgs e) {
 			settings.Show();
 			settings.Activate();
+		}
+
+		static bool ContainsArgument(string[] args, string argument) {
+			argument = argument.ToLower();
+			foreach (string arg in args) {
+				if (arg.ToLower().Contains(argument))
+					return true; //-- We found the argument!
+			}
+			//- Argument not found
+			return false;
 		}
 	}
 }

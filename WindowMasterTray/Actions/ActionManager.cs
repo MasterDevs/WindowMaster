@@ -86,6 +86,7 @@ namespace WindowMasterLib.Actions {
 				aTypes.Add(typeof(MakeOpaqueAction));
 				aTypes.Add(typeof(MaximizeWindowAction));
 				aTypes.Add(typeof(MinimizeRestoreOtherWindowsAction));
+				aTypes.Add(typeof(MinimizeToTray));
 				aTypes.Add(typeof(MinimizeWindowAction));
 				aTypes.Add(typeof(MoveWindowAction));
 				aTypes.Add(typeof(RestoreDownAction));

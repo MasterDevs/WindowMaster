@@ -17,13 +17,28 @@ namespace WindowMasterLib {
 
 		public List<HotKeyAction> Actions;
 		public KeyCombo[] Combos;
-		
+
 		private HotKeyAction SelectedAction { get { return (HotKeyAction)lbActions.SelectedItem; } }
 		private KeyCombo SelectedCombo { get { return (KeyCombo)lbHotKeys.SelectedItem; } }
 		private bool HasKeyCombo { get { return lbHotKeys.Items.Count != 0; } }
 
+		private string InitalDir { get { return Environment.GetFolderPath(Environment.SpecialFolder.Personal); } }
+
 		public SettingsWindow() {
 			InitializeComponent();
+			openDialog.InitialDirectory = InitalDir;
+			saveDialog.InitialDirectory = InitalDir;
+		}
+
+		private void Save() {
+			SaveActions();
+			SavePreferences();
+		}
+		private void SavePreferences() {
+			if (mi_StartWithWindows.Checked)
+				RegistryManager.StartWithWindows_Add();
+			else
+				RegistryManager.StartWithWindows_Remove();
 		}
 
 		/// <summary>
@@ -33,10 +48,10 @@ namespace WindowMasterLib {
 		private void LoadActions() {
 			//-- Start from Scratch
 			RemoveAllHotKeys();
-			
+
 			//-- Initialize Actions
 			Actions = ActionManager.LoadActions();
-			      
+
 			//-- Add Actions to the Actions List Box
 			lbActions.Items.Clear();
 			foreach (HotKeyAction act in Actions) {
@@ -44,7 +59,7 @@ namespace WindowMasterLib {
 			}
 
 			//-- Set the ListBox HotKey Datasource to nothing. 
-      //[When a Action is clicked, the list will be populated]
+			//[When a Action is clicked, the list will be populated]
 			Combos = null;
 			lbHotKeys.DataSource = Combos;
 
@@ -87,7 +102,7 @@ namespace WindowMasterLib {
 		private DialogResult PromptForSave() {
 			DialogResult dr = MessageBox.Show("You have modified some actions. Do you want to save your actions?", "Actions not saved!", MessageBoxButtons.YesNoCancel, MessageBoxIcon.Warning);
 			if (dr == DialogResult.Yes) {
-				SaveActions();
+				Save();
 			}
 
 			return dr;
@@ -98,9 +113,9 @@ namespace WindowMasterLib {
 		/// bRemoveHotKey, bAddHotKey, bRemoveAction & bModifyAction
 		/// </summary>
 		private void DisableButtons() {
-			bRemoveHotKey.Enabled = 
-				bAddHotKey.Enabled = 
-				bRemoveAction.Enabled = 
+			bRemoveHotKey.Enabled =
+				bAddHotKey.Enabled =
+				bRemoveAction.Enabled =
 				bModifyAction.Enabled = false;
 		}
 
@@ -177,6 +192,87 @@ namespace WindowMasterLib {
 
 		#endregion
 
+		#region Configuration Menu Events
+		/// <summary>
+		/// Sets bApply.Enabled to true to notify the form a change has been made.
+		/// In this case, it's setting the StartWithWindows flag.
+		/// </summary>
+		private void MenuItem_StartWithWindows_Click(object sender, EventArgs e) {
+			bApply.Enabled = true;
+		}
+
+		/// <summary>
+		/// If there are unsaved actions, the user is asked to save before 
+		/// importing a new set of actions.
+		/// </summary>
+		private void mi_ImportConfiguration_Click(object sender, EventArgs e) {
+			//-- Make sure all actions are saved
+			if (bApply.Enabled) {
+				DialogResult dr = MessageBox.Show("Before importing you must save your actions. Would you like to save now?", "Actions not saved!", MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
+				if (dr == DialogResult.Yes) {
+					Save();
+					bApply.Enabled = false;
+				} else
+					return;
+			}
+
+
+			//-- We must unregister & remove all hotkeys so when we call the 
+			RemoveAllHotKeys();
+
+			DialogResult openDialogResult = openDialog.ShowDialog(this);
+			if (openDialogResult == DialogResult.OK || openDialogResult == DialogResult.Yes) {
+
+				try {
+					//-- Load the actions from user specified location
+					Actions = ActionManager.LoadActions(openDialog.FileName);
+				} catch (Exception) {
+					MessageBox.Show("There was an error importing the actions. Please try again, making sure you're selecting a valid WindowMaster configuration file.", "Error Loading Config File", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+					openDialog.InitialDirectory = InitalDir;
+					return;
+				}
+
+				//-- Save the actions
+				if (ActionManager.SaveActions(Actions))
+					MessageBox.Show("Actions Imported!", "Success", MessageBoxButtons.OK, MessageBoxIcon.Asterisk);
+			}
+
+			//-- Load new actions or restore previous configuration
+			LoadActions();
+		}
+
+		/// <summary>
+		/// If there are unsaved actions, the user is prompted to save before
+		/// exporting their actions.
+		/// </summary>
+		private void mi_ExportConfiguration_Click(object sender, EventArgs e) {
+			//-- Make sure all actions are saved
+			if (bApply.Enabled) {
+				DialogResult dr = MessageBox.Show("Before exporting you must save your actions. Would you like to save now?", "Actions not saved!", MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
+				if (dr == DialogResult.Yes) {
+					Save();
+					bApply.Enabled = false;
+				} else
+					return;
+			}
+
+			DialogResult saveDialogResult = saveDialog.ShowDialog(this);
+			if (saveDialogResult == DialogResult.OK || saveDialogResult == DialogResult.Yes) {
+
+				try {
+					//-- Save the Actions to the user specified location
+					ActionManager.SaveActions(Actions, saveDialog.FileName);
+				} catch (Exception) {
+					MessageBox.Show("There was an error exporting the actions. Please try again, making sure you're selecting a location that you can save to.", "Error Saving Config File", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+					saveDialog.InitialDirectory = InitalDir;
+					return;
+				}
+
+				MessageBox.Show("Actions Exported!", "Success", MessageBoxButtons.OK, MessageBoxIcon.Asterisk);
+			}
+		}
+		#endregion
+
 		#region ListBoxes Actions
 
 		/// <summary>
@@ -214,14 +310,14 @@ namespace WindowMasterLib {
 		private void lbHotKeys_DoubleClick(object sender, EventArgs e) {
 			if (lbHotKeys.SelectedItem != null) {
 				KeyCombo oldKC = SelectedCombo;
-				HotKeyForm hkf = new HotKeyForm(oldKC);
-				DialogResult result = hkf.ShowDialog();
-				if (result == DialogResult.OK) {
-					SelectedAction.ChangeHotKey(oldKC, hkf.HotKey, false);
-					RefreshHotKeys();
-					bApply.Enabled = true;
+				using (HotKeyForm hkf = new HotKeyForm(oldKC)) {
+					DialogResult result = hkf.ShowDialog();
+					if (result == DialogResult.OK) {
+						SelectedAction.ChangeHotKey(oldKC, hkf.HotKey, false);
+						RefreshHotKeys();
+						bApply.Enabled = true;
+					}
 				}
-				hkf.Dispose();
 			}
 		}
 
@@ -243,15 +339,15 @@ namespace WindowMasterLib {
 		/// and add it to the actions list.
 		/// </summary>
 		private void bAddAction_Click(object sender, EventArgs e) {
-			ActionForm af = new ActionForm();
-			DialogResult dr = af.ShowDialog();
-			if (dr == DialogResult.OK) {
-				Actions.Add(af.Action);
-				lbActions.Items.Add(af.Action);
-				lbActions.SetItemChecked(lbActions.Items.Count - 1, af.Action.Enabled);
-				bApply.Enabled = true;
+			using (ActionForm af = new ActionForm()) {
+				DialogResult dr = af.ShowDialog();
+				if (dr == DialogResult.OK) {
+					Actions.Add(af.Action);
+					lbActions.Items.Add(af.Action);
+					lbActions.SetItemChecked(lbActions.Items.Count - 1, af.Action.Enabled);
+					bApply.Enabled = true;
+				}
 			}
-			af.Dispose();
 		}
 
 		/// <summary>
@@ -259,17 +355,17 @@ namespace WindowMasterLib {
 		/// selected action
 		/// </summary>
 		private void bModify_Click(object sender, EventArgs e) {
-			ActionForm af = new ActionForm(SelectedAction);
-			DialogResult dr = af.ShowDialog();
-			if (dr == DialogResult.OK) {
-				//-- Update Checked state
-				int index = lbActions.SelectedIndex;
-				lbActions.SetItemChecked(index, SelectedAction.Enabled);
-				tbActionDescription.Text = SelectedAction.Description;
-				lbActions.Refresh();
-				bApply.Enabled = true;
+			using (ActionForm af = new ActionForm(SelectedAction)) {
+				DialogResult dr = af.ShowDialog();
+				if (dr == DialogResult.OK) {
+					//-- Update Checked state
+					int index = lbActions.SelectedIndex;
+					lbActions.SetItemChecked(index, SelectedAction.Enabled);
+					tbActionDescription.Text = SelectedAction.Description;
+					lbActions.Refresh();
+					bApply.Enabled = true;
+				}
 			}
-			af.Dispose();
 		}
 
 		/// <summary>
@@ -288,16 +384,15 @@ namespace WindowMasterLib {
 		/// the new HotKey will be added to the SelectedAction
 		/// </summary>
 		private void bAddHotKey_Click(object sender, EventArgs e) {
-
-			HotKeyForm hkf = new HotKeyForm();
-			DialogResult result = hkf.ShowDialog();
-			if (result == DialogResult.OK) {
-				SelectedAction.AddHotKey(hkf.HotKey);
-				RefreshHotKeys();
-				bApply.Enabled = true;
-				bRemoveHotKey.Enabled = true;
+			using (HotKeyForm hkf = new HotKeyForm()) {
+				DialogResult result = hkf.ShowDialog();
+				if (result == DialogResult.OK) {
+					SelectedAction.AddHotKey(hkf.HotKey);
+					RefreshHotKeys();
+					bApply.Enabled = true;
+					bRemoveHotKey.Enabled = true;
+				}
 			}
-			hkf.Dispose();
 		}
 
 		/// <summary>
@@ -315,12 +410,12 @@ namespace WindowMasterLib {
 
 			bApply.Enabled = true;
 		}
-		
+
 		/// <summary>
 		/// Saves the actions to the config file and hides the form.
 		/// </summary>
 		private void bOK_Click(object sender, EventArgs e) {
-			SaveActions();
+			Save();
 			Hide();
 		}
 
@@ -328,7 +423,7 @@ namespace WindowMasterLib {
 		/// Saves the actions to the config file.
 		/// </summary>
 		private void bApply_Click(object sender, EventArgs e) {
-			SaveActions();
+			Save();
 			bApply.Enabled = false;
 		}
 
@@ -343,34 +438,8 @@ namespace WindowMasterLib {
 			Hide();
 		}
 
-		/// <summary>
-		/// If there are unsaved actions, the user is prompted to save.
-		/// If they choose to save, then are then presented with the 
-		/// Import / Export form
-		/// </summary>
-		private void bImportExport_Click(object sender, EventArgs e) {
-
-			//-- Make sure all actions are saved
-			if (bApply.Enabled) {
-				DialogResult dr = MessageBox.Show("Before Importing / Exporting you must save your actions. Would you like to save now?", "Actions not saved!", MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
-				if (dr == DialogResult.Yes) {
-					SaveActions();
-					bApply.Enabled = false;
-				} else
-					return;
-			}
-
-			ImportExportForm ief = new ImportExportForm();
-			//-- We must unregister & remove all hotkeys
-			RemoveAllHotKeys();
-
-			//-- Block on the dialog
-			ief.ShowDialog(this);
-			
-			//-- Load Actions
-			LoadActions();
-		}
-
 		#endregion
+
+
 	}
 }
