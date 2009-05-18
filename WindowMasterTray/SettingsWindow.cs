@@ -377,6 +377,7 @@ namespace WindowMasterLib {
 			lbActions.Items.Remove(SelectedAction);
 			bApply.Enabled = true;
 			DisableButtons();
+			RefreshHotKeys();
 		}
 
 		/// <summary>
