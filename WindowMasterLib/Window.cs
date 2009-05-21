@@ -325,8 +325,13 @@ namespace WindowMasterLib {
 		/// Minimizes the window.
 		/// </summary>
 		/// <returns>True if the window was minimized</returns>
-		public bool Minimize() {
-			return SetWindowState(WindowState.Minimized);
+		public bool Minimize(bool remainActive) {
+			if(remainActive)
+				return SetWindowState(WindowState.Minimized);
+			
+			WINDOWPLACEMENT wp = GetWindowPlacement();
+			wp.showCmd = (uint)ShowCMD.SW_MINIMIZE;
+			return SetWindowPlacement(wp);			
 		}
 		/// <summary>
 		/// Maximizes the window.

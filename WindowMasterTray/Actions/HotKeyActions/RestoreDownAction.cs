@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.ComponentModel;
 
 namespace WindowMasterLib.Actions.HotKeyActions {
 	[Serializable]
@@ -12,7 +13,7 @@ namespace WindowMasterLib.Actions.HotKeyActions {
 			if (w.State == WindowState.Maximized)
 				w.Restore();
 			else if (w.State == WindowState.Normal)
-				w.Minimize();
+				w.Minimize(true);
 		}
 
 		public RestoreDownAction() {

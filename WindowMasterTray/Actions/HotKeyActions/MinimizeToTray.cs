@@ -62,10 +62,10 @@ namespace WindowMasterLib.Actions.HotKeyActions {
 		private List<NotifyIcon> MinimizedWindows;
 
 		protected override void ActionMethod(object sender, EventArgs args) {
-			if (Enabled) {
-				Window win = Window.ForeGroundWindow;
+			Window win = Window.ForeGroundWindow;
+			if (Enabled && !WindowHasBeenMinimized(win.WindowHandle) ) {
 				//-- Try to grab the icon from the path to the executible of the window
-				Icon icon = Iconfrompath(pathfromhwnd(win.WindowHandle));
+				Icon icon = IconFromPath(PathFromWindowHandle(win.WindowHandle));
 				
 				//-- Create the tray icon
 				NotifyIcon tray = new NotifyIcon();
@@ -75,6 +75,9 @@ namespace WindowMasterLib.Actions.HotKeyActions {
 				tray.Text = win.Title.Length > 64 ? win.Title.Substring(0, 63) : win.Title;
 				tray.Click += new EventHandler(tray_Click);
 
+				//-- Minimize the window
+				win.Minimize(false);
+				
 				//-- Hide the window
 				win.Hide();
 
@@ -122,7 +125,7 @@ namespace WindowMasterLib.Actions.HotKeyActions {
 		/// This method will retrieve the path of the process based on the 
 		/// handle to it's window.
 		/// </summary>
-		private string pathfromhwnd(IntPtr hwnd) {
+		private string PathFromWindowHandle(IntPtr hwnd) {
 			uint dwProcessId;
 			GetWindowThreadProcessId(hwnd, out dwProcessId);
 			IntPtr hProcess = OpenProcess(VMRead | QueryInformation, false, dwProcessId);
@@ -136,8 +139,8 @@ namespace WindowMasterLib.Actions.HotKeyActions {
 		/// This method will retrieve the default icon from an executable
 		/// that is located at the parameter path
 		/// </summary>
-		private Icon Iconfrompath(string path) {
-			System.Drawing.Icon icon = null;
+		private Icon IconFromPath(string path) {
+			Icon icon = null;
 
 			if (System.IO.File.Exists(path)) {
 				SHFILEINFO info = new SHFILEINFO();
@@ -149,7 +152,19 @@ namespace WindowMasterLib.Actions.HotKeyActions {
 			}
 
 			return icon;
-		} 
+		}
+
+		/// <summary>
+		/// Returns true if the window has already been minimized to tray
+		/// </summary>
+		private bool WindowHasBeenMinimized(IntPtr handle) {
+			foreach (NotifyIcon ni in MinimizedWindows) {
+				window w = (window)ni.Tag;
+				if (w.win.WindowHandle == handle)
+					return true;
+			}
+			return false;
+		}
 		#endregion
 	}
 }

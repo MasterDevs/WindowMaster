@@ -4,6 +4,9 @@ using System.Windows.Forms;
 using WindowMasterLib;
 using System.Drawing;
 using WindowMasterLib.Actions;
+using System.Threading;
+using System.Diagnostics;
+using System.Runtime.InteropServices;
 
 namespace WindowMasterLib {
 	static class Program {
@@ -12,14 +15,22 @@ namespace WindowMasterLib {
 		/// </summary>
 		[STAThread]
 		static void Main(string[] args) {
-			Application.EnableVisualStyles();
-			Application.SetCompatibleTextRenderingDefault(false);
-			settings = new SettingsWindow();
-			InitItems();
-			//-- Only show the settings form if we don't have the -hide argument
-			if(!ContainsArgument(args, "hide"))
-				miSettings_Click(null, null);
-			Application.Run();
+			bool firstInstance = true;
+			using (Mutex mutex = new Mutex(true, "WindowMaster", out firstInstance)) {
+				if (firstInstance) {
+					Application.EnableVisualStyles();
+					Application.SetCompatibleTextRenderingDefault(false);
+					settings = new SettingsWindow();
+					InitItems();
+					//-- Only show the settings form if we don't have the -hide argument
+					if (!ContainsArgument(args, "hide"))
+						miSettings_Click(null, null);
+					Application.Run(settings);
+				} else {
+					mutex.ReleaseMutex();
+					Application.Exit();
+				}
+			}
 		}
 
 		static SettingsWindow settings;

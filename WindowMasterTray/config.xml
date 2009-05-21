@@ -101,4 +101,15 @@
     <Name>Minimize / Restore All Other Windows</Name>
     <Description>Minimizes all active windows other then the foreground window. When pressed again, will restore all of those windows to their previous position.</Description>
   </HotKeyAction>
+  <HotKeyAction xsi:type="MinimizeToTray">
+    <Combos>
+      <KeyCombo>
+        <Modifiers>Shift Win</Modifiers>
+        <Key>Down</Key>
+      </KeyCombo>
+    </Combos>
+    <Enabled>true</Enabled>
+    <Name>Minimize to System Tray</Name>
+    <Description>This action will minimize the foreground window to the system tray. It can be restored by clicking on the tray icon that's created.</Description>
+  </HotKeyAction>
 </ArrayOfHotKeyAction>

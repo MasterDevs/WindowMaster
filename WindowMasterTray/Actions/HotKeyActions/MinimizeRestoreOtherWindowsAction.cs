@@ -33,7 +33,7 @@ namespace WindowMasterLib.Actions.HotKeyActions {
 			foreach (Window w in Window.AllVisibleWindows) {
 				if (w.WindowHandle != MainWindow.WindowHandle) {
 					PreviousStates.Add(w, w.State);
-					w.Minimize();
+					w.Minimize(false);
 				}
 			}
 			//-- After we minimize, we need to se the MainWindow as the foreground window
