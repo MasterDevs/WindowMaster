@@ -9,9 +9,9 @@ namespace WindowMasterLib.Actions.HotKeyActions {
 	[Serializable]
 	public class StartApplicationAction : HotKeyAction {
 
-		[Description("Arguments that will be passed to the appliction when it starts")]
-		public string Arguments { get; set; }
 		[Description("Set of command-line arguments to use when starting the application.")]
+		public string Arguments { get; set; }
+		[Description("The full path to the process to be started.")]
 		public string Path { get; set; }
 		[Description("Initial Directory for the process to be started.")]
 		public string WorkingDirectory { get; set; }
