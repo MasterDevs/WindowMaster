@@ -44,6 +44,7 @@ namespace WindowMasterLib {
 		/// Consise name of the action
 		/// </summary>
 		[Browsable(true)]
+		[Description("Name of the action")]
 		public string Name { get; set; }
 		/// <summary>
 		/// Explains the function of the action

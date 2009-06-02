@@ -25,6 +25,8 @@ namespace WindowMasterLib {
 					//-- Only show the settings form if we don't have the -hide argument
 					if (!ContainsArgument(args, "hide"))
 						miSettings_Click(null, null);
+					else
+						settings.LoadActions(); //-- Load actions if we don't show the form
 					Application.Run();
 				} else {
 					mutex.ReleaseMutex();

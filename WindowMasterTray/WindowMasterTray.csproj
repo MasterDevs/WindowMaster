@@ -92,6 +92,7 @@
     <Compile Include="Actions\HotKeyActions\RestoreDownAction.cs" />
     <Compile Include="Actions\HotKeyActions\RestoreUpAction.cs" />
     <Compile Include="Actions\HotKeyActions\RestoreWindowAction.cs" />
+    <Compile Include="Actions\HotKeyActions\StartApplicationAction.cs" />
     <Compile Include="Actions\HotKeyActions\StretchWindowAction.cs" />
     <Compile Include="HotKeyForm.cs">
       <SubType>Form</SubType>

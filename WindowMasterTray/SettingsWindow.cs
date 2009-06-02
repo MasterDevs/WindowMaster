@@ -45,7 +45,7 @@ namespace WindowMasterLib {
 		/// Initialzes all of the Actions from the Config file
 		/// and populates the Actions CheckedListBox
 		/// </summary>
-		private void LoadActions() {
+		public void LoadActions() {
 			//-- Start from Scratch
 			RemoveAllHotKeys();
 
