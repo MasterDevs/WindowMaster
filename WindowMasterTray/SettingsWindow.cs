@@ -35,10 +35,7 @@ namespace WindowMasterLib {
 			SavePreferences();
 		}
 		private void SavePreferences() {
-			if (mi_StartWithWindows.Checked)
-				RegistryManager.StartWithWindows_Add();
-			else
-				RegistryManager.StartWithWindows_Remove();
+			RegistryManager.StartWithWindows = mi_StartWithWindows.Checked;
 		}
 
 		/// <summary>
@@ -67,6 +64,9 @@ namespace WindowMasterLib {
 			bApply.Enabled = false;
 			bAddHotKey.Enabled = false;
 			bRemoveHotKey.Enabled = false;
+
+			//-- Initialize Menus
+			mi_StartWithWindows.Checked = RegistryManager.StartWithWindows;
 		}
 
 		/// <summary>
