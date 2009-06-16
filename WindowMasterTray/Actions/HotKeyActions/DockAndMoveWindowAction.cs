@@ -34,11 +34,9 @@ namespace WindowMasterLib.Actions.HotKeyActions {
 					w.UnDock();
 				}
 
-				double orig_opacity = w.GetOpacityPercentage();
-
 				//-- Hide Window
-				w.MakeInvisible();
-
+				w.SetWindowState(WindowState.Hide);
+				
 				//-- We are moving to the left
 				if (MoveDirection == Direction.Left) {
 					//-- Window is Docked on the Left
@@ -68,10 +66,9 @@ namespace WindowMasterLib.Actions.HotKeyActions {
 						w.Dock(curScreen, DockStyle.Right, Percentage);
 					}
 				}
-
-				//-- Show Window @ it's original opacity
-				//w.ChangeOpacity(orig_opacity);
-				w.MakeOpaque();
+				
+				//-- Show Window
+				w.SetWindowState(WindowState.Normal);
 			}
 		}
 

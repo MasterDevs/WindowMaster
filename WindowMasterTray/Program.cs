@@ -63,7 +63,7 @@ namespace WindowMasterLib {
 
 			notify = new NotifyIcon();
 			notify.Visible = true;
-			notify.Icon = Icon.FromHandle(Properties.Resources.Monitor_16.GetHicon());
+			notify.Icon = Properties.Resources.Monitor_256;
 			notify.ContextMenu = cm;
 			notify.DoubleClick += new EventHandler(miSettings_Click);
 

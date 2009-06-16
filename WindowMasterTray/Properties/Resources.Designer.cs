@@ -60,45 +60,10 @@ namespace WindowMasterLib.Properties {
             }
         }
         
-        internal static System.Drawing.Icon DefaultTrayIcon {
-            get {
-                object obj = ResourceManager.GetObject("DefaultTrayIcon", resourceCulture);
-                return ((System.Drawing.Icon)(obj));
-            }
-        }
-        
-        internal static System.Drawing.Bitmap Monitor_128 {
-            get {
-                object obj = ResourceManager.GetObject("Monitor_128", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
-            }
-        }
-        
-        internal static System.Drawing.Bitmap Monitor_16 {
-            get {
-                object obj = ResourceManager.GetObject("Monitor_16", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
-            }
-        }
-        
-        internal static System.Drawing.Bitmap Monitor_256 {
+        internal static System.Drawing.Icon Monitor_256 {
             get {
                 object obj = ResourceManager.GetObject("Monitor_256", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
-            }
-        }
-        
-        internal static System.Drawing.Bitmap Monitor_32 {
-            get {
-                object obj = ResourceManager.GetObject("Monitor_32", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
-            }
-        }
-        
-        internal static System.Drawing.Bitmap Monitor_64 {
-            get {
-                object obj = ResourceManager.GetObject("Monitor_64", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
+                return ((System.Drawing.Icon)(obj));
             }
         }
     }

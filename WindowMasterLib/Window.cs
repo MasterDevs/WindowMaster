@@ -289,6 +289,7 @@ namespace WindowMasterLib {
 		/// </summary>
 		public void UnDock() {
 			if (Docks.ContainsKey(WindowHandle)) {
+				SetWindowState(WindowState.Hide);
 				WINDOWPLACEMENT wp = Docks[WindowHandle].WindowPlacement;
 				SetWindowPlacement(wp);
 				Docks.Remove(WindowHandle);
@@ -425,27 +426,6 @@ namespace WindowMasterLib {
 
 			//-- Set Layred Attributes
 			return SetLayeredWindowAttributes(WindowHandle, 0, bAlpha, LWA_ALPHA);
-		}
-
-		/// <summary>
-		/// Returns the perctange of opacity of the current window.
-		/// </summary>
-		/// <returns>1 is fully opaque<para>0 is fully invisible</para></returns>
-		public double GetOpacityPercentage() {
-			uint crKey;
-			byte bAlpha;
-			uint dwFlags;
-			
-			//-- Get Current Values
-			GetLayeredWindowAttributes(WindowHandle, out crKey, out bAlpha, out dwFlags);
-
-		
-			//-- If the window is not layered, return 1 (fully opaque)
-			if (crKey == 0 && bAlpha == 0 && dwFlags == 0) {
-				return 1;
-			}
-			else
-				return bAlpha / 255;
 		}
 
 		/// <summary>
@@ -794,9 +774,22 @@ namespace WindowMasterLib {
 	/// Lets you know the current 'State' of the window
 	/// </summary>
 	public enum WindowState : uint {
+		/// <summary>
+		/// Hides the window.
+		/// <para>Note: The window will not be shown in the taskbar.</para>
+		/// </summary>
 		Hide = 0,
+		/// <summary>
+		/// Shows the window in its regular (non-maximized) position.
+		/// </summary>
 		Normal = 1,
+		/// <summary>
+		/// Window is in the minimized state, only visible in taskbar.
+		/// </summary>
 		Minimized = 2,
+		/// <summary>
+		/// Window is maximized, taking up the entire working area of the screen.
+		/// </summary>
 		Maximized = 3
 	}
 }
