@@ -148,20 +148,7 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <None Include="Resources\Monitor_256.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Resources\Monitor_128.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Resources\Monitor_16.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Resources\Monitor_32.png" />
-  </ItemGroup>
-  <ItemGroup>
     <None Include="app.config" />
-    <None Include="Resources\Monitor_64.png" />
   </ItemGroup>
   <ItemGroup>
     <None Include="config.xml">
