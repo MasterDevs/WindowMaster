@@ -115,7 +115,6 @@
 			// 
 			// bOK
 			// 
-			this.bOK.DialogResult = System.Windows.Forms.DialogResult.OK;
 			this.bOK.Enabled = false;
 			this.bOK.Location = new System.Drawing.Point(13, 132);
 			this.bOK.Name = "bOK";
@@ -123,6 +122,7 @@
 			this.bOK.TabIndex = 5;
 			this.bOK.Text = "&OK";
 			this.bOK.UseVisualStyleBackColor = true;
+			this.bOK.Click += new System.EventHandler(this.bOK_Click);
 			// 
 			// bCancel
 			// 

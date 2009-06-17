@@ -102,6 +102,27 @@ namespace WindowMasterLib {
 		}
 
 		/// <summary>
+		/// This simple method will check to see if a hotkey is available.
+		/// </summary>
+		/// <param name="hotkey">The HotKey to be checked for availability</param>
+		/// <returns>True if hotkey is available, false otherwise</returns>
+		public static bool IsHotKeyAvailable(KeyCombo hotkey) {
+			bool isAvailable = false;
+			StaticID += 1;
+
+			isAvailable =
+				RegisterHotKey(StaticWindow.Handle, StaticID, (uint)hotkey.Modifiers, (uint)hotkey.Key);
+			
+			//-- Unregister hotkey if it's available
+			if (isAvailable) {
+				UnregisterHotKey(StaticWindow.Handle, StaticID);
+			}
+
+			StaticID -= 1;
+			return isAvailable;
+		}
+
+		/// <summary>
 		/// Registers a hotkey with the static window instance.
 		/// </summary>
 		/// <param name="kc">KeyCobmination that makes up the hotkey</param>

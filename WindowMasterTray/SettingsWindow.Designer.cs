@@ -35,6 +35,7 @@
 			this.bRemoveAction = new System.Windows.Forms.Button();
 			this.bAddAction = new System.Windows.Forms.Button();
 			this.groupBox2 = new System.Windows.Forms.GroupBox();
+			this.bModifyHotKey = new System.Windows.Forms.Button();
 			this.tbActionDescription = new System.Windows.Forms.TextBox();
 			this.bApply = new System.Windows.Forms.Button();
 			this.bCancel = new System.Windows.Forms.Button();
@@ -84,7 +85,7 @@
 			this.lbHotKeys.Size = new System.Drawing.Size(164, 109);
 			this.lbHotKeys.TabIndex = 6;
 			this.toolTip.SetToolTip(this.lbHotKeys, "HotKeys");
-			this.lbHotKeys.DoubleClick += new System.EventHandler(this.lbHotKeys_DoubleClick);
+			this.lbHotKeys.DoubleClick += new System.EventHandler(this.lbHotKeys_EditHotKey);
 			// 
 			// bAddHotKey
 			// 
@@ -160,6 +161,7 @@
 			// 
 			// groupBox2
 			// 
+			this.groupBox2.Controls.Add(this.bModifyHotKey);
 			this.groupBox2.Controls.Add(this.lbHotKeys);
 			this.groupBox2.Controls.Add(this.bAddHotKey);
 			this.groupBox2.Controls.Add(this.bRemoveHotKey);
@@ -169,6 +171,18 @@
 			this.groupBox2.TabIndex = 10;
 			this.groupBox2.TabStop = false;
 			this.groupBox2.Text = "HotKeys";
+			// 
+			// bModifyHotKey
+			// 
+			this.bModifyHotKey.Enabled = false;
+			this.bModifyHotKey.Location = new System.Drawing.Point(178, 63);
+			this.bModifyHotKey.Name = "bModifyHotKey";
+			this.bModifyHotKey.Size = new System.Drawing.Size(45, 27);
+			this.bModifyHotKey.TabIndex = 9;
+			this.bModifyHotKey.Text = "%";
+			this.toolTip.SetToolTip(this.bModifyHotKey, "Modify Selected Action");
+			this.bModifyHotKey.UseVisualStyleBackColor = true;
+			this.bModifyHotKey.Click += new System.EventHandler(this.lbHotKeys_EditHotKey);
 			// 
 			// tbActionDescription
 			// 
@@ -326,5 +340,6 @@
 		private System.Windows.Forms.SaveFileDialog saveDialog;
 		private System.Windows.Forms.OpenFileDialog openDialog;
 		private System.Windows.Forms.ToolStripSeparator toolStripSeparator1;
+		private System.Windows.Forms.Button bModifyHotKey;
 	}
 }

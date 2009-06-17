@@ -105,10 +105,17 @@ namespace WindowMasterLib {
 
 		private void Verify_HotKey_Selected(object sender, EventArgs e) {
 			//-- The ok button is only enabled if we have at least 1 modifier
-			// and a key is selected
+			// a key is selected, and that hotkey is available
 			bOK.Enabled =
 				(cbAlt.Checked || cbCtrl.Checked || cbShift.Checked || cbWin.Checked) &&
 				(ddlKey.SelectedItem != null);
+		}
+
+		private void bOK_Click(object sender, EventArgs e) {
+			if (!WindowMasterLib.HotKey.IsHotKeyAvailable(HotKey))
+				MessageBox.Show("HotKey is already in use!\r\n\r\nPlease select another HotKey", "HotKey in Use", MessageBoxButtons.OK, MessageBoxIcon.Error);
+			else
+				DialogResult = DialogResult.OK;
 		}
 	}
 }

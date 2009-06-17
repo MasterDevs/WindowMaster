@@ -61,9 +61,10 @@ namespace WindowMasterLib {
 			lbHotKeys.DataSource = Combos;
 
 			//-- Initialize Buttons
-			bApply.Enabled = false;
-			bAddHotKey.Enabled = false;
-			bRemoveHotKey.Enabled = false;
+			bApply.Enabled = 
+				bAddHotKey.Enabled = 
+				bRemoveHotKey.Enabled = 
+				bModifyHotKey.Enabled = false;
 
 			//-- Initialize Menus
 			mi_StartWithWindows.Checked = RegistryManager.StartWithWindows;
@@ -113,10 +114,8 @@ namespace WindowMasterLib {
 		/// bRemoveHotKey, bAddHotKey, bRemoveAction & bModifyAction
 		/// </summary>
 		private void DisableButtons() {
-			bRemoveHotKey.Enabled =
-				bAddHotKey.Enabled =
-				bRemoveAction.Enabled =
-				bModifyAction.Enabled = false;
+			bRemoveHotKey.Enabled = bAddHotKey.Enabled = bModifyHotKey.Enabled =
+				bRemoveAction.Enabled = bModifyAction.Enabled = false;
 		}
 
 		#region Form Events
@@ -153,9 +152,10 @@ namespace WindowMasterLib {
 				RemoveAllHotKeys();
 
 				//-- Don't enable these buttons when nothing is selected
-				bRemoveHotKey.Enabled = false;
-				bModifyAction.Enabled = false;
-				bRemoveAction.Enabled = false;
+				bRemoveHotKey.Enabled = 
+					bModifyAction.Enabled = 
+					bRemoveAction.Enabled = 
+					bModifyHotKey.Enabled = false;
 				//-- Load Actions from ConfigFile
 				Actions = ActionManager.LoadActions();
 			}
@@ -293,7 +293,7 @@ namespace WindowMasterLib {
 
 				//-- Initialize Add / Delete HotKey Buttons
 				bAddHotKey.Enabled = true;
-				bRemoveHotKey.Enabled = HasKeyCombo;
+				bRemoveHotKey.Enabled = bModifyHotKey.Enabled = HasKeyCombo;
 
 				//-- Enable Modify & Remove Buttons
 				bModifyAction.Enabled = true;
@@ -307,7 +307,7 @@ namespace WindowMasterLib {
 		/// into it's constructor. If the form's dialog result
 		/// is OK, it'll change the old hotkey with the new one.
 		/// </summary>
-		private void lbHotKeys_DoubleClick(object sender, EventArgs e) {
+		private void lbHotKeys_EditHotKey(object sender, EventArgs e) {
 			if (lbHotKeys.SelectedItem != null) {
 				KeyCombo oldKC = SelectedCombo;
 				using (HotKeyForm hkf = new HotKeyForm(oldKC)) {
@@ -390,8 +390,8 @@ namespace WindowMasterLib {
 				if (result == DialogResult.OK) {
 					SelectedAction.AddHotKey(hkf.HotKey);
 					RefreshHotKeys();
-					bApply.Enabled = true;
-					bRemoveHotKey.Enabled = true;
+					bApply.Enabled = 
+						bRemoveHotKey.Enabled = bModifyHotKey.Enabled = true;
 				}
 			}
 		}
@@ -406,7 +406,7 @@ namespace WindowMasterLib {
 			RefreshHotKeys();
 
 			if (lbHotKeys.Items.Count == 0) {
-				bRemoveHotKey.Enabled = false;
+				bRemoveHotKey.Enabled = bModifyHotKey.Enabled = false;
 			}
 
 			bApply.Enabled = true;
