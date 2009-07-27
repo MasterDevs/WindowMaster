@@ -41,8 +41,9 @@ namespace WindowMasterLib.Actions.HotKeyActions {
 
 		public override void Initialize(HotKeyAction action) {
 			base.Initialize(action);
-			if (action is StretchWindowAction)
-				Direction = ((StretchWindowAction)action).Direction;
+			StretchWindowAction swa = action as StretchWindowAction;
+			if (swa != null)
+				Direction = swa.Direction;
 		}
 	}
 }

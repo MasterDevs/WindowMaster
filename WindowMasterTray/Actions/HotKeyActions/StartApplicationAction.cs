@@ -77,8 +77,8 @@ namespace WindowMasterLib.Actions.HotKeyActions {
 
 		public override void Initialize(HotKeyAction action) {
 			base.Initialize(action);
-			if (action is StartApplicationAction) {
-				StartApplicationAction saa = (StartApplicationAction)action;
+			StartApplicationAction saa = action as StartApplicationAction;
+			if(saa != null) {
 				Arguments = saa.Arguments;
 				Path = saa.Path;
 				WorkingDirectory = saa.WorkingDirectory;

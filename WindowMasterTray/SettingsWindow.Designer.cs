@@ -41,6 +41,8 @@
 			this.bCancel = new System.Windows.Forms.Button();
 			this.toolTip = new System.Windows.Forms.ToolTip(this.components);
 			this.menuStrip1 = new System.Windows.Forms.MenuStrip();
+			this.fileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+			this.mi_Exit = new System.Windows.Forms.ToolStripMenuItem();
 			this.configurationToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.mi_StartWithWindows = new System.Windows.Forms.ToolStripMenuItem();
 			this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
@@ -220,12 +222,28 @@
 			// menuStrip1
 			// 
 			this.menuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.fileToolStripMenuItem,
             this.configurationToolStripMenuItem});
 			this.menuStrip1.Location = new System.Drawing.Point(0, 0);
 			this.menuStrip1.Name = "menuStrip1";
 			this.menuStrip1.Size = new System.Drawing.Size(601, 24);
 			this.menuStrip1.TabIndex = 16;
 			this.menuStrip1.Text = "menuStrip1";
+			// 
+			// fileToolStripMenuItem
+			// 
+			this.fileToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.mi_Exit});
+			this.fileToolStripMenuItem.Name = "fileToolStripMenuItem";
+			this.fileToolStripMenuItem.Size = new System.Drawing.Size(35, 20);
+			this.fileToolStripMenuItem.Text = "File";
+			// 
+			// mi_Exit
+			// 
+			this.mi_Exit.Name = "mi_Exit";
+			this.mi_Exit.Size = new System.Drawing.Size(103, 22);
+			this.mi_Exit.Text = "Exit";
+			this.mi_Exit.Click += new System.EventHandler(this.mi_Exit_Click);
 			// 
 			// configurationToolStripMenuItem
 			// 
@@ -307,6 +325,7 @@
 			this.HelpButtonClicked += new System.ComponentModel.CancelEventHandler(this.SettingsWindow_HelpButtonClicked);
 			this.VisibleChanged += new System.EventHandler(this.SettingsWindow_VisibleChanged);
 			this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.SettingsWindow_FormClosing);
+			this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.SettingsWindow_KeyDown);
 			this.groupBox1.ResumeLayout(false);
 			this.groupBox2.ResumeLayout(false);
 			this.menuStrip1.ResumeLayout(false);
@@ -341,5 +360,7 @@
 		private System.Windows.Forms.OpenFileDialog openDialog;
 		private System.Windows.Forms.ToolStripSeparator toolStripSeparator1;
 		private System.Windows.Forms.Button bModifyHotKey;
+		private System.Windows.Forms.ToolStripMenuItem fileToolStripMenuItem;
+		private System.Windows.Forms.ToolStripMenuItem mi_Exit;
 	}
 }

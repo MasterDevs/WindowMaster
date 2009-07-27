@@ -11,17 +11,6 @@ namespace WindowMasterLib.Actions.HotKeyActions {
 	public class MinimizeToTray : HotKeyAction {
 
 		#region P/Invokes
-		[DllImport("user32.dll")]
-		public static extern bool IsWindow(IntPtr hWnd);
-		[DllImport("user32.dll", SetLastError = true)]
-		public static extern uint GetWindowThreadProcessId(IntPtr hWnd, out uint lpdwProcessId);
-		[DllImport("kernel32.dll")]
-		public static extern IntPtr OpenProcess(uint dwDesiredAccess, bool bInheritHandle,
-			 uint dwProcessId);
-		[DllImport("Psapi.dll", SetLastError = true)]
-		[PreserveSig]
-		public static extern uint GetModuleFileNameEx([In]IntPtr hProcess, [In] IntPtr hModule, [Out] StringBuilder lpFilename,
-				[In][MarshalAs(UnmanagedType.U4)]int nSize);
 		[DllImport("kernel32.dll", SetLastError = true)]
 		public static extern bool CloseHandle(IntPtr hHandle);
 		[DllImport("shell32.dll")]
@@ -33,9 +22,6 @@ namespace WindowMasterLib.Actions.HotKeyActions {
 
 		public const uint SHGFI_ICON = 0x100;
 		public const uint SHGFI_SMALLICON = 0x1;
-
-		private uint VMRead = 0x00000010;
-		private uint QueryInformation = 0x00000400;
 
 		[StructLayout(LayoutKind.Sequential)]
 		public struct SHFILEINFO {
@@ -65,7 +51,7 @@ namespace WindowMasterLib.Actions.HotKeyActions {
 			Window win = Window.ForeGroundWindow;
 			if (Enabled && !WindowHasBeenMinimized(win.WindowHandle) ) {
 				//-- Try to grab the icon from the path to the executible of the window
-				Icon icon = IconFromPath(PathFromWindowHandle(win.WindowHandle));
+				Icon icon = IconFromPath(win.ExecutiblePath);
 				
 				//-- Create the tray icon
 				NotifyIcon tray = new NotifyIcon();
@@ -107,7 +93,7 @@ namespace WindowMasterLib.Actions.HotKeyActions {
 		private void tray_Click(object sender, EventArgs e) {
 			NotifyIcon tray = sender as NotifyIcon;
 			window win = tray.Tag as window;
-			if (IsWindow(win.win.WindowHandle)) {
+			if (Window.IsWindow(win.win.WindowHandle)) {
 				win.win.SetWindowState(win.previousState);
 				win.win.SetAsForegroundWindow();
 			} else
@@ -121,20 +107,6 @@ namespace WindowMasterLib.Actions.HotKeyActions {
 		}
 
 		#region Helper Methods
-		/// <summary>
-		/// This method will retrieve the path of the process based on the 
-		/// handle to it's window.
-		/// </summary>
-		private string PathFromWindowHandle(IntPtr hwnd) {
-			uint dwProcessId;
-			GetWindowThreadProcessId(hwnd, out dwProcessId);
-			IntPtr hProcess = OpenProcess(VMRead | QueryInformation, false, dwProcessId);
-			StringBuilder path = new StringBuilder(1024);
-			GetModuleFileNameEx(hProcess, IntPtr.Zero, path, 1024);
-			CloseHandle(hProcess);
-			return path.ToString();
-		}
-
 		/// <summary>
 		/// This method will retrieve the default icon from an executable
 		/// that is located at the parameter path

@@ -13,37 +13,37 @@ namespace WindowMasterLib.Actions {
 		private static XmlSerializer serializer =
 			new XmlSerializer(typeof(List<HotKeyAction>), ActionTypes);
 
+		public static List<HotKeyAction> Actions { get; set; }
+
 		private const string ConfigFileName = "WindowMasterConfig.xml";
 
-		public static List<HotKeyAction> LoadActions(string xmlPath) {
-			List<HotKeyAction> actions = new List<HotKeyAction>();
+		static ActionManager() { LoadActions(); }
+
+		public static void LoadActions(string xmlPath) {
+			Actions = new List<HotKeyAction>();
 			using (TextReader reader = new StreamReader(xmlPath)) {
-				actions = (List<HotKeyAction>)serializer.Deserialize(reader);
+				Actions = (List<HotKeyAction>)serializer.Deserialize(reader);
 				reader.Close();
 			}
-			return actions;
 		}
 
-		public static List<HotKeyAction> LoadActions() {
-
-			List<HotKeyAction> actions = new List<HotKeyAction>();
+		public static void LoadActions() {
+			Actions = new List<HotKeyAction>();
 			try {
-
 				//-- Get a storage location
 				using (IsolatedStorageFile isoStore = IsolatedStorageFile.GetUserStoreForAssembly())
 				//-- Get a handle to the config file stream
 				using (IsolatedStorageFileStream isoFileStream =
 					new IsolatedStorageFileStream(ConfigFileName, FileMode.Open, FileAccess.Read, isoStore)) {
 					//-- Deserialize the actions
-					actions = (List<HotKeyAction>)serializer.Deserialize(isoFileStream);
+					Actions = (List<HotKeyAction>)serializer.Deserialize(isoFileStream);
 					//-- Close the file stream
 					isoFileStream.Close();
 				}
 			} catch (Exception) { }
-			return actions;
 		}
 
-		public static bool SaveActions(List<HotKeyAction> actions) {
+		public static bool SaveActions() {
 
 			try {
 
@@ -54,7 +54,7 @@ namespace WindowMasterLib.Actions {
 					new IsolatedStorageFileStream(ConfigFileName, FileMode.Create, FileAccess.Write, isoStore)) {
 
 					//-- Serialize the actions to the file
-					serializer.Serialize(isoStream, actions);
+					serializer.Serialize(isoStream, Actions);
 
 					//-- Close the stream
 					isoStream.Close();
@@ -65,9 +65,9 @@ namespace WindowMasterLib.Actions {
 			} catch (Exception) { return false; }
 		}
 
-		public static void SaveActions(List<HotKeyAction> actions, string xmlPath) {
+		public static void SaveActions(string xmlPath) {
 			using (TextWriter writer = new StreamWriter(xmlPath)) {
-				serializer.Serialize(writer, actions);
+				serializer.Serialize(writer, Actions);
 				writer.Close();
 			}
 		}
@@ -85,10 +85,13 @@ namespace WindowMasterLib.Actions {
 				aTypes.Add(typeof(MakeInvisibleAction));
 				aTypes.Add(typeof(MakeOpaqueAction));
 				aTypes.Add(typeof(MaximizeWindowAction));
+				aTypes.Add(typeof(MemorizeWindowLocationAction));
 				aTypes.Add(typeof(MinimizeRestoreOtherWindowsAction));
 				aTypes.Add(typeof(MinimizeToTray));
 				aTypes.Add(typeof(MinimizeWindowAction));
 				aTypes.Add(typeof(MoveWindowAction));
+				aTypes.Add(typeof(RecoverOrphanWindowsAction));
+				aTypes.Add(typeof(RememberWindowLocationAction));
 				aTypes.Add(typeof(RestoreDownAction));
 				aTypes.Add(typeof(RestoreUpAction));
 				aTypes.Add(typeof(RestoreWindowAction));

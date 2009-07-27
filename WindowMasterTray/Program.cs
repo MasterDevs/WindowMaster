@@ -5,11 +5,11 @@ using WindowMasterLib;
 using System.Drawing;
 using WindowMasterLib.Actions;
 using System.Threading;
-using System.Diagnostics;
 using System.Runtime.InteropServices;
 
 namespace WindowMasterLib {
 	static class Program {
+
 		/// <summary>
 		/// The main entry point for the application.
 		/// </summary>
@@ -22,17 +22,28 @@ namespace WindowMasterLib {
 					Application.SetCompatibleTextRenderingDefault(false);
 					settings = new SettingsWindow();
 					InitItems();
+					
 					//-- Only show the settings form if we don't have the -hide argument
 					if (!ContainsArgument(args, "hide"))
 						miSettings_Click(null, null);
 					else
 						settings.LoadActions(); //-- Load actions if we don't show the form
-					Application.Run();
+					Application.Run(settings);
 				} else {
-					mutex.ReleaseMutex();
+					//-- Display message to user that application is already running
+					MessageBox.Show("WindowMaster is currently running!", "WindowMaster is currently running!", MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
 					Application.Exit();
 				}
 			}
+		}
+
+		public static void Exit() {
+			notify.Visible = false;
+			//-- Dispose Necessary Forms
+			settings.Dispose();
+			//-- Hotkeys Is Disposable
+			HotKey.CleanUp();
+			Application.Exit();
 		}
 
 		static SettingsWindow settings;
@@ -40,7 +51,7 @@ namespace WindowMasterLib {
 		static ContextMenu cm;
 		static MenuItem miAbout;
 		static MenuItem miSettings;
-		static MenuItem miClose;
+		static MenuItem miExit;
 		
 		static void InitItems() {
 			miSettings = new MenuItem();
@@ -51,14 +62,14 @@ namespace WindowMasterLib {
 			miAbout.Text = "About";
 			miAbout.Click += new EventHandler(miAbout_Click);
 
-			miClose = new MenuItem();
-			miClose.Text = "Exit";
-			miClose.Click += new EventHandler(miClose_Click);
+			miExit = new MenuItem();
+			miExit.Text = "Exit";
+			miExit.Click += new EventHandler(miExit_Click);
 
 			cm = new ContextMenu();
 			cm.MenuItems.Add(miSettings);
 			cm.MenuItems.Add(miAbout);
-			cm.MenuItems.Add(miClose);
+			cm.MenuItems.Add(miExit);
 			cm.Name = "cm";
 
 			notify = new NotifyIcon();
@@ -75,14 +86,12 @@ namespace WindowMasterLib {
 			a.ShowDialog();
 		}
 
-		static void miClose_Click(object sender, EventArgs e) {
-			notify.Visible = false;
-			settings.Dispose();
-			Application.Exit();
+		static void miExit_Click(object sender, EventArgs e) {
+			Exit();
 		}
 
 		static void miSettings_Click(object sender, EventArgs e) {
-			settings.Show();
+			settings.Visible = true;
 			settings.Activate();
 		}
 

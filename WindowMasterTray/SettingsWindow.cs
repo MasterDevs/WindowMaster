@@ -15,11 +15,19 @@ using WindowMasterLib.Actions.HotKeyActions;
 namespace WindowMasterLib {
 	public partial class SettingsWindow : Form {
 
-		public List<HotKeyAction> Actions;
+		protected override void WndProc(ref Message m) {
+			base.WndProc(ref m);
+
+			if (m.Msg == 1223)
+				MessageBox.Show("OK");
+		}
+
 		public KeyCombo[] Combos;
 
-		private HotKeyAction SelectedAction { get { return (HotKeyAction)lbActions.SelectedItem; } }
-		private KeyCombo SelectedCombo { get { return (KeyCombo)lbHotKeys.SelectedItem; } }
+		private HotKeyAction SelectedAction { get { return (HotKeyAction)lbActions.SelectedItem; } 	}
+		private KeyCombo SelectedCombo { get { return (KeyCombo)lbHotKeys.SelectedItem; }	}
+		private bool ComboSelected { get { return lbHotKeys.SelectedItem != null; } }
+		private bool ActionSelected { get { return lbActions.SelectedItem != null; } }
 		private bool HasKeyCombo { get { return lbHotKeys.Items.Count != 0; } }
 
 		private string InitalDir { get { return Environment.GetFolderPath(Environment.SpecialFolder.Personal); } }
@@ -28,14 +36,6 @@ namespace WindowMasterLib {
 			InitializeComponent();
 			openDialog.InitialDirectory = InitalDir;
 			saveDialog.InitialDirectory = InitalDir;
-		}
-
-		private void Save() {
-			SaveActions();
-			SavePreferences();
-		}
-		private void SavePreferences() {
-			RegistryManager.StartWithWindows = mi_StartWithWindows.Checked;
 		}
 
 		/// <summary>
@@ -47,11 +47,11 @@ namespace WindowMasterLib {
 			RemoveAllHotKeys();
 
 			//-- Initialize Actions
-			Actions = ActionManager.LoadActions();
+			ActionManager.LoadActions();
 
 			//-- Add Actions to the Actions List Box
 			lbActions.Items.Clear();
-			foreach (HotKeyAction act in Actions) {
+			foreach (HotKeyAction act in ActionManager.Actions) {
 				lbActions.Items.Add(act, act.Enabled);
 			}
 
@@ -61,26 +61,30 @@ namespace WindowMasterLib {
 			lbHotKeys.DataSource = Combos;
 
 			//-- Initialize Buttons
-			bApply.Enabled = 
-				bAddHotKey.Enabled = 
-				bRemoveHotKey.Enabled = 
+			bApply.Enabled =
+				bAddHotKey.Enabled =
+				bRemoveHotKey.Enabled =
 				bModifyHotKey.Enabled = false;
 
 			//-- Initialize Menus
 			mi_StartWithWindows.Checked = RegistryManager.StartWithWindows;
 		}
 
-		/// <summary>
-		/// Saves the actions to the Config File
-		/// </summary>
-		private void SaveActions() { ActionManager.SaveActions(Actions); }
+		private void Save() {
+			//-- Save Actions
+			ActionManager.SaveActions();
+			//-- Save Preferences
+			RegistryManager.StartWithWindows = mi_StartWithWindows.Checked;
+			//-- Reset bApply
+			bApply.Enabled = false;
+		}
 
 		/// <summary>
 		/// Unregisters all current hotkeys
 		/// </summary>
 		private void RemoveAllHotKeys() {
-			if (Actions != null)
-				foreach (HotKeyAction a in Actions)
+			if (ActionManager.Actions != null)
+				foreach (HotKeyAction a in ActionManager.Actions)
 					a.RemoveAllHotKeys();
 		}
 
@@ -125,15 +129,21 @@ namespace WindowMasterLib {
 		/// we'll close the form is when the CloseReason is ApplicationExitCall.
 		/// </summary>
 		private void SettingsWindow_FormClosing(object sender, FormClosingEventArgs e) {
+
+			if (e.CloseReason == CloseReason.WindowsShutDown) {
+				//-- Exit Gracefully
+				Program.Exit();
+			}
+
 			//-- Only close this form if we are exiting. Else, we'll hide it.
 			if (e.CloseReason != CloseReason.ApplicationExitCall) {
 				if (bApply.Enabled) {
 					DialogResult dr = PromptForSave();
 					if (dr == DialogResult.Cancel) return;
 				}
-				Hide();
+				this.Visible = false;
 				e.Cancel = true;
-			}
+			} 
 		}
 
 		/// <summary>
@@ -157,7 +167,7 @@ namespace WindowMasterLib {
 					bRemoveAction.Enabled = 
 					bModifyHotKey.Enabled = false;
 				//-- Load Actions from ConfigFile
-				Actions = ActionManager.LoadActions();
+				ActionManager.LoadActions();
 			}
 		}
 
@@ -171,11 +181,11 @@ namespace WindowMasterLib {
 					DialogResult dr = PromptForSave();
 					if (dr == DialogResult.Cancel) return;
 				}
-				Hide();
+				this.Visible = false;
 			} else if (e.KeyCode == Keys.Delete) { //-- Delete Action or KeyCode
-				if (lbActions.Focused && SelectedAction != null) {
+				if (lbActions.Focused && ActionSelected) {
 					bRemoveAction_Click(sender, e);
-				} else if (lbHotKeys.Focused && SelectedCombo != null) {
+				} else if (lbHotKeys.Focused && ComboSelected) {
 					bRemoveKey_Click(sender, e);
 				}
 			}
@@ -225,7 +235,7 @@ namespace WindowMasterLib {
 
 				try {
 					//-- Load the actions from user specified location
-					Actions = ActionManager.LoadActions(openDialog.FileName);
+					ActionManager.LoadActions(openDialog.FileName);
 				} catch (Exception) {
 					MessageBox.Show("There was an error importing the actions. Please try again, making sure you're selecting a valid WindowMaster configuration file.", "Error Loading Config File", MessageBoxButtons.OK, MessageBoxIcon.Warning);
 					openDialog.InitialDirectory = InitalDir;
@@ -233,7 +243,7 @@ namespace WindowMasterLib {
 				}
 
 				//-- Save the actions
-				if (ActionManager.SaveActions(Actions))
+				if (ActionManager.SaveActions())
 					MessageBox.Show("Actions Imported!", "Success", MessageBoxButtons.OK, MessageBoxIcon.Asterisk);
 			}
 
@@ -261,7 +271,7 @@ namespace WindowMasterLib {
 
 				try {
 					//-- Save the Actions to the user specified location
-					ActionManager.SaveActions(Actions, saveDialog.FileName);
+					ActionManager.SaveActions(saveDialog.FileName);
 				} catch (Exception) {
 					MessageBox.Show("There was an error exporting the actions. Please try again, making sure you're selecting a location that you can save to.", "Error Saving Config File", MessageBoxButtons.OK, MessageBoxIcon.Warning);
 					saveDialog.InitialDirectory = InitalDir;
@@ -342,7 +352,7 @@ namespace WindowMasterLib {
 			using (ActionForm af = new ActionForm()) {
 				DialogResult dr = af.ShowDialog();
 				if (dr == DialogResult.OK) {
-					Actions.Add(af.Action);
+					ActionManager.Actions.Add(af.Action);
 					lbActions.Items.Add(af.Action);
 					lbActions.SetItemChecked(lbActions.Items.Count - 1, af.Action.Enabled);
 					bApply.Enabled = true;
@@ -373,7 +383,7 @@ namespace WindowMasterLib {
 		/// </summary>
 		private void bRemoveAction_Click(object sender, EventArgs e) {
 			SelectedAction.RemoveAllHotKeys();
-			Actions.Remove(SelectedAction);
+			ActionManager.Actions.Remove(SelectedAction);
 			lbActions.Items.Remove(SelectedAction);
 			bApply.Enabled = true;
 			DisableButtons();
@@ -404,10 +414,8 @@ namespace WindowMasterLib {
 			KeyCombo kc = SelectedCombo;
 			SelectedAction.RemoveHotKey(kc);
 			RefreshHotKeys();
-
-			if (lbHotKeys.Items.Count == 0) {
-				bRemoveHotKey.Enabled = bModifyHotKey.Enabled = false;
-			}
+			
+			bRemoveHotKey.Enabled = bModifyHotKey.Enabled = HasKeyCombo;
 
 			bApply.Enabled = true;
 		}
@@ -417,7 +425,7 @@ namespace WindowMasterLib {
 		/// </summary>
 		private void bOK_Click(object sender, EventArgs e) {
 			Save();
-			Hide();
+			this.Visible = false;
 		}
 
 		/// <summary>
@@ -436,11 +444,14 @@ namespace WindowMasterLib {
 				DialogResult dr = PromptForSave();
 				if (dr == DialogResult.Cancel) return;
 			}
-			Hide();
+			this.Visible = false;
 		}
 
 		#endregion
 
+		private void mi_Exit_Click(object sender, EventArgs e) {
+			Program.Exit();
+		}
 
 	}
 }

@@ -9,6 +9,21 @@ namespace WindowMasterLib {
 	public class Window {
 
 		#region User32.dll Methods
+		#region Together, these methods will grab the file path of the executible based on a window handle
+		[DllImport("user32.dll", SetLastError = true)]
+		public static extern uint GetWindowThreadProcessId(IntPtr hWnd, out uint lpdwProcessId);
+		[DllImport("kernel32.dll")]
+		public static extern IntPtr OpenProcess(uint dwDesiredAccess, bool bInheritHandle,
+			 uint dwProcessId);
+		private static uint VMRead = 0x00000010;
+		private static uint QueryInformation = 0x00000400;
+		[DllImport("Psapi.dll", SetLastError = true)]
+		[PreserveSig]
+		public static extern uint GetModuleFileNameEx([In]IntPtr hProcess, [In] IntPtr hModule, [Out] StringBuilder lpFilename,
+				[In][MarshalAs(UnmanagedType.U4)]int nSize);
+		[DllImport("kernel32.dll", SetLastError = true)]
+		public static extern bool CloseHandle(IntPtr hHandle); 
+		#endregion
 
 		[DllImport("user32.dll", ExactSpelling = true, SetLastError = true)]
 		private static extern IntPtr GetForegroundWindow();
@@ -57,6 +72,13 @@ namespace WindowMasterLib {
 		
 		[DllImport("user32.dll", SetLastError = true, CharSet = CharSet.Auto)]
 		static extern int GetWindowTextLength(IntPtr hWnd);
+
+		/// <summary>
+		/// Deterimines if a handle corresponds to a window
+		/// </summary>
+		/// <param name="hWnd">Handle that should correspond to a window</param>
+		[DllImport("user32.dll")]
+		public static extern bool IsWindow(IntPtr hWnd);
 
 		#endregion
 
@@ -109,6 +131,19 @@ namespace WindowMasterLib {
 			}
 			return true; //-- Continue Enumeration
 		}
+		/// <summary>
+		/// This method will retrieve the path of the process based on the 
+		/// handle to it's window.
+		/// </summary>
+		public static string PathFromWindowHandle(IntPtr hwnd) {
+			uint dwProcessId;
+			GetWindowThreadProcessId(hwnd, out dwProcessId);
+			IntPtr hProcess = OpenProcess(VMRead | QueryInformation, false, dwProcessId);
+			StringBuilder path = new StringBuilder(1024);
+			GetModuleFileNameEx(hProcess, IntPtr.Zero, path, 1024);
+			CloseHandle(hProcess);
+			return path.ToString();
+		}
 
 		public string Title {
 			get {
@@ -119,15 +154,23 @@ namespace WindowMasterLib {
 			}
 		}
 
+		public string ExecutiblePath {
+			get { return PathFromWindowHandle(WindowHandle); }
+		}
+
 		public Window() {
 			WindowHandle = IntPtr.Zero;
 			ScreenBounds = new RECT();
 		}
 
 		public Window(IntPtr handle) {
-			WindowHandle = handle;
-			ScreenBounds = new RECT();
-			GetWindowRect(handle, ref ScreenBounds);
+			if (IsWindow(handle)) {
+				WindowHandle = handle;
+				ScreenBounds = new RECT();
+				GetWindowRect(handle, ref ScreenBounds);
+			} else {
+				throw new ArgumentException("Handle does not corrspond to a window");
+			}
 		}
 
 		/// <summary>
@@ -139,7 +182,7 @@ namespace WindowMasterLib {
 		/// relocated to the next screen then it's size will be reset to
 		/// it's original size based from the Top Left relocated corner</param>
 		/// </summary>
-		public void MoveToScreen(Screen toScr, bool preserveSize) {
+		public void MoveToScreen(Screen toScr, bool preserveSize, bool keepInBounds) {
 			
 			//-- Get the current state of the window
 			WINDOWPLACEMENT wp = GetWindowPlacement();
@@ -154,8 +197,18 @@ namespace WindowMasterLib {
 			//-- Initialize the Screen bounds of our window
 			GetWindowRect(WindowHandle, ref ScreenBounds);
 
+			//-- Grab the Minimum & Maximum Size of the Window
+			
+			//-- If the Maximum Size is Larger then the toScreen size
+			//or if the Minimum size is la
+			
 			//-- Relocate the window to the other screen
-			ScreenBounds.Relocate(new RECT(CurrentScreen.WorkingArea), new RECT(toScr.WorkingArea), preserveSize);
+			if(keepInBounds)
+				ScreenBounds.RelocateInBounds(
+					new RECT(CurrentScreen.WorkingArea), new RECT(toScr.WorkingArea), preserveSize);
+			else
+				ScreenBounds.Relocate(
+					new RECT(CurrentScreen.WorkingArea), new RECT(toScr.WorkingArea), preserveSize);
 
 			//-- Move & ReDraw the window
 			MoveWindow(WindowHandle,
@@ -176,6 +229,10 @@ namespace WindowMasterLib {
 				//-- Set the new window placement.
 				SetWindowPlacement(wp);
 			} 
+		}
+
+		public void MoveToScreen(Screen toScr, bool preserveSize) {
+			MoveToScreen(toScr, preserveSize);
 		}
 
 		/// <summary>
@@ -310,6 +367,14 @@ namespace WindowMasterLib {
 			}
 		}
 
+		public RECT CurrentPosition {
+			get {
+				RECT r = new RECT();
+				GetWindowRect(WindowHandle, ref r);
+				return r;
+			}
+		}
+
 		/// <summary>
 		/// Hides the window and activates another window.
 		/// <para>The window will no longer be visible in the taskbar if
@@ -440,7 +505,7 @@ namespace WindowMasterLib {
 		/// <summary>
 		/// Gets the window placement of the current window
 		/// </summary>
-		private WINDOWPLACEMENT GetWindowPlacement() {
+		public WINDOWPLACEMENT GetWindowPlacement() {
 			WINDOWPLACEMENT w = WINDOWPLACEMENT.Default;
 			GetWindowPlacement(WindowHandle, ref w);
 			return w;
@@ -470,7 +535,7 @@ namespace WindowMasterLib {
 		/// </summary>
 		/// <param name="wp">Info about the new placement of the window</param>
 		/// <returns>True if the windows placement has been set</returns>
-		private bool SetWindowPlacement(WINDOWPLACEMENT wp) {
+		public bool SetWindowPlacement(WINDOWPLACEMENT wp) {
 			return SetWindowPlacement(WindowHandle, ref wp);
 		}
 
@@ -496,7 +561,6 @@ namespace WindowMasterLib {
 				DockStyle = ds;
 			}
 		}
-
 
 		/// <summary>
 		/// Values of all of the set window position flags.
@@ -687,8 +751,9 @@ namespace WindowMasterLib {
 		/// <summary>
 		/// Defines the WINDOWPLACMENT Structure
 		/// </summary>
+		[Serializable()]
 		[StructLayout(LayoutKind.Sequential)]
-		private struct WINDOWPLACEMENT {
+		public struct WINDOWPLACEMENT {
 			public uint length;
 			public uint flags;
 			public uint showCmd;

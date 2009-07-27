@@ -39,8 +39,8 @@ namespace WindowMasterLib.Actions.HotKeyActions {
 
 		public override void Initialize(HotKeyAction action) {
 			base.Initialize(action);
-			if (action is ChangeOpacityAction) {
-				ChangeOpacityAction coa = (ChangeOpacityAction)action;
+			ChangeOpacityAction coa = action as ChangeOpacityAction;
+			if(coa != null) {
 				Percentage = coa.Percentage;
 			}
 		}

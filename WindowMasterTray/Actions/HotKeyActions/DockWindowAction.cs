@@ -53,8 +53,8 @@ namespace WindowMasterLib.Actions.HotKeyActions {
 
 		public override void Initialize(HotKeyAction action) {
 			base.Initialize(action);
-			if (action is DockWindowAction) {
-				DockWindowAction dwa = (DockWindowAction)action;
+			DockWindowAction dwa = action as DockWindowAction;
+			if(dwa != null) {
 				Dock = dwa.Dock;
 				Percentage = dwa.Percentage;
 			}

@@ -124,9 +124,8 @@ namespace WindowMasterLib.Actions.HotKeyActions {
 
 		public override void Initialize(HotKeyAction action) {
 			base.Initialize(action);
-
-			if (action is DockAndMoveWindowAction) {
-				DockAndMoveWindowAction dmwa = (DockAndMoveWindowAction)action;
+			DockAndMoveWindowAction dmwa = action as DockAndMoveWindowAction;
+			if(dmwa != null) {
 				PreserveSize = dmwa.PreserveSize;
 				Percentage = dmwa.Percentage;
 				MoveDirection = dmwa.MoveDirection;

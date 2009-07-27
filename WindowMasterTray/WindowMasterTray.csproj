@@ -85,15 +85,21 @@
     <Compile Include="Actions\HotKeyActions\MakeInvisibleAction.cs" />
     <Compile Include="Actions\HotKeyActions\MakeOpaqueAction.cs" />
     <Compile Include="Actions\HotKeyActions\MaximizeWindowAction.cs" />
+    <Compile Include="Actions\HotKeyActions\MediaKeyAction.cs" />
+    <Compile Include="Actions\HotKeyActions\MemorizeWindowLocationAction.cs" />
     <Compile Include="Actions\HotKeyActions\MinimizeRestoreOtherWindowsAction.cs" />
     <Compile Include="Actions\HotKeyActions\MinimizeToTray.cs" />
     <Compile Include="Actions\HotKeyActions\MinimizeWindowAction.cs" />
     <Compile Include="Actions\HotKeyActions\MoveWindowAction.cs" />
+    <Compile Include="Actions\HotKeyActions\RecoverOrphanWindowsAction.cs" />
+    <Compile Include="Actions\HotKeyActions\RememberWindowLocationAction.cs" />
     <Compile Include="Actions\HotKeyActions\RestoreDownAction.cs" />
     <Compile Include="Actions\HotKeyActions\RestoreUpAction.cs" />
     <Compile Include="Actions\HotKeyActions\RestoreWindowAction.cs" />
     <Compile Include="Actions\HotKeyActions\StartApplicationAction.cs" />
     <Compile Include="Actions\HotKeyActions\StretchWindowAction.cs" />
+    <Compile Include="Actions\SerializableDictionary.cs" />
+    <Compile Include="Actions\WindowMemory.cs" />
     <Compile Include="HotKeyForm.cs">
       <SubType>Form</SubType>
     </Compile>

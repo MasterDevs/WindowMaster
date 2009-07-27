@@ -19,11 +19,11 @@ namespace WindowMasterLib.Util {
 			}
 		}
 
-		public RECT(int left_, int top_, int right_, int bottom_) {
-			Left = left_;
-			Top = top_;
-			Right = right_;
-			Bottom = bottom_;
+		public RECT(int left, int top, int right, int bottom) {
+			Left = left;
+			Top = top;
+			Right = right;
+			Bottom = bottom;
 		}
 
 		public RECT(System.Drawing.Rectangle r) {
@@ -38,28 +38,15 @@ namespace WindowMasterLib.Util {
 		public POINT Location { get { return new POINT(Left, Top); } }
 
 		/// <summary>
-		/// This method will determine if the parameter is
-		/// inside of this rectangle
+		/// This method will determine if this rectangle is fully
+		/// inside of the passed in parameter
+		/// <param name="r">The bounding rectangle</param>
+		/// <returns>True if this instance is fits inside of the parameter R.</returns>
 		/// </summary>
-		public bool IsInside(RECT r) {
-
-			bool left = r.Left >= Left;
-			bool right = r.Right <= Right;
-			bool top = r.Top >= Top;
-			bool bottom = r.Bottom <= Bottom;
-
-			//-- Simple Case -- r is fully inside this instance
-			if (left && right && top && bottom)
-				return true;
-
-			if (left && right && top) {
-				return (r.Bottom - (r.Height / 2)) <= Bottom;
-			} else if (left && right && bottom) {
-				return (r.Top + (r.Height / 2)) >= Top;
-			} else if (bottom && top && left) {
-				return (r.Right - (r.Width / 2)) <= Right;
-			} else
-				return (r.Left + (r.Width / 2)) >= Left;
+		public bool IsInsideOf(RECT r) {
+			return
+				r.Left <= Left && r.Right >= Right &&
+				r.Top <= Top && r.Bottom >= Bottom;
 		}
 
 		/// <summary>
@@ -180,11 +167,43 @@ namespace WindowMasterLib.Util {
 			ReInit(Relocate(this, from, to, preserveSize));
 		}
 
+		public RECT RelocateInBounds(RECT from, RECT to, bool preserveSize) {
+			RECT r = Relocate(this, from, to, preserveSize);
+			int width = r.Width;
+			int height = r.Height;
+			if (r.Left < to.Left) { r.Left = to.Left; }
+			if (r.Right > to.Right) { r.Right = to.Right; }
+			if (r.Top < to.Top) { r.Top = to.Top; }
+			if (r.Bottom > to.Bottom) { r.Bottom = to.Bottom; }
+
+			int corWidth = r.Width;
+			int corHeight = r.Height;
+			if (preserveSize) { //-- Maintain Original Size
+
+				//-- We will only resize if the newly created window
+				//will fit in the new bounds.
+
+				//-- Horizontal Positioning
+				if ((r.Left + width) <= to.Right)
+					r.Right = r.Left + width;
+				else if (width <= to.Width) 
+					r.Left = r.Right - width;
+
+				//-- Vertical Positioning
+				if ((r.Top + height) <= to.Height)
+					r.Bottom = r.Top + height;
+				else if (height <= to.Height)
+					r.Top = r.Bottom - to.Height;
+			}
+
+			ReInit(r);
+			return r;
+		}
+
 		private static RECT Relocate(RECT r, RECT from, RECT to, bool preserveSize) {
 			//-- Find Height & Width Multiplier
 			double height = (double)to.Height / (double)from.Height;
 			double width = (double)to.Width / (double)from.Width;
-
 
 			//-- Calculate the new location of the window
 			int left = to.Left + (int)Math.Round(((double)(r.Left - from.Left) * width));

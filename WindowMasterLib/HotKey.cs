@@ -28,6 +28,7 @@ namespace WindowMasterLib {
 			public Window() {
 				// create the handle for the window.
 				this.CreateHandle(new CreateParams());
+				CreateParams cp = new CreateParams();
 			}
 
 			/// <summary>
@@ -59,7 +60,7 @@ namespace WindowMasterLib {
 			#endregion
 		}
 
-		private Window _window = new Window();
+		private Window _window;
 		private int _currentId;
 		private Dictionary<KeyCombo, int> Combos;
 		private static Dictionary<KeyCombo, EventHandler<KeyPressedEventArgs>> StaticKeyCombos;
@@ -74,6 +75,7 @@ namespace WindowMasterLib {
 
 
 		public HotKey() {
+			_window = new Window();
 			// register the event of the inner native window.
 			_window.KeyPressed += delegate(object sender, KeyPressedEventArgs args) {
 				if (KeyPressed != null)
@@ -91,6 +93,7 @@ namespace WindowMasterLib {
 			StaticKeyCombos = new Dictionary<KeyCombo, EventHandler<KeyPressedEventArgs>>();
 			StaticComboIDs = new Dictionary<KeyCombo, int>();
 			StaticWindow = new Window();
+			
 			//-- register the event of the inner static native window.
 			StaticWindow.KeyPressed += delegate(object sender, KeyPressedEventArgs args) {
 				if (StaticKeyCombos.ContainsKey(args.HotKey) &&
@@ -229,6 +232,14 @@ namespace WindowMasterLib {
 
 			// dispose the inner native window.
 			_window.Dispose();
+		}
+
+		/// <summary>
+		/// This method must me ran before the program exists. This is necessary
+		/// to dispose the naitive static window that is created.
+		/// </summary>
+		public static void CleanUp() {
+			StaticWindow.Dispose();
 		}
 
 		#endregion

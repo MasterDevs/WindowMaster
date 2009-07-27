@@ -45,9 +45,9 @@ namespace WindowMasterLib.Actions.HotKeyActions {
 
 		public override void Initialize(HotKeyAction action) {
 			base.Initialize(action);
-
-			if (action is MoveWindowAction) {
-				PreserveSize = ((MoveWindowAction)action).PreserveSize;
+			MoveWindowAction mwa = action as MoveWindowAction;
+			if (mwa != null) {
+				PreserveSize = mwa.PreserveSize;
 			}
 		}
 
