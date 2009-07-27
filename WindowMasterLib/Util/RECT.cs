@@ -169,31 +169,37 @@ namespace WindowMasterLib.Util {
 
 		public RECT RelocateInBounds(RECT from, RECT to, bool preserveSize) {
 			RECT r = Relocate(this, from, to, preserveSize);
-			int width = r.Width;
-			int height = r.Height;
+			int orig_width = r.Width;
+			int orig_height = r.Height;
 			if (r.Left < to.Left) { r.Left = to.Left; }
 			if (r.Right > to.Right) { r.Right = to.Right; }
 			if (r.Top < to.Top) { r.Top = to.Top; }
 			if (r.Bottom > to.Bottom) { r.Bottom = to.Bottom; }
 
-			int corWidth = r.Width;
-			int corHeight = r.Height;
 			if (preserveSize) { //-- Maintain Original Size
 
 				//-- We will only resize if the newly created window
 				//will fit in the new bounds.
 
 				//-- Horizontal Positioning
-				if ((r.Left + width) <= to.Right)
-					r.Right = r.Left + width;
-				else if (width <= to.Width) 
-					r.Left = r.Right - width;
+				if ((r.Left + orig_width) <= to.Right)
+					r.Right = r.Left + orig_width;
+				else if (orig_width <= to.Width)
+					r.Left = r.Right - orig_width;
+				else { //-- Width is too large. Resize to max bounds
+					r.Left = to.Left;
+					r.Right = to.Right;
+				}
 
 				//-- Vertical Positioning
-				if ((r.Top + height) <= to.Height)
-					r.Bottom = r.Top + height;
-				else if (height <= to.Height)
-					r.Top = r.Bottom - to.Height;
+				if ((r.Top + orig_height) <= to.Bottom)
+					r.Bottom = r.Top + orig_height;
+				else if (orig_height <= to.Height)
+					r.Top = r.Bottom - orig_height;
+				else { //-- Height is too large. Resize ot max bounds
+					r.Top = to.Top;
+					r.Bottom = to.Bottom;
+				}
 			}
 
 			ReInit(r);
