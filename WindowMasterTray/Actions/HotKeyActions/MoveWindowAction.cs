@@ -23,7 +23,7 @@ namespace WindowMasterLib.Actions.HotKeyActions {
 				//-- Set the current index of the window
 				screens.CurrentIndex = screens.IndexOf(Screen.FromHandle(w.WindowHandle));
 				//-- Move the window
-				w.MoveToScreen(screens.Next, PreserveSize);
+				w.MoveToScreen(screens.Next, PreserveSize, KeepInBounds);
 			}
 		}
 
@@ -32,6 +32,13 @@ namespace WindowMasterLib.Actions.HotKeyActions {
 		public bool PreserveSize {
 			get { return _PreserveSize; }
 			set { _PreserveSize = value; }
+		}
+
+		private bool _KeepInBounds = false;
+		[Description("When set to true, the window will be relocated so that it'll be completely inside of the target screen.")]
+		public bool KeepInBounds {
+			get { return _KeepInBounds; }
+			set { _KeepInBounds = value; }
 		}
 
 		public MoveWindowAction() {
@@ -48,6 +55,7 @@ namespace WindowMasterLib.Actions.HotKeyActions {
 			MoveWindowAction mwa = action as MoveWindowAction;
 			if (mwa != null) {
 				PreserveSize = mwa.PreserveSize;
+				_KeepInBounds = mwa.KeepInBounds;
 			}
 		}
 

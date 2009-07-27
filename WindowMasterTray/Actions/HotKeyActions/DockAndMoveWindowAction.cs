@@ -46,7 +46,7 @@ namespace WindowMasterLib.Actions.HotKeyActions {
 					}//-- Window is Docked on the Right 
 					else if (w.CurrentDockPosition == DockStyle.Right) {
 						w.UnDock();
-						w.MoveToScreen(curScreen, false);
+						w.MoveToScreen(curScreen, false, false);
 					}
 					else //-- Window is not Docked 
 					{
@@ -60,7 +60,7 @@ namespace WindowMasterLib.Actions.HotKeyActions {
 					} //-- Window is Docked on the Left
 					else if (w.CurrentDockPosition == DockStyle.Left) {
 						w.UnDock();
-						w.MoveToScreen(curScreen, false);
+						w.MoveToScreen(curScreen, false, false);
 					} //-- Window is not Docked
 					else {
 						w.Dock(curScreen, DockStyle.Right, Percentage);

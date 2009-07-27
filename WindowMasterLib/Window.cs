@@ -231,10 +231,6 @@ namespace WindowMasterLib {
 			} 
 		}
 
-		public void MoveToScreen(Screen toScr, bool preserveSize) {
-			MoveToScreen(toScr, preserveSize);
-		}
-
 		/// <summary>
 		/// This method will save the windows' current location, then 
 		/// stretch the window horizontally. When called again for the
