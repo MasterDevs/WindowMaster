@@ -28,7 +28,7 @@ namespace WindowMasterLib {
 						miSettings_Click(null, null);
 					else
 						settings.LoadActions(); //-- Load actions if we don't show the form
-					Application.Run(settings);
+					Application.Run();
 				} else {
 					//-- Display message to user that application is already running
 					MessageBox.Show("WindowMaster is currently running!", "WindowMaster is currently running!", MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);

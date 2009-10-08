@@ -182,7 +182,7 @@
 			this.bModifyHotKey.Size = new System.Drawing.Size(45, 27);
 			this.bModifyHotKey.TabIndex = 9;
 			this.bModifyHotKey.Text = "%";
-			this.toolTip.SetToolTip(this.bModifyHotKey, "Modify Selected Action");
+			this.toolTip.SetToolTip(this.bModifyHotKey, "Modify Selected Hotkey");
 			this.bModifyHotKey.UseVisualStyleBackColor = true;
 			this.bModifyHotKey.Click += new System.EventHandler(this.lbHotKeys_EditHotKey);
 			// 
@@ -235,13 +235,13 @@
 			this.fileToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.mi_Exit});
 			this.fileToolStripMenuItem.Name = "fileToolStripMenuItem";
-			this.fileToolStripMenuItem.Size = new System.Drawing.Size(35, 20);
+			this.fileToolStripMenuItem.Size = new System.Drawing.Size(37, 20);
 			this.fileToolStripMenuItem.Text = "File";
 			// 
 			// mi_Exit
 			// 
 			this.mi_Exit.Name = "mi_Exit";
-			this.mi_Exit.Size = new System.Drawing.Size(103, 22);
+			this.mi_Exit.Size = new System.Drawing.Size(92, 22);
 			this.mi_Exit.Text = "Exit";
 			this.mi_Exit.Click += new System.EventHandler(this.mi_Exit_Click);
 			// 
@@ -254,7 +254,7 @@
             this.mi_ExportConfiguration});
 			this.configurationToolStripMenuItem.Name = "configurationToolStripMenuItem";
 			this.configurationToolStripMenuItem.ShowShortcutKeys = false;
-			this.configurationToolStripMenuItem.Size = new System.Drawing.Size(84, 20);
+			this.configurationToolStripMenuItem.Size = new System.Drawing.Size(93, 20);
 			this.configurationToolStripMenuItem.Text = "Configuration";
 			// 
 			// mi_StartWithWindows
@@ -262,20 +262,20 @@
 			this.mi_StartWithWindows.CheckOnClick = true;
 			this.mi_StartWithWindows.Name = "mi_StartWithWindows";
 			this.mi_StartWithWindows.ShowShortcutKeys = false;
-			this.mi_StartWithWindows.Size = new System.Drawing.Size(162, 22);
+			this.mi_StartWithWindows.Size = new System.Drawing.Size(171, 22);
 			this.mi_StartWithWindows.Text = "Start With Windows";
 			this.mi_StartWithWindows.Click += new System.EventHandler(this.MenuItem_StartWithWindows_Click);
 			// 
 			// toolStripSeparator1
 			// 
 			this.toolStripSeparator1.Name = "toolStripSeparator1";
-			this.toolStripSeparator1.Size = new System.Drawing.Size(159, 6);
+			this.toolStripSeparator1.Size = new System.Drawing.Size(168, 6);
 			// 
 			// mi_ImportConfiguration
 			// 
 			this.mi_ImportConfiguration.Name = "mi_ImportConfiguration";
 			this.mi_ImportConfiguration.ShowShortcutKeys = false;
-			this.mi_ImportConfiguration.Size = new System.Drawing.Size(162, 22);
+			this.mi_ImportConfiguration.Size = new System.Drawing.Size(171, 22);
 			this.mi_ImportConfiguration.Text = "Import Actions";
 			this.mi_ImportConfiguration.Click += new System.EventHandler(this.mi_ImportConfiguration_Click);
 			// 
@@ -283,7 +283,7 @@
 			// 
 			this.mi_ExportConfiguration.Name = "mi_ExportConfiguration";
 			this.mi_ExportConfiguration.ShowShortcutKeys = false;
-			this.mi_ExportConfiguration.Size = new System.Drawing.Size(162, 22);
+			this.mi_ExportConfiguration.Size = new System.Drawing.Size(171, 22);
 			this.mi_ExportConfiguration.Text = "Export Actions";
 			this.mi_ExportConfiguration.Click += new System.EventHandler(this.mi_ExportConfiguration_Click);
 			// 
