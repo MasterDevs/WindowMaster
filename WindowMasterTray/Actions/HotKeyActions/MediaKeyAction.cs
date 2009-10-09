@@ -48,8 +48,14 @@ namespace WindowMasterLib.Actions.HotKeyActions {
 		}
 
 		[Browsable(true), Description("The Media Key you'd like to press")]
-		public MediaKey Key { get; set; }
-
+		public MediaKey Key {
+			get { return _key; }
+			set {
+				Name = value.ToString(); 
+				_key = value;
+			}
+		}
+		private MediaKey _key;
 		public MediaKeyAction () {
 			Name = "Media Key Action";
 			Description = "Simulates a media key being pressed. Usefull if you don't have a media keyboard.";
