@@ -6,6 +6,9 @@ using System.Drawing;
 using WindowMasterLib.Actions;
 using System.Threading;
 using System.Runtime.InteropServices;
+using System.Runtime.Remoting.Channels;
+using System.Runtime.Remoting;
+using System.Runtime.Remoting.Channels.Ipc;
 
 namespace WindowMasterLib {
 	static class Program {
@@ -22,6 +25,7 @@ namespace WindowMasterLib {
 					Application.SetCompatibleTextRenderingDefault(false);
 					settings = new SettingsWindow();
 					InitItems();
+					ListenForOtherInstances();
 					
 					//-- Only show the settings form if we don't have the -hide argument
 					if (!ContainsArgument(args, "hide"))
@@ -30,8 +34,9 @@ namespace WindowMasterLib {
 						settings.LoadActions(); //-- Load actions if we don't show the form
 					Application.Run();
 				} else {
-					//-- Display message to user that application is already running
-					MessageBox.Show("WindowMaster is currently running!", "WindowMaster is currently running!", MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
+					//-- Display the SettingsWindow of the First Instance
+					NotifyFirstInstance();
+					//-- Exit this instance as the user's already using the first instance.
 					Application.Exit();
 				}
 			}
@@ -104,5 +109,61 @@ namespace WindowMasterLib {
 			//- Argument not found
 			return false;
 		}
+
+		#region IPC for Single Instance Application
+		private const string ServerChannelName = "WindowMaster";
+		private const string FirstInstanceName = "FirstInstance";
+		private const string RemoteMessageFS = "ipc://{0}/{1}";
+
+		/// <summary>
+		/// Sets up the Server Channel to listen for other instances
+		/// remote message.
+		/// </summary>
+		static void ListenForOtherInstances() {
+			//-- Create the Server Channel
+			IpcServerChannel serverChannel = new IpcServerChannel(ServerChannelName);
+			ChannelServices.RegisterChannel(serverChannel, false);
+
+			RemoteMessage remoteMessage = new RemoteMessage(settings);
+			RemotingServices.Marshal(remoteMessage, FirstInstanceName);
+		}
+
+		/// <summary>
+		/// When another instance of WindowMaster starts up, it
+		/// will call this method to open up an IPC channel
+		/// to the first instance and show the settings window.
+		/// </summary>
+		static void NotifyFirstInstance() {
+			IpcClientChannel clientChannel = new IpcClientChannel();
+			ChannelServices.RegisterChannel(clientChannel, false);
+
+			RemoteMessage message = (RemoteMessage)Activator.GetObject(typeof(RemoteMessage),
+				string.Format(RemoteMessageFS, ServerChannelName, FirstInstanceName));
+
+			if (!message.Equals(null)) {
+				message.ShowSettingsWindow();
+			}
+		}
+
+		/// <summary>
+		/// This small class is used to show the SettingsWindow
+		/// by containing a reference to it.
+		/// </summary>
+		class RemoteMessage : MarshalByRefObject {
+			private SettingsWindow mainForm;
+
+			public RemoteMessage(SettingsWindow mainForm) {
+				this.mainForm = mainForm;
+			}
+
+			public void ShowSettingsWindow() {
+				mainForm.Show();
+				mainForm.Activate();
+			}
+		} 
+		#endregion
+
+
+
 	}
 }
