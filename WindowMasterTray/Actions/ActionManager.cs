@@ -96,7 +96,8 @@ namespace WindowMasterLib.Actions {
 				aTypes.Add(typeof(RestoreDownAction));
 				aTypes.Add(typeof(RestoreUpAction));
 				aTypes.Add(typeof(RestoreWindowAction));
-				aTypes.Add(typeof(StartApplicationAction)); 
+				aTypes.Add(typeof(ShowActiveActionsAction));
+				aTypes.Add(typeof(StartApplicationAction));
 				aTypes.Add(typeof(StretchWindowAction));
 				return aTypes.ToArray();
 			}

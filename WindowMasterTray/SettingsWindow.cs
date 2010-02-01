@@ -32,6 +32,29 @@ namespace WindowMasterLib {
 
 		private string InitalDir { get { return Environment.GetFolderPath(Environment.SpecialFolder.Personal); } }
 
+		public string ActiveActionsString {
+			get {
+				if (ActionManager.Actions == null || ActionManager.Actions.Count == 0)
+					return string.Empty;
+
+				StringBuilder sb = new StringBuilder();
+				foreach (var item in ActionManager.Actions.OrderBy(p => p.Name)) {
+					if (item.Enabled) {
+						sb.Append(item.Name);
+						sb.Append(" [");
+						for (int i = 0; i < item.Combos.Length; i++) {
+							sb.Append(item.Combos[i].ToString());
+							if (i + 1 < item.Combos.Length)
+								sb.Append(", ");
+						}
+						sb.Append("]");
+						sb.Append(Environment.NewLine);
+					}
+				}
+				return sb.ToString();
+			}
+		}
+
 		public SettingsWindow() {
 			InitializeComponent();
 			openDialog.InitialDirectory = InitalDir;

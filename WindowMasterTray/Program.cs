@@ -26,7 +26,7 @@ namespace WindowMasterLib {
 					settings = new SettingsWindow();
 					InitItems();
 					ListenForOtherInstances();
-					
+
 					//-- Only show the settings form if we don't have the -hide argument
 					if (!ContainsArgument(args, "hide"))
 						miSettings_Click(null, null);
@@ -49,6 +49,22 @@ namespace WindowMasterLib {
 			//-- Hotkeys Is Disposable
 			HotKey.CleanUp();
 			Application.Exit();
+		}
+
+		/// <summary>
+		/// Displays a balloon icon of all active hotkeys.
+		/// </summary>
+		/// <param name="timeout">Length of balloon pop-up, in milliseconds</param>
+		public static void DisplayActiveHotKeys(int timeout) {
+			string activeHotKeys = settings.ActiveActionsString;
+
+			//-- If the text of the balloon is empty, a runtime error will be thrown
+			if (string.IsNullOrEmpty(activeHotKeys))
+				notify.BalloonTipText = "No Active HotKeys!";
+			else
+				notify.BalloonTipText = activeHotKeys;
+
+			notify.ShowBalloonTip(timeout);
 		}
 
 		static SettingsWindow settings;
@@ -82,7 +98,8 @@ namespace WindowMasterLib {
 			notify.Icon = Properties.Resources.Monitor_256;
 			notify.ContextMenu = cm;
 			notify.DoubleClick += new EventHandler(miSettings_Click);
-
+			notify.BalloonTipIcon = ToolTipIcon.Info;
+			notify.BalloonTipTitle = "Active HotKeys";
 			notify.Text = "Window Master";
 		}
 
@@ -162,8 +179,5 @@ namespace WindowMasterLib {
 			}
 		} 
 		#endregion
-
-
-
 	}
 }
