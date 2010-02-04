@@ -97,6 +97,7 @@ namespace WindowMasterLib {
 			notify.Visible = true;
 			notify.Icon = Properties.Resources.Monitor_256;
 			notify.ContextMenu = cm;
+			notify.BalloonTipClicked += new EventHandler(miSettings_Click);
 			notify.DoubleClick += new EventHandler(miSettings_Click);
 			notify.BalloonTipIcon = ToolTipIcon.Info;
 			notify.BalloonTipTitle = "Active HotKeys";
