@@ -8,7 +8,7 @@ namespace WindowMasterLib.Actions.HotKeyActions {
 	[Serializable]
 	public class ShowActiveActionsAction : HotKeyAction {
 
-		private int _timeout;
+		private int _timeout = 500;
 
 		[Description("Time (in milliseconds) you wish to display the popup for. Must be between 500-30000.")]
 		public int Timeout {
@@ -25,7 +25,7 @@ namespace WindowMasterLib.Actions.HotKeyActions {
 
 		public ShowActiveActionsAction () {
 			Name = "Show Active Actions";
-			Description = "Displays a Balloon Icon showing the user the currently Active Actions";
+			Description = "Displays a Balloon Icon showing the user the currently active Actions.";
 		}
 
 		public ShowActiveActionsAction(KeyCombo hotKey)

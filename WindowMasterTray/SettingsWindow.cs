@@ -15,13 +15,6 @@ using WindowMasterLib.Actions.HotKeyActions;
 namespace WindowMasterLib {
 	public partial class SettingsWindow : Form {
 
-		protected override void WndProc(ref Message m) {
-			base.WndProc(ref m);
-
-			if (m.Msg == 1223)
-				MessageBox.Show("OK");
-		}
-
 		public KeyCombo[] Combos;
 
 		private HotKeyAction SelectedAction { get { return (HotKeyAction)lbActions.SelectedItem; } 	}
@@ -39,7 +32,7 @@ namespace WindowMasterLib {
 
 				StringBuilder sb = new StringBuilder();
 				foreach (var item in ActionManager.Actions.OrderBy(p => p.Name)) {
-					if (item.Enabled) {
+					if (item.Enabled && !(item is ShowActiveActionsAction)) {
 						sb.Append(item.Name);
 						sb.Append(" [");
 						for (int i = 0; i < item.Combos.Length; i++) {
@@ -48,6 +41,7 @@ namespace WindowMasterLib {
 								sb.Append(", ");
 						}
 						sb.Append("]");
+						sb.Append(Environment.NewLine);
 						sb.Append(Environment.NewLine);
 					}
 				}

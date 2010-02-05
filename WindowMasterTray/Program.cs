@@ -56,15 +56,20 @@ namespace WindowMasterLib {
 		/// </summary>
 		/// <param name="timeout">Length of balloon pop-up, in milliseconds</param>
 		public static void DisplayActiveHotKeys(int timeout) {
+
 			string activeHotKeys = settings.ActiveActionsString;
 
 			//-- If the text of the balloon is empty, a runtime error will be thrown
 			if (string.IsNullOrEmpty(activeHotKeys))
-				notify.BalloonTipText = "No Active HotKeys!";
-			else
-				notify.BalloonTipText = activeHotKeys;
+				activeHotKeys = "No Active HotKeys!";
 
-			notify.ShowBalloonTip(timeout);
+			activeHotKeys += "\n\nWould you like to show the Settings Window?";
+			
+			DialogResult result = 
+				MessageBox.Show(activeHotKeys, "Active Hotkeys", MessageBoxButtons.YesNo, MessageBoxIcon.Information, MessageBoxDefaultButton.Button2);
+
+			if (result == DialogResult.Yes)
+				miSettings_Click(null, null);
 		}
 
 		static SettingsWindow settings;
@@ -99,8 +104,6 @@ namespace WindowMasterLib {
 			notify.ContextMenu = cm;
 			notify.BalloonTipClicked += new EventHandler(miSettings_Click);
 			notify.DoubleClick += new EventHandler(miSettings_Click);
-			notify.BalloonTipIcon = ToolTipIcon.Info;
-			notify.BalloonTipTitle = "Active HotKeys";
 			notify.Text = "Window Master";
 		}
 
