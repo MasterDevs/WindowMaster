@@ -1,6 +1,6 @@
 ﻿
-Microsoft Visual Studio Solution File, Format Version 10.00
-# Visual C# Express 2008
+Microsoft Visual Studio Solution File, Format Version 11.00
+# Visual Studio 2010
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WindowMasterLib", "WindowMasterLib\WindowMasterLib.csproj", "{48DBED11-397A-4F75-93B8-F251EE67846B}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WindowMasterTray", "WindowMasterTray\WindowMasterTray.csproj", "{2147001D-941A-4A62-BDD2-DA9F1F124D4B}"
