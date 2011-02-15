@@ -51,14 +51,14 @@ namespace WindowMasterLib.Actions.HotKeyActions {
 		public MediaKey Key {
 			get { return _key; }
 			set {
-				Name = value.ToString(); 
+				Name = value.ToString();
 				_key = value;
 			}
 		}
 		private MediaKey _key;
-		public MediaKeyAction () {
+		public MediaKeyAction() {
 			Name = "Media Key Action";
-			Description = "Simulates a media key being pressed. Usefull if you don't have a media keyboard.";
+			Description = "Simulates a media key being pressed. Useful if you don't have a media keyboard.";
 		}
 
 		public MediaKeyAction(KeyCombo hotKey)

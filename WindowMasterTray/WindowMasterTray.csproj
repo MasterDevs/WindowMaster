@@ -101,7 +101,9 @@
     <Compile Include="Actions\HotKeyActions\RestoreDownAction.cs" />
     <Compile Include="Actions\HotKeyActions\RestoreUpAction.cs" />
     <Compile Include="Actions\HotKeyActions\RestoreWindowAction.cs" />
+    <Compile Include="Actions\HotKeyActions\SetWindowPlacement.cs" />
     <Compile Include="Actions\HotKeyActions\ShowActiveActionsAction.cs" />
+    <Compile Include="Actions\HotKeyActions\ShowWindowPlacement.cs" />
     <Compile Include="Actions\HotKeyActions\StartApplicationAction.cs" />
     <Compile Include="Actions\HotKeyActions\StretchWindowAction.cs" />
     <Compile Include="Actions\SerializableDictionary.cs" />

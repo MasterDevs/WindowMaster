@@ -22,7 +22,7 @@ namespace WindowMasterLib {
 		public static extern uint GetModuleFileNameEx([In]IntPtr hProcess, [In] IntPtr hModule, [Out] StringBuilder lpFilename,
 				[In][MarshalAs(UnmanagedType.U4)]int nSize);
 		[DllImport("kernel32.dll", SetLastError = true)]
-		public static extern bool CloseHandle(IntPtr hHandle); 
+		public static extern bool CloseHandle(IntPtr hHandle);
 		#endregion
 
 		[DllImport("user32.dll", ExactSpelling = true, SetLastError = true)]
@@ -69,7 +69,7 @@ namespace WindowMasterLib {
 
 		[DllImport("user32.dll", CharSet = CharSet.Auto, SetLastError = true)]
 		static extern int GetWindowText(IntPtr hWnd, StringBuilder lpString, int nMaxCount);
-		
+
 		[DllImport("user32.dll", SetLastError = true, CharSet = CharSet.Auto)]
 		static extern int GetWindowTextLength(IntPtr hWnd);
 
@@ -118,7 +118,7 @@ namespace WindowMasterLib {
 				EnumWindows(new EnumWindowsDelagate(EnumWindowsCallBack), IntPtr.Zero);
 				return VisibleWindows;
 			}
-		}		
+		}
 		/// <summary>
 		/// This is the callback method for the EnumWindows command
 		/// </summary>
@@ -183,11 +183,11 @@ namespace WindowMasterLib {
 		/// it's original size based from the Top Left relocated corner</param>
 		/// </summary>
 		public void MoveToScreen(Screen toScr, bool preserveSize, bool keepInBounds) {
-			
+
 			//-- Get the current state of the window
 			WINDOWPLACEMENT wp = GetWindowPlacement();
 			uint windowStateBeforeMove = wp.showCmd;
-			
+
 			//-- Place window in normal mode if it's currently maximized
 			if (windowStateBeforeMove == (uint)WindowState.Maximized) {
 				wp.showCmd = (uint)WindowState.Normal;
@@ -198,12 +198,12 @@ namespace WindowMasterLib {
 			GetWindowRect(WindowHandle, ref ScreenBounds);
 
 			//-- Grab the Minimum & Maximum Size of the Window
-			
+
 			//-- If the Maximum Size is Larger then the toScreen size
 			//or if the Minimum size is la
-			
+
 			//-- Relocate the window to the other screen
-			if(keepInBounds)
+			if (keepInBounds)
 				ScreenBounds.RelocateInBounds(
 					new RECT(CurrentScreen.WorkingArea), new RECT(toScr.WorkingArea), preserveSize);
 			else
@@ -213,7 +213,7 @@ namespace WindowMasterLib {
 			//-- Move & ReDraw the window
 			MoveWindow(WindowHandle,
 				ScreenBounds.Left, ScreenBounds.Top, ScreenBounds.Width, ScreenBounds.Height, true);
-			
+
 			//-- If we started off maximized, let's finish that way
 			if (windowStateBeforeMove == (uint)WindowState.Maximized) {
 
@@ -228,7 +228,7 @@ namespace WindowMasterLib {
 				wp.showCmd = (uint)WindowState.Maximized;
 				//-- Set the new window placement.
 				SetWindowPlacement(wp);
-			} 
+			}
 		}
 
 		/// <summary>
@@ -264,7 +264,7 @@ namespace WindowMasterLib {
 					ScreenBounds.Right = curScreen.Right;
 				}
 				//-- RePosition the window
-				MoveWindow(WindowHandle, 
+				MoveWindow(WindowHandle,
 					ScreenBounds.Left, ScreenBounds.Top, ScreenBounds.Width, ScreenBounds.Height, true);
 			}
 		}
@@ -283,7 +283,7 @@ namespace WindowMasterLib {
 			//-- First make sure the window is in Normal Mode
 			if (wp.showCmd == (uint)WindowState.Normal) {
 				RECT curScreen = new RECT(CurrentScreen.WorkingArea);
-				
+
 				//-- Check if we're stretched
 				if (wp.rcNormalPosition.Height == curScreen.Height) { //-- If we're stretched, restore to 2/3
 					//-- check if we stored the position before the stretch
@@ -348,11 +348,11 @@ namespace WindowMasterLib {
 				Docks.Remove(WindowHandle);
 			}
 		}
-		
+
 		/// <summary>
 		/// Returns true if a window is currently docked.
 		/// </summary>
-		public bool IsDocked { get { return Docks.ContainsKey(WindowHandle); }  }
+		public bool IsDocked { get { return Docks.ContainsKey(WindowHandle); } }
 
 		public DockStyle CurrentDockPosition {
 			get {
@@ -388,12 +388,12 @@ namespace WindowMasterLib {
 		/// </summary>
 		/// <returns>True if the window was minimized</returns>
 		public bool Minimize(bool remainActive) {
-			if(remainActive)
+			if (remainActive)
 				return SetWindowState(WindowState.Minimized);
-			
+
 			WINDOWPLACEMENT wp = GetWindowPlacement();
 			wp.showCmd = (uint)ShowCMD.SW_MINIMIZE;
-			return SetWindowPlacement(wp);			
+			return SetWindowPlacement(wp);
 		}
 		/// <summary>
 		/// Maximizes the window.
@@ -471,7 +471,7 @@ namespace WindowMasterLib {
 				return SetLayeredWindowAttributes(WindowHandle, 0, 0, LWA_ALPHA);
 			else //-- Default value
 				val = 10;
-			
+
 			//-- Modify bAlpha, making sure it's within the bounds
 			if (increase) {
 				if ((bAlpha + val) > 255)
@@ -525,7 +525,13 @@ namespace WindowMasterLib {
 				}
 			}
 		}
-		
+
+		public void SetWindowLocation(int left, int top, int right, int bottom) {
+			int height = bottom - top;
+			int width = right - left;
+			MoveWindow(WindowHandle, left, top, width, height, true);
+		}
+
 		/// <summary>
 		/// Sets the placement of the current window
 		/// </summary>
@@ -750,11 +756,67 @@ namespace WindowMasterLib {
 		[Serializable()]
 		[StructLayout(LayoutKind.Sequential)]
 		public struct WINDOWPLACEMENT {
+			/// <summary>
+			/// The length of the structure, in bytes.
+			/// </summary>
 			public uint length;
+			/// <summary>
+			/// The flags that control the position of the minimized window and the 
+			/// method by which the window is restored. This member can be one or 
+			/// more of the following values.<para>
+			/// WPF_ASYNCWINDOWPLACEMENT [0x0004] - If the calling thread and the 
+			/// thread that owns the window are attached to different input queues, 
+			/// the system posts the request to the thread that owns the window. 
+			/// This prevents the calling thread from blocking its execution while 
+			/// other threads process the request.</para><para>
+			/// WPF_RESTORETOMAXIMIZED [0x0002] - The restored window will be maximized, 
+			/// regardless of whether it was maximized before it was minimized. 
+			/// This setting is only valid the next time the window is restored. 
+			/// It does not change the default restoration behavior. This flag is 
+			/// only valid when the SW_SHOWMINIMIZED value is specified for the 
+			/// showCmd member.</para><para>
+			/// WPF_SETMINPOSITION [0x0001] - The coordinates of the minimized window 
+			/// may be specified. This flag must be specified if the coordinates are 
+			/// set in the ptMinPosition member.</para>
+			/// </summary>
 			public uint flags;
+			/// <summary>
+			/// The current show state of the window. This member can be one of the 
+			/// following values.<para>
+			/// SW_HIDE [0] - Hides the window and activates another window.</para><para>
+			/// SW_MAXIMIZE [3] - Maximizes the specified window.</para><para>
+			/// SW_MINIMIZE [6] - Minimizes the specified window and activates the 
+			/// next top-level window in the z-order.</para><para>
+			/// SW_RESTORE [9] - Activates and displays the window. If the window is 
+			/// minimized or maximized, the system restores it to its original size 
+			/// and position. An application should specify this flag when restoring 
+			/// a minimized window.</para><para>
+			/// SW_SHOW [5] - Activates the window and displays it in its current size and position.</para><para>
+			/// SW_SHOWMINIMIZED [2] - Activates the window and displays it as a 
+			/// minimized window.</para><para>
+			/// SW_SHOWMINNOACTIVE [7] - Displays the window as a minimized window. 
+			/// This value is similar to SW_SHOWMINIMIZED, except the window is not activated.</para><para>
+			/// SW_SHOWNA [8] - Displays the window in its current size and position. 
+			/// This value is similar to SW_SHOW, except the window is not activated.</para><para>
+			/// SW_SHOWNOACTIVATE [4] - Displays a window in its most recent size and
+			/// position. This value is similar to SW_SHOWNORMAL, except the window is not activated.</para>
+			/// SW_SHOWNORMAL [1] - Activates and displays a window. If the window is
+			/// minimized or maximized, the system restores it to its original size 
+			/// and position. An application should specify this flag when displaying
+			/// the window for the first time.
+			/// </summary>
 			public uint showCmd;
+			/// <summary>
+			/// The coordinates of the window's upper-left corner when the window is minimized.
+			/// </summary>
 			public POINT ptMinPosition;
+			/// <summary>
+			/// The coordinates of the window's upper-left corner when the window is maximized.
+			/// </summary>
 			public POINT ptMaxPosition;
+			/// <summary>
+			/// The window's coordinates when the window is in the restored position.
+			/// </summary>
 			public RECT rcNormalPosition;
 
 			public static WINDOWPLACEMENT Default {
@@ -829,7 +891,7 @@ namespace WindowMasterLib {
 		}
 		#endregion
 	}
-	
+
 	/// <summary>
 	/// Values of showCmd field inside of WindowPlacement.
 	/// Lets you know the current 'State' of the window
@@ -837,19 +899,23 @@ namespace WindowMasterLib {
 	public enum WindowState : uint {
 		/// <summary>
 		/// Hides the window.
-		/// <para>Note: The window will not be shown in the taskbar.</para>
+		/// <para>Note: The window will not be shown in the taskbar.</para><para>
+		/// 'SW_HIDE'</para>
 		/// </summary>
 		Hide = 0,
 		/// <summary>
-		/// Shows the window in its regular (non-maximized) position.
+		/// Shows the window in its regular (non-maximized) position.<para>
+		///'SW_SHOWNORMAL'</para>
 		/// </summary>
 		Normal = 1,
 		/// <summary>
-		/// Window is in the minimized state, only visible in taskbar.
+		/// Window is in the minimized state, only visible in taskbar.<para>
+		/// 'SW_SHOWMINIMIZED'</para>
 		/// </summary>
 		Minimized = 2,
 		/// <summary>
-		/// Window is maximized, taking up the entire working area of the screen.
+		/// Window is maximized, taking up the entire working area of the screen.<para>
+		/// 'SW_MAXIMIZE' / 'SW_SHOWMAXIMIZED'</para>
 		/// </summary>
 		Maximized = 3
 	}
