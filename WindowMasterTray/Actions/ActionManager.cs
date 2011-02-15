@@ -91,6 +91,7 @@ namespace WindowMasterLib.Actions {
 				aTypes.Add(typeof(MinimizeToTray));
 				aTypes.Add(typeof(MinimizeWindowAction));
 				aTypes.Add(typeof(MoveWindowAction));
+				aTypes.Add(typeof(PureTextAction));
 				aTypes.Add(typeof(RecoverOrphanWindowsAction));
 				aTypes.Add(typeof(RememberWindowLocationAction));
 				aTypes.Add(typeof(RestoreDownAction));

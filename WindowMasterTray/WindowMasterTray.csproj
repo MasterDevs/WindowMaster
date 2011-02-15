@@ -96,6 +96,7 @@
     <Compile Include="Actions\HotKeyActions\MinimizeToTray.cs" />
     <Compile Include="Actions\HotKeyActions\MinimizeWindowAction.cs" />
     <Compile Include="Actions\HotKeyActions\MoveWindowAction.cs" />
+    <Compile Include="Actions\HotKeyActions\PureTextAction.cs" />
     <Compile Include="Actions\HotKeyActions\RecoverOrphanWindowsAction.cs" />
     <Compile Include="Actions\HotKeyActions\RememberWindowLocationAction.cs" />
     <Compile Include="Actions\HotKeyActions\RestoreDownAction.cs" />
