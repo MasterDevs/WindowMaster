@@ -5,6 +5,7 @@ using WindowMasterLib;
 using System.Runtime.InteropServices;
 using System.Drawing;
 using System.Text;
+using System.IO;
 
 namespace WindowMasterLib.Actions.HotKeyActions {
 	[Serializable]
@@ -36,6 +37,11 @@ namespace WindowMasterLib.Actions.HotKeyActions {
 
 		#endregion
 
+		#region Private Members
+		private static readonly string WinDir = Environment.GetEnvironmentVariable("WINDIR");
+		private static readonly string ExplorerPath = Path.Combine(WinDir, "explorer.exe").ToLowerInvariant();
+		#endregion
+
 		private class window {
 			public Window win;
 			public WindowState previousState;
@@ -49,10 +55,12 @@ namespace WindowMasterLib.Actions.HotKeyActions {
 
 		protected override void ActionMethod(object sender, EventArgs args) {
 			Window win = Window.ForeGroundWindow;
-			if (Enabled && !WindowHasBeenMinimized(win.WindowHandle) ) {
-				//-- Try to grab the icon from the path to the executible of the window
+			if (Enabled &&
+					!WindowHasBeenMinimized(win.WindowHandle) &&
+					!IsWindowsExplorer(win.ExecutiblePath)) {
+				//-- Try to grab the icon from the path to the executable of the window
 				Icon icon = IconFromPath(win.ExecutiblePath);
-				
+
 				//-- Create the tray icon
 				NotifyIcon tray = new NotifyIcon();
 				tray.Icon = icon;
@@ -63,7 +71,7 @@ namespace WindowMasterLib.Actions.HotKeyActions {
 
 				//-- Minimize the window
 				win.Minimize(false);
-				
+
 				//-- Hide the window
 				win.Hide();
 
@@ -124,6 +132,15 @@ namespace WindowMasterLib.Actions.HotKeyActions {
 			}
 
 			return icon;
+		}
+
+		/// <summary>
+		/// Returns true if the path is to Windows Explorer.
+		/// </summary>
+		/// <param name="p"></param>
+		/// <returns></returns>
+		private bool IsWindowsExplorer(string path) {
+			return ExplorerPath == path.ToLowerInvariant();
 		}
 
 		/// <summary>
