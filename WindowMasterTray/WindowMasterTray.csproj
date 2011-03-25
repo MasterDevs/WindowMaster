@@ -170,8 +170,12 @@
     <None Include="app.config" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="Resources\EditHS.bmp" />
     <None Include="config.xml">
     </None>
+    <None Include="Images\DeleteHS.png" />
+    <Content Include="Images\Edit.png" />
+    <Content Include="Images\NewDocumentHS.png" />
     <Content Include="Monitor_256.ico" />
   </ItemGroup>
   <ItemGroup>

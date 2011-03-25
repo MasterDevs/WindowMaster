@@ -52,7 +52,6 @@
 			this.openDialog = new System.Windows.Forms.OpenFileDialog();
 			this.groupBox1.SuspendLayout();
 			this.groupBox2.SuspendLayout();
-			this.menuStrip1.SuspendLayout();
 			this.SuspendLayout();
 			// 
 			// lbActions
@@ -64,8 +63,8 @@
 			this.lbActions.TabIndex = 0;
 			this.lbActions.ThreeDCheckBoxes = true;
 			this.toolTip.SetToolTip(this.lbActions, "Actions");
-			this.lbActions.SelectedIndexChanged += new System.EventHandler(this.lbActions_SelectedIndexChanged);
 			this.lbActions.ItemCheck += new System.Windows.Forms.ItemCheckEventHandler(this.lbActions_ItemCheck);
+			this.lbActions.SelectedIndexChanged += new System.EventHandler(this.lbActions_SelectedIndexChanged);
 			// 
 			// bOK
 			// 
@@ -92,11 +91,11 @@
 			// bAddHotKey
 			// 
 			this.bAddHotKey.Enabled = false;
+			this.bAddHotKey.Image = global::WindowMasterLib.Properties.Resources.NewDocumentHS;
 			this.bAddHotKey.Location = new System.Drawing.Point(178, 23);
 			this.bAddHotKey.Name = "bAddHotKey";
 			this.bAddHotKey.Size = new System.Drawing.Size(47, 27);
 			this.bAddHotKey.TabIndex = 7;
-			this.bAddHotKey.Text = "+";
 			this.toolTip.SetToolTip(this.bAddHotKey, "Add HotKey for Selected Action");
 			this.bAddHotKey.UseVisualStyleBackColor = true;
 			this.bAddHotKey.Click += new System.EventHandler(this.bAddHotKey_Click);
@@ -104,11 +103,11 @@
 			// bRemoveHotKey
 			// 
 			this.bRemoveHotKey.Enabled = false;
+			this.bRemoveHotKey.Image = global::WindowMasterLib.Properties.Resources.DeleteHS;
 			this.bRemoveHotKey.Location = new System.Drawing.Point(178, 104);
 			this.bRemoveHotKey.Name = "bRemoveHotKey";
 			this.bRemoveHotKey.Size = new System.Drawing.Size(47, 27);
 			this.bRemoveHotKey.TabIndex = 8;
-			this.bRemoveHotKey.Text = "-";
 			this.toolTip.SetToolTip(this.bRemoveHotKey, "Remove Selected HotKey for Selected Action");
 			this.bRemoveHotKey.UseVisualStyleBackColor = true;
 			this.bRemoveHotKey.Click += new System.EventHandler(this.bRemoveKey_Click);
@@ -129,11 +128,11 @@
 			// bModifyAction
 			// 
 			this.bModifyAction.Enabled = false;
+			this.bModifyAction.Image = global::WindowMasterLib.Properties.Resources.Edit;
 			this.bModifyAction.Location = new System.Drawing.Point(285, 63);
 			this.bModifyAction.Name = "bModifyAction";
 			this.bModifyAction.Size = new System.Drawing.Size(45, 27);
 			this.bModifyAction.TabIndex = 3;
-			this.bModifyAction.Text = "%";
 			this.toolTip.SetToolTip(this.bModifyAction, "Modify Selected Action");
 			this.bModifyAction.UseVisualStyleBackColor = true;
 			this.bModifyAction.Click += new System.EventHandler(this.bModify_Click);
@@ -141,22 +140,22 @@
 			// bRemoveAction
 			// 
 			this.bRemoveAction.Enabled = false;
+			this.bRemoveAction.Image = global::WindowMasterLib.Properties.Resources.DeleteHS;
 			this.bRemoveAction.Location = new System.Drawing.Point(283, 104);
 			this.bRemoveAction.Name = "bRemoveAction";
 			this.bRemoveAction.Size = new System.Drawing.Size(47, 27);
 			this.bRemoveAction.TabIndex = 2;
-			this.bRemoveAction.Text = "-";
 			this.toolTip.SetToolTip(this.bRemoveAction, "Remove Selected Action");
 			this.bRemoveAction.UseVisualStyleBackColor = true;
 			this.bRemoveAction.Click += new System.EventHandler(this.bRemoveAction_Click);
 			// 
 			// bAddAction
 			// 
+			this.bAddAction.Image = global::WindowMasterLib.Properties.Resources.NewDocumentHS;
 			this.bAddAction.Location = new System.Drawing.Point(283, 23);
 			this.bAddAction.Name = "bAddAction";
 			this.bAddAction.Size = new System.Drawing.Size(47, 27);
 			this.bAddAction.TabIndex = 1;
-			this.bAddAction.Text = "+";
 			this.toolTip.SetToolTip(this.bAddAction, "Add Action");
 			this.bAddAction.UseVisualStyleBackColor = true;
 			this.bAddAction.Click += new System.EventHandler(this.bAddAction_Click);
@@ -177,11 +176,11 @@
 			// bModifyHotKey
 			// 
 			this.bModifyHotKey.Enabled = false;
+			this.bModifyHotKey.Image = global::WindowMasterLib.Properties.Resources.Edit;
 			this.bModifyHotKey.Location = new System.Drawing.Point(178, 63);
 			this.bModifyHotKey.Name = "bModifyHotKey";
 			this.bModifyHotKey.Size = new System.Drawing.Size(45, 27);
 			this.bModifyHotKey.TabIndex = 9;
-			this.bModifyHotKey.Text = "%";
 			this.toolTip.SetToolTip(this.bModifyHotKey, "Modify Selected Hotkey");
 			this.bModifyHotKey.UseVisualStyleBackColor = true;
 			this.bModifyHotKey.Click += new System.EventHandler(this.lbHotKeys_EditHotKey);
@@ -222,9 +221,6 @@
 			// menuStrip1
 			// 
 			this.menuStrip1.BackColor = System.Drawing.SystemColors.MenuBar;
-			this.menuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.fileToolStripMenuItem,
-            this.configurationToolStripMenuItem});
 			this.menuStrip1.Location = new System.Drawing.Point(0, 0);
 			this.menuStrip1.Name = "menuStrip1";
 			this.menuStrip1.Size = new System.Drawing.Size(601, 24);
@@ -236,13 +232,13 @@
 			this.fileToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.mi_Exit});
 			this.fileToolStripMenuItem.Name = "fileToolStripMenuItem";
-			this.fileToolStripMenuItem.Size = new System.Drawing.Size(35, 20);
+			this.fileToolStripMenuItem.Size = new System.Drawing.Size(37, 20);
 			this.fileToolStripMenuItem.Text = "File";
 			// 
 			// mi_Exit
 			// 
 			this.mi_Exit.Name = "mi_Exit";
-			this.mi_Exit.Size = new System.Drawing.Size(103, 22);
+			this.mi_Exit.Size = new System.Drawing.Size(92, 22);
 			this.mi_Exit.Text = "Exit";
 			this.mi_Exit.Click += new System.EventHandler(this.mi_Exit_Click);
 			// 
@@ -255,7 +251,7 @@
             this.mi_ExportConfiguration});
 			this.configurationToolStripMenuItem.Name = "configurationToolStripMenuItem";
 			this.configurationToolStripMenuItem.ShowShortcutKeys = false;
-			this.configurationToolStripMenuItem.Size = new System.Drawing.Size(84, 20);
+			this.configurationToolStripMenuItem.Size = new System.Drawing.Size(93, 20);
 			this.configurationToolStripMenuItem.Text = "Configuration";
 			// 
 			// mi_StartWithWindows
@@ -263,20 +259,20 @@
 			this.mi_StartWithWindows.CheckOnClick = true;
 			this.mi_StartWithWindows.Name = "mi_StartWithWindows";
 			this.mi_StartWithWindows.ShowShortcutKeys = false;
-			this.mi_StartWithWindows.Size = new System.Drawing.Size(162, 22);
+			this.mi_StartWithWindows.Size = new System.Drawing.Size(171, 22);
 			this.mi_StartWithWindows.Text = "Start With Windows";
 			this.mi_StartWithWindows.Click += new System.EventHandler(this.MenuItem_StartWithWindows_Click);
 			// 
 			// toolStripSeparator1
 			// 
 			this.toolStripSeparator1.Name = "toolStripSeparator1";
-			this.toolStripSeparator1.Size = new System.Drawing.Size(159, 6);
+			this.toolStripSeparator1.Size = new System.Drawing.Size(168, 6);
 			// 
 			// mi_ImportConfiguration
 			// 
 			this.mi_ImportConfiguration.Name = "mi_ImportConfiguration";
 			this.mi_ImportConfiguration.ShowShortcutKeys = false;
-			this.mi_ImportConfiguration.Size = new System.Drawing.Size(162, 22);
+			this.mi_ImportConfiguration.Size = new System.Drawing.Size(171, 22);
 			this.mi_ImportConfiguration.Text = "Import Actions";
 			this.mi_ImportConfiguration.Click += new System.EventHandler(this.mi_ImportConfiguration_Click);
 			// 
@@ -284,7 +280,7 @@
 			// 
 			this.mi_ExportConfiguration.Name = "mi_ExportConfiguration";
 			this.mi_ExportConfiguration.ShowShortcutKeys = false;
-			this.mi_ExportConfiguration.Size = new System.Drawing.Size(162, 22);
+			this.mi_ExportConfiguration.Size = new System.Drawing.Size(171, 22);
 			this.mi_ExportConfiguration.Text = "Export Actions";
 			this.mi_ExportConfiguration.Click += new System.EventHandler(this.mi_ExportConfiguration_Click);
 			// 
@@ -324,13 +320,11 @@
 			this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
 			this.Text = "WindowMaster Settings";
 			this.HelpButtonClicked += new System.ComponentModel.CancelEventHandler(this.SettingsWindow_HelpButtonClicked);
-			this.VisibleChanged += new System.EventHandler(this.SettingsWindow_VisibleChanged);
 			this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.SettingsWindow_FormClosing);
+			this.VisibleChanged += new System.EventHandler(this.SettingsWindow_VisibleChanged);
 			this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.SettingsWindow_KeyDown);
 			this.groupBox1.ResumeLayout(false);
 			this.groupBox2.ResumeLayout(false);
-			this.menuStrip1.ResumeLayout(false);
-			this.menuStrip1.PerformLayout();
 			this.ResumeLayout(false);
 			this.PerformLayout();
 
