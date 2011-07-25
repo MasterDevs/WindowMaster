@@ -218,15 +218,6 @@
 			this.bCancel.UseVisualStyleBackColor = true;
 			this.bCancel.Click += new System.EventHandler(this.bCancel_Click);
 			// 
-			// menuStrip1
-			// 
-			this.menuStrip1.BackColor = System.Drawing.SystemColors.MenuBar;
-			this.menuStrip1.Location = new System.Drawing.Point(0, 0);
-			this.menuStrip1.Name = "menuStrip1";
-			this.menuStrip1.Size = new System.Drawing.Size(601, 24);
-			this.menuStrip1.TabIndex = 16;
-			this.menuStrip1.Text = "menuStrip1";
-			// 
 			// fileToolStripMenuItem
 			// 
 			this.fileToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
@@ -283,6 +274,18 @@
 			this.mi_ExportConfiguration.Size = new System.Drawing.Size(171, 22);
 			this.mi_ExportConfiguration.Text = "Export Actions";
 			this.mi_ExportConfiguration.Click += new System.EventHandler(this.mi_ExportConfiguration_Click);
+			// 
+			// menuStrip1
+			// 
+			this.menuStrip1.BackColor = System.Drawing.SystemColors.MenuBar;
+			this.menuStrip1.Location = new System.Drawing.Point(0, 0);
+			this.menuStrip1.Name = "menuStrip1";
+			this.menuStrip1.Size = new System.Drawing.Size(601, 24);
+			this.menuStrip1.TabIndex = 16;
+			this.menuStrip1.Text = "menuStrip1";
+			this.menuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+					 fileToolStripMenuItem, configurationToolStripMenuItem
+			});
 			// 
 			// saveDialog
 			// 
