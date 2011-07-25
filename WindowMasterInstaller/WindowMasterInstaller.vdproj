@@ -151,9 +151,14 @@
             {
             "AssemblyRegister" = "3:1"
             "AssemblyIsInGAC" = "11:FALSE"
-            "AssemblyAsmDisplayName" = "8:WindowMasterLib, Version=1.0.0.27065, Culture=neutral, processorArchitecture=MSIL"
+            "AssemblyAsmDisplayName" = "8:WindowMasterLib, Version=1.0.0.27443, Culture=neutral, processorArchitecture=MSIL"
                 "ScatterAssemblies"
                 {
+                    "_8A468FE04AD8F4C8AAA1B2AC0CC88F35"
+                    {
+                    "Name" = "8:WindowMasterLib.dll"
+                    "Attributes" = "3:512"
+                    }
                 }
             "SourcePath" = "8:WindowMasterLib.dll"
             "TargetName" = "8:"
@@ -241,7 +246,7 @@
         "Name" = "8:Microsoft Visual Studio"
         "ProductName" = "8:WindowMaster"
         "ProductCode" = "8:{505DCB9E-7F78-4E5B-BC58-30120BD87601}"
-        "PackageCode" = "8:{FFCE8706-4309-4B8B-96A7-0F5589DDBDD4}"
+        "PackageCode" = "8:{E320B2F8-FDF5-4CB1-AE5D-6D4224888C7E}"
         "UpgradeCode" = "8:{F4E37C11-5F5A-47D7-B667-72F5D3E8053C}"
         "AspNetVersion" = "8:4.0.30319.0"
         "RestartWWWService" = "11:FALSE"
