@@ -125,6 +125,7 @@ namespace WindowMasterLib.Actions.HotKeyActions {
 				Arguments = saa.Arguments;
 				CreateNoWindow = saa.CreateNoWindow;
 				Path = saa.Path;
+				PrintOutput = saa.PrintOutput;
 				StartNewInstance = saa.StartNewInstance;
 				WindowStyle = saa.WindowStyle;
 				WorkingDirectory = saa.WorkingDirectory;

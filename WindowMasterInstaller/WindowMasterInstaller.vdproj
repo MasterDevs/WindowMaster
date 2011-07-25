@@ -15,7 +15,7 @@
     {
         "Entry"
         {
-        "MsmKey" = "8:_87E1455D0D11DAEF4A39CF6F5FCA12AB"
+        "MsmKey" = "8:_8A468FE04AD8F4C8AAA1B2AC0CC88F35"
         "OwnerKey" = "8:_B00BA2AA2E3C48DF9A9B855816768B6B"
         "MsmSig" = "8:_UNDEFINED"
         }
@@ -34,7 +34,7 @@
         "Entry"
         {
         "MsmKey" = "8:_UNDEFINED"
-        "OwnerKey" = "8:_87E1455D0D11DAEF4A39CF6F5FCA12AB"
+        "OwnerKey" = "8:_8A468FE04AD8F4C8AAA1B2AC0CC88F35"
         "MsmSig" = "8:_UNDEFINED"
         }
     }
@@ -139,7 +139,7 @@
                 {
                 "Name" = "8:.NET Framework"
                 "Message" = "8:[VSDNETMSG]"
-                "Version" = "8:3.5.30729"
+                "FrameworkVersion" = "8:3.5.30729   "
                 "AllowLaterVersions" = "11:FALSE"
                 "InstallUrl" = "8:http://go.microsoft.com/fwlink/?LinkId=76617"
                 }
@@ -147,18 +147,13 @@
         }
         "File"
         {
-            "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_87E1455D0D11DAEF4A39CF6F5FCA12AB"
+            "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_8A468FE04AD8F4C8AAA1B2AC0CC88F35"
             {
             "AssemblyRegister" = "3:1"
             "AssemblyIsInGAC" = "11:FALSE"
-            "AssemblyAsmDisplayName" = "8:WindowMasterLib, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL"
+            "AssemblyAsmDisplayName" = "8:WindowMasterLib, Version=1.0.0.27065, Culture=neutral, processorArchitecture=MSIL"
                 "ScatterAssemblies"
                 {
-                    "_87E1455D0D11DAEF4A39CF6F5FCA12AB"
-                    {
-                    "Name" = "8:WindowMasterLib.dll"
-                    "Attributes" = "3:512"
-                    }
                 }
             "SourcePath" = "8:WindowMasterLib.dll"
             "TargetName" = "8:"
@@ -245,17 +240,18 @@
         {
         "Name" = "8:Microsoft Visual Studio"
         "ProductName" = "8:WindowMaster"
-        "ProductCode" = "8:{DB92F90C-86A7-40DF-B14C-4A3DC7BEDACF}"
-        "PackageCode" = "8:{0388A383-5F5E-490E-807D-F53FFE54D413}"
+        "ProductCode" = "8:{505DCB9E-7F78-4E5B-BC58-30120BD87601}"
+        "PackageCode" = "8:{FFCE8706-4309-4B8B-96A7-0F5589DDBDD4}"
         "UpgradeCode" = "8:{F4E37C11-5F5A-47D7-B667-72F5D3E8053C}"
+        "AspNetVersion" = "8:4.0.30319.0"
         "RestartWWWService" = "11:FALSE"
         "RemovePreviousVersions" = "11:TRUE"
         "DetectNewerInstalledVersion" = "11:TRUE"
         "InstallAllUsers" = "11:TRUE"
-        "ProductVersion" = "8:0.4.5"
+        "ProductVersion" = "8:0.4.8"
         "Manufacturer" = "8:MasterDevelopers"
         "ARPHELPTELEPHONE" = "8:"
-        "ARPHELPLINK" = "8:"
+        "ARPHELPLINK" = "8:http://windowmaster.codeplex.com/"
         "Title" = "8:WindowMaster"
         "Subject" = "8:"
         "ARPCONTACT" = "8:MasterDevelopers"
