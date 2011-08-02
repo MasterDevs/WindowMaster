@@ -64,6 +64,7 @@
 			this.tbStdOutput.Location = new System.Drawing.Point(3, 3);
 			this.tbStdOutput.Multiline = true;
 			this.tbStdOutput.Name = "tbStdOutput";
+			this.tbStdOutput.ScrollBars = System.Windows.Forms.ScrollBars.Both;
 			this.tbStdOutput.Size = new System.Drawing.Size(487, 235);
 			this.tbStdOutput.TabIndex = 1;
 			// 
@@ -96,6 +97,7 @@
 			this.tbStdError.Location = new System.Drawing.Point(3, 3);
 			this.tbStdError.Multiline = true;
 			this.tbStdError.Name = "tbStdError";
+			this.tbStdError.ScrollBars = System.Windows.Forms.ScrollBars.Both;
 			this.tbStdError.Size = new System.Drawing.Size(487, 235);
 			this.tbStdError.TabIndex = 1;
 			// 
