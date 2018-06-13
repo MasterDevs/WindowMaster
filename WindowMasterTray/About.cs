@@ -8,7 +8,7 @@ using System.Windows.Forms;
 
 namespace WindowMasterLib {
 	partial class About : Form {
-		public static string WebPage = "http://WindowMaster.CodePlex.com";
+		public static string WebPage = "https://github.com/MasterDevs/WindowMaster";
 		public About() {
 			InitializeComponent();
 			this.Text = String.Format("About {0}", AssemblyTitle);
